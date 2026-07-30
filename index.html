@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>nyxven.com</title>
   <link rel="icon" type="image/png" href="profile.png">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * {
       margin: 0;
@@ -183,6 +183,26 @@
     .bg-toggle input {
       accent-color: #6c5ce7;
       cursor: pointer;
+    }
+
+    /* GUNS.LOL (SİLAH) NAV İKONU EFEKTİ */
+    .guns-nav-icon {
+      font-size: 20px;
+      color: #aaa;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 4px;
+      border-bottom: 2px solid #555; /* Gri alt çizgi */
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+    .guns-nav-icon:hover {
+      color: #a29bfe !important;
+      border-bottom-color: #a29bfe;
+      transform: scale(1.15) rotate(-5deg);
+      filter: drop-shadow(0 0 10px #6c5ce7); /* Mor neon parlama */
     }
 
     .nav-right .login-btn {
@@ -425,20 +445,33 @@
       justify-content: center;
       margin-top: 30px;
       flex-wrap: wrap;
+      align-items: center;
     }
     .social-channels a {
       color: #aaa;
-      font-size: 36px;
+      font-size: 34px;
       transition: all 0.3s ease;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      text-decoration: none;
     }
     .social-channels a:hover {
       transform: scale(1.2);
     }
     .social-channels a.youtube-channel:hover { color: #ff0000; filter: drop-shadow(0 0 10px #ff0000); }
     .social-channels a.tiktok-channel:hover { color: #ee1d52; filter: drop-shadow(0 0 10px #ee1d52); }
+
+    /* GUNS.LOL SOSYAL MEDYA İKONU EFEKTİ */
+    .social-channels a.guns-channel {
+      border-bottom: 2px solid #555;
+      padding-bottom: 2px;
+    }
+    .social-channels a.guns-channel:hover {
+      color: #a29bfe;
+      border-bottom-color: #a29bfe;
+      filter: drop-shadow(0 0 12px #6c5ce7);
+    }
 
     /* Auth Boxes */
     .login-box, .register-box {
@@ -535,10 +568,12 @@
 </head>
 <body>
 
+<!-- KARŞILAMA EKRANI -->
 <div id="enterOverlay" onclick="enterSite()">
   <h2>[ CLICK TO ENTER ]</h2>
 </div>
 
+<!-- ARKA PLAN VİDEO KATMANI -->
 <div class="bg-video-container active" id="bgVideoContainer">
   <video class="bg-video-main" id="bgVideo" loop playsinline preload="auto">
     <source src="soldierboyedit.mp4" type="video/mp4">
@@ -564,6 +599,11 @@
         <input type="checkbox" id="bgVideoToggle" checked> Arkaplan
       </label>
     </div>
+
+    <!-- GUNS.LOL (SİLAH) SAĞ ÜST İKON -->
+    <a href="https://guns.lol/nyxven" target="_blank" class="guns-nav-icon" title="guns.lol/nyxven">
+      <i class="fas fa-gun"></i>
+    </a>
 
     <a id="loginBtn" onclick="handleLoginClick()" class="login-btn">Giriş Yap</a>
     <a id="registerBtn" onclick="goToSection('kayit')">Kayıt Ol</a>
@@ -607,6 +647,9 @@
   <div class="social-channels">
     <a href="https://www.youtube.com/@RENXC-c3d" target="_blank" class="youtube-channel" title="YouTube"><i class="fab fa-youtube"></i></a>
     <a href="https://www.tiktok.com/@nyxven.inc" target="_blank" class="tiktok-channel" title="TikTok"><i class="fab fa-tiktok"></i></a>
+    
+    <!-- GUNS.LOL (SİLAH) SOSYAL MEDYA İKONU -->
+    <a href="https://guns.lol/nyxven" target="_blank" class="guns-channel" title="guns.lol/nyxven"><i class="fas fa-gun"></i></a>
   </div>
 </section>
 
