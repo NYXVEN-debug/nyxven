@@ -24,7 +24,7 @@
       position: relative;
     }
 
-    /* GUNS.LOL TARZI CLICK TO ENTER PERDESİ */
+    /* CLICK TO ENTER PERDESİ */
     #enterOverlay {
       position: fixed;
       top: 0;
@@ -60,7 +60,7 @@
       50% { transform: scale(1.05); opacity: 1; }
     }
 
-    /* OPTİMİZE EDİLMİŞ ARKA PLAN VİDEO KATMANI */
+    /* ARKA PLAN VİDEO KATMANI */
     .bg-video-container {
       position: fixed;
       top: 0;
@@ -83,7 +83,6 @@
       visibility: visible;
     }
 
-    /* Yan boşluklar için hafif estetik ortam ışığı */
     .bg-video-container::before {
       content: '';
       position: absolute;
@@ -93,7 +92,6 @@
       z-index: 0;
     }
 
-    /* Ana Video - Donanım Hızlandırmalı (Kasma Yapmaz) */
     .bg-video-main {
       position: relative;
       max-width: 100%;
@@ -103,7 +101,7 @@
       object-fit: contain;
       z-index: 1;
       will-change: transform;
-      transform: translateZ(0); /* GPU Donanım Hızlandırma */
+      transform: translateZ(0);
       box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
     }
 
@@ -187,15 +185,6 @@
       cursor: pointer;
     }
 
-    .discord-icon {
-      font-size: 22px;
-      color: #5865F2;
-      transition: transform 0.3s ease, filter 0.3s ease;
-    }
-    .discord-icon:hover {
-      transform: scale(1.2) rotate(5deg);
-      filter: drop-shadow(0 0 8px #5865F2);
-    }
     .nav-right .login-btn {
       color: #a29bfe;
       font-weight: 600;
@@ -215,12 +204,10 @@
       position: relative;
     }
     
-    /* Video Kapalıyken Arka Plan */
     body.no-video .hero {
       background: radial-gradient(circle at 50% 30%, rgba(108, 92, 231, 0.25) 0%, rgba(11, 11, 16, 1) 70%);
     }
 
-    /* Glowing Aura Profile */
     .hero .avatar-container {
       position: relative;
       width: 140px;
@@ -452,7 +439,6 @@
     }
     .social-channels a.youtube-channel:hover { color: #ff0000; filter: drop-shadow(0 0 10px #ff0000); }
     .social-channels a.tiktok-channel:hover { color: #ee1d52; filter: drop-shadow(0 0 10px #ee1d52); }
-    .social-channels a.discord-channel:hover { color: #5865F2; filter: drop-shadow(0 0 10px #5865F2); }
 
     /* Auth Boxes */
     .login-box, .register-box {
@@ -579,9 +565,6 @@
       </label>
     </div>
 
-    <a href="https://discord.gg/sunucu-linki" target="_blank" class="discord-icon" title="Discord">
-      <i class="fab fa-discord"></i>
-    </a>
     <a id="loginBtn" onclick="handleLoginClick()" class="login-btn">Giriş Yap</a>
     <a id="registerBtn" onclick="goToSection('kayit')">Kayıt Ol</a>
   </div>
@@ -624,7 +607,6 @@
   <div class="social-channels">
     <a href="https://www.youtube.com/@RENXC-c3d" target="_blank" class="youtube-channel" title="YouTube"><i class="fab fa-youtube"></i></a>
     <a href="https://www.tiktok.com/@nyxven.inc" target="_blank" class="tiktok-channel" title="TikTok"><i class="fab fa-tiktok"></i></a>
-    <a href="https://discord.gg/sunucu-linki" target="_blank" class="discord-channel" title="Discord"><i class="fab fa-discord"></i></a>
   </div>
 </section>
 
@@ -684,14 +666,12 @@
   const volumeValue = document.getElementById('volumeValue');
   const enterOverlay = document.getElementById('enterOverlay');
 
-  // Giriş yapıldığında videoyu oynat
   function enterSite() {
     enterOverlay.classList.add('hidden');
     bgVideo.volume = volumeSlider.value / 100;
     bgVideo.play().catch(e => console.log('Video oynatılamadı:', e));
   }
 
-  // Profil resmi yoksa varsayılan N logosu
   function getFallbackAvatar() {
     const canvas = document.createElement('canvas');
     canvas.width = 140;
@@ -713,14 +693,12 @@
     return canvas.toDataURL();
   }
 
-  // Ses Kontrolü
   volumeSlider.addEventListener('input', (e) => {
     const val = e.target.value;
     volumeValue.textContent = val + '%';
     bgVideo.volume = val / 100;
   });
 
-  // Arka Plan Göster/Gizle
   bgVideoToggle.addEventListener('change', (e) => {
     if (e.target.checked) {
       bgVideoContainer.classList.add('active');
