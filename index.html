@@ -246,6 +246,14 @@
       opacity: 1;
       transform: translateY(0);
     }
+
+    /* VİDEOLARIM BÖLÜMÜ VARSAYILAN OLARAK AÇIK */
+    #videolarim {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     .section h2 {
       font-size: 36px;
       font-weight: 700;
@@ -577,6 +585,7 @@
 
 <section class="hero" id="anasayfa">
   <div class="avatar-container">
+    <!-- Düzeltilmiş Avatar/Profil Resmi Mantığı -->
     <img src="profile.png" id="userAvatar" alt="Profile" class="avatar" onerror="this.onerror=null; this.src=getFallbackAvatar();">
   </div>
   <h1>Editor.</h1>
@@ -597,8 +606,8 @@
   <p style="font-size: 20px; color: #8888aa;">Şu an için aktif bir projem yok.</p>
 </section>
 
-<!-- OTOMATİK YÜKLENEN VİDEOLARIM SEKMESİ -->
-<section class="section" id="videolarim">
+<!-- OTOMATİK YÜKLENEN VİDEOLARIM SEKMESİ (AÇIK VE GÖRÜNÜR DUMDA) -->
+<section class="section visible" id="videolarim" style="display: block;">
   <h2>Videolarım</h2>
   <p>YouTube kanalıma yüklediğim son içerikler otomatik olarak burada listelenir:</p>
   <div class="video-grid" id="youtubeVideoGrid">
@@ -687,6 +696,7 @@
     bgMusic.play().catch(e => console.log('Müzik çalınamadı:', e));
   }
 
+  // Profil resmi yüklenemezse devreye giren dinamik Canvas profil logosu
   function getFallbackAvatar() {
     const canvas = document.createElement('canvas');
     canvas.width = 140;
@@ -765,9 +775,12 @@
   }
 
   document.addEventListener('DOMContentLoaded', function() {
+    // Videolarım dışındaki diğer bölümleri başlangıçta gizle
     document.querySelectorAll('.section').forEach(sec => {
-      sec.style.display = 'none';
-      sec.classList.remove('visible');
+      if (sec.id !== 'videolarim') {
+        sec.style.display = 'none';
+        sec.classList.remove('visible');
+      }
     });
     checkLoginStatus();
     fetchVideos();
