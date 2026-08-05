@@ -18,13 +18,44 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
+    :root {
+      --primary-color: #6c5ce7;
+      --accent-color: #a29bfe;
+      --bg-color: #08080c;
+      --card-bg: rgba(22, 22, 32, 0.55);
+      --text-color: #f0f0f0;
+      --glow-color: rgba(108, 92, 231, 0.4);
+    }
+
+    /* TEMA TANIMLAMALARI */
+    body.theme-matrix {
+      --primary-color: #00b894;
+      --accent-color: #55efc4;
+      --glow-color: rgba(0, 184, 148, 0.4);
+    }
+    body.theme-cyberpunk {
+      --primary-color: #ff7675;
+      --accent-color: #d63031;
+      --glow-color: rgba(214, 48, 49, 0.4);
+    }
+    body.theme-ocean {
+      --primary-color: #0984e3;
+      --accent-color: #74b9ff;
+      --glow-color: rgba(9, 132, 227, 0.4);
+    }
+    body.theme-amber {
+      --primary-color: #fdcb6e;
+      --accent-color: #e1b12c;
+      --glow-color: rgba(253, 203, 110, 0.4);
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       cursor: url('arrow.cur'), auto !important;
     }
-    a, button, input, textarea, .player-btn, .guns-nav-icon, .menu-toggle, .poll-option, .mini-game-btn {
+    a, button, input, textarea, .player-btn, .guns-nav-icon, .menu-toggle, .poll-option, .mini-game-btn, .theme-dot, .auth-btn {
       cursor: url('arrow.cur'), pointer !important;
     }
 
@@ -32,9 +63,9 @@
       scroll-behavior: smooth;
     }
     body {
-      background-color: #08080c;
+      background-color: var(--bg-color);
       font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
-      color: #f0f0f0;
+      color: var(--text-color);
       line-height: 1.6;
       overflow-x: hidden;
       position: relative;
@@ -67,12 +98,12 @@
       top: 25px;
       right: 25px;
       background: rgba(18, 18, 26, 0.95);
-      border: 1px solid rgba(162, 155, 254, 0.4);
-      border-left: 5px solid #a29bfe;
+      border: 1px solid var(--accent-color);
+      border-left: 5px solid var(--accent-color);
       color: #fff;
       padding: 14px 22px;
       border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(108, 92, 231, 0.4);
+      box-shadow: 0 10px 30px var(--glow-color);
       z-index: 999999;
       font-weight: 500;
       display: flex;
@@ -114,7 +145,7 @@
       letter-spacing: 5px;
       color: #fff;
       text-transform: uppercase;
-      text-shadow: 0 0 25px rgba(108, 92, 231, 0.9);
+      text-shadow: 0 0 25px var(--glow-color);
       animation: pulse 2s infinite;
     }
     @keyframes pulse {
@@ -137,10 +168,10 @@
     }
     .brand {
       font-weight: 800;
-      color: #a29bfe;
+      color: var(--accent-color);
       font-size: 20px;
       letter-spacing: 1px;
-      text-shadow: 0 0 10px rgba(162, 155, 254, 0.5);
+      text-shadow: 0 0 10px var(--glow-color);
     }
     .nav-left {
       display: flex;
@@ -155,8 +186,8 @@
       transition: all 0.3s ease;
     }
     .nav-left a:hover, .nav-right a:hover {
-      color: #a29bfe;
-      text-shadow: 0 0 12px rgba(162, 155, 254, 0.8);
+      color: var(--accent-color);
+      text-shadow: 0 0 12px var(--glow-color);
     }
     .nav-right {
       display: flex;
@@ -169,6 +200,48 @@
       font-size: 24px;
       color: #fff;
     }
+
+    /* TEMA SEÇİCİ */
+    .theme-selector {
+      display: flex;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 5px 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .theme-dot {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+    .theme-dot:hover { transform: scale(1.3); }
+
+    /* VIEW COUNTER & AUTH UI */
+    .view-counter-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ddd;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .auth-btn {
+      background: var(--primary-color);
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+    .auth-btn:hover { opacity: 0.85; }
 
     .status-badge {
       display: flex;
@@ -214,7 +287,7 @@
       backdrop-filter: blur(10px);
     }
     .player-btn {
-      color: #a29bfe;
+      color: var(--accent-color);
       font-size: 14px;
       transition: transform 0.2s, color 0.2s;
     }
@@ -239,7 +312,7 @@
     }
     .eq-bar {
       width: 3px;
-      background: #a29bfe;
+      background: var(--accent-color);
       border-radius: 2px;
       height: 3px;
       transition: height 0.1s ease;
@@ -251,7 +324,7 @@
 
     .volume-control input[type="range"] {
       width: 50px;
-      accent-color: #6c5ce7;
+      accent-color: var(--primary-color);
     }
 
     .guns-nav-icon {
@@ -260,9 +333,9 @@
       transition: all 0.3s ease;
     }
     .guns-nav-icon:hover {
-      color: #a29bfe !important;
+      color: var(--accent-color) !important;
       transform: scale(1.2) rotate(-5deg);
-      filter: drop-shadow(0 0 10px #6c5ce7);
+      filter: drop-shadow(0 0 10px var(--primary-color));
     }
 
     /* HERO */
@@ -274,7 +347,7 @@
       align-items: center;
       text-align: center;
       padding: 120px 20px 60px;
-      background: radial-gradient(circle at 50% 35%, rgba(108, 92, 231, 0.22) 0%, rgba(8, 8, 12, 0.85) 70%);
+      background: radial-gradient(circle at 50% 35%, var(--glow-color) 0%, rgba(8, 8, 12, 0.85) 70%);
     }
     .hero .avatar-container {
       position: relative;
@@ -287,7 +360,7 @@
       content: '';
       position: absolute;
       top: -6px; left: -6px; right: -6px; bottom: -6px;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(162, 155, 254, 0.6) 50%, rgba(0,0,0,0) 70%);
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, var(--accent-color) 50%, rgba(0,0,0,0) 70%);
       border-radius: 50%;
       z-index: 1;
       filter: blur(10px);
@@ -295,7 +368,7 @@
     }
     @keyframes gunsGlow {
       0% { transform: scale(0.98); filter: blur(8px) drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)); }
-      100% { transform: scale(1.05); filter: blur(14px) drop-shadow(0 0 30px rgba(162, 155, 254, 1)); }
+      100% { transform: scale(1.05); filter: blur(14px) drop-shadow(0 0 30px var(--accent-color)); }
     }
     .hero .avatar {
       position: relative;
@@ -310,7 +383,7 @@
       font-size: 58px;
       font-weight: 800;
       letter-spacing: -1px;
-      background: linear-gradient(135deg, #ffffff 30%, #a29bfe 100%);
+      background: linear-gradient(135deg, #ffffff 30%, var(--accent-color) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 4px;
@@ -330,7 +403,7 @@
 
     /* GLASS CARDS */
     .glass-card {
-      background: rgba(22, 22, 32, 0.55);
+      background: var(--card-bg);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -342,8 +415,8 @@
       perspective: 1000px;
     }
     .glass-card:hover {
-      border-color: rgba(162, 155, 254, 0.4);
-      box-shadow: 0 20px 40px rgba(108, 92, 231, 0.25);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 20px 40px var(--glow-color);
     }
 
     /* SECTIONS */
@@ -365,9 +438,9 @@
       font-size: 36px;
       font-weight: 700;
       margin-bottom: 25px;
-      border-left: 4px solid #6c5ce7;
+      border-left: 4px solid var(--primary-color);
       padding-left: 18px;
-      background: linear-gradient(to right, #fff, #a29bfe);
+      background: linear-gradient(to right, #fff, var(--accent-color));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -440,23 +513,23 @@
       overflow: hidden;
       transition: all 0.3s;
     }
-    .poll-option:hover { border-color: #6c5ce7; background: rgba(20, 20, 30, 0.9); }
+    .poll-option:hover { border-color: var(--primary-color); background: rgba(20, 20, 30, 0.9); }
     .poll-bg-bar {
       position: absolute;
       top: 0; left: 0; bottom: 0;
-      background: rgba(108, 92, 231, 0.3);
+      background: var(--glow-color);
       width: 0%;
       transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 1;
     }
     .poll-text { position: relative; z-index: 2; font-weight: 500; }
-    .poll-percent { position: relative; z-index: 2; font-weight: 700; color: #a29bfe; }
+    .poll-percent { position: relative; z-index: 2; font-weight: 700; color: var(--accent-color); }
 
     .admin-poll-control {
       display: none;
       margin-top: 25px;
       padding-top: 20px;
-      border-top: 1px dashed rgba(162, 155, 254, 0.3);
+      border-top: 1px dashed var(--accent-color);
     }
     .admin-poll-control h4 { color: #2ecc71; margin-bottom: 12px; font-size: 16px; }
     .admin-poll-inputs { display: flex; flex-direction: column; gap: 10px; }
@@ -485,13 +558,13 @@
       background: rgba(12, 12, 18, 0.8);
       padding: 12px 16px;
       border-radius: 12px;
-      border-left: 3px solid #6c5ce7;
+      border-left: 3px solid var(--primary-color);
       position: relative;
     }
     .chat-item.pinned { border-left: 3px solid #f1c40f; background: rgba(241, 196, 15, 0.08); }
     .chat-user {
       font-size: 13px;
-      color: #a29bfe;
+      color: var(--accent-color);
       font-weight: 700;
       margin-bottom: 4px;
       display: flex;
@@ -532,12 +605,51 @@
       outline: none;
     }
     .chat-input-area button {
-      background: #6c5ce7;
+      background: var(--primary-color);
       color: #fff;
       border: none;
       padding: 0 24px;
       border-radius: 10px;
       font-weight: 600;
+    }
+
+    /* AUTH MODAL */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(10px);
+      z-index: 9999999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-card {
+      background: #12121a;
+      border: 1px solid var(--primary-color);
+      width: 90%; max-width: 400px;
+      border-radius: 16px;
+      padding: 25px;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 15px; right: 15px;
+      color: #888; font-size: 18px; cursor: pointer;
+    }
+    .auth-tabs { display: flex; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .auth-tab { padding-bottom: 8px; font-weight: 600; cursor: pointer; color: #888; }
+    .auth-tab.active { color: var(--accent-color); border-bottom: 2px solid var(--primary-color); }
+    .auth-form { display: flex; flex-direction: column; gap: 12px; }
+    .auth-form input {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 10px; border-radius: 8px; color: #fff; outline: none;
+    }
+    .auth-form button {
+      background: var(--primary-color);
+      border: none; padding: 12px; border-radius: 8px; color: #fff; font-weight: 600; margin-top: 5px;
     }
 
     /* MINI GAME FLOATING WIDGET */
@@ -546,7 +658,7 @@
       bottom: 25px;
       right: 25px;
       background: rgba(18, 18, 26, 0.9);
-      border: 1px solid rgba(162, 155, 254, 0.3);
+      border: 1px solid var(--accent-color);
       backdrop-filter: blur(15px);
       padding: 12px 18px;
       border-radius: 50px;
@@ -557,7 +669,7 @@
       z-index: 9999;
     }
     .mini-game-btn {
-      background: #6c5ce7;
+      background: var(--primary-color);
       border: none;
       color: #fff;
       width: 38px; height: 38px;
@@ -569,7 +681,7 @@
       transition: transform 0.1s;
     }
     .mini-game-btn:active { transform: scale(0.85); }
-    .score-text { font-weight: 700; color: #a29bfe; font-size: 14px; }
+    .score-text { font-weight: 700; color: var(--accent-color); font-size: 14px; }
 
     /* FORM & KANALLAR */
     .contact-form { display: flex; flex-direction: column; gap: 16px; margin-top: 15px; }
@@ -583,7 +695,7 @@
       outline: none;
     }
     .contact-form button {
-      background: linear-gradient(135deg, #6c5ce7, #8e74ff);
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
       border: none;
       padding: 15px;
       border-radius: 30px;
@@ -597,7 +709,7 @@
     .channel-card .channel-info { flex: 1; }
     .channel-card a {
       display: inline-block;
-      background: #6c5ce7;
+      background: var(--primary-color);
       color: #fff;
       padding: 8px 22px;
       border-radius: 30px;
@@ -607,7 +719,7 @@
 
     .social-channels { display: flex; gap: 30px; justify-content: center; margin-top: 30px; font-size: 32px; }
     .social-channels a { color: #aaa; transition: all 0.3s; }
-    .social-channels a:hover { color: #a29bfe; transform: scale(1.2); }
+    .social-channels a:hover { color: var(--accent-color); transform: scale(1.2); }
 
     .footer {
       text-align: center;
@@ -638,12 +750,12 @@
     }
   </style>
 </head>
-<body>
+<body class="theme-default">
 
 <canvas id="bgCanvas"></canvas>
 
 <div id="customToast">
-  <i class="fas fa-bell" style="color: #a29bfe;"></i>
+  <i class="fas fa-bell" style="color: var(--accent-color);"></i>
   <span id="toastMsg">Sistem bildirimi.</span>
 </div>
 
@@ -657,6 +769,31 @@
   <span class="score-text">Skor: <span id="gunScore">0</span></span>
 </div>
 
+<!-- AUTH MODAL (OTP'SİZ KULLANICI GİRİŞ/KAYIT) -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal-card">
+    <i class="fas fa-times modal-close" onclick="closeAuthModal()"></i>
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tabLoginBtn" onclick="switchAuthTab('login')">Giriş Yap</div>
+      <div class="auth-tab" id="tabRegisterBtn" onclick="switchAuthTab('register')">Kayıt Ol</div>
+    </div>
+    
+    <!-- Giriş Formu -->
+    <div class="auth-form" id="loginForm">
+      <input type="text" id="loginUsername" placeholder="Kullanıcı Adı">
+      <input type="password" id="loginPassword" placeholder="Şifre">
+      <button onclick="handleLogin()">Giriş Yap</button>
+    </div>
+
+    <!-- Kayıt Formu -->
+    <div class="auth-form" id="registerForm" style="display: none;">
+      <input type="text" id="regUsername" placeholder="Kullanıcı Adı Seç">
+      <input type="password" id="regPassword" placeholder="Şifre Oluştur">
+      <button onclick="handleRegister()">Kayıt Ol</button>
+    </div>
+  </div>
+</div>
+
 <audio id="bgMusic" loop preload="auto"></audio>
 
 <nav class="navbar">
@@ -667,13 +804,30 @@
     <a onclick="goToSection('hakkimda')">Hakkımda</a>
     <a onclick="goToSection('projelerim')">Projelerim</a>
     <a onclick="goToSection('videolarim')">Videolarım</a>
-    <a onclick="goToSection('anket')"><i class="fas fa-poll" style="color: #a29bfe;"></i> Anket</a>
+    <a onclick="goToSection('anket')"><i class="fas fa-poll" style="color: var(--accent-color);"></i> Anket</a>
     <a onclick="goToSection('kanallarim')">Kanallarım</a>
     <a onclick="goToSection('oneri')"><i class="fas fa-lightbulb" style="color: #f1c40f;"></i> Öneri</a>
-    <a onclick="goToSection('sohbet')"><i class="fas fa-comments" style="color: #a29bfe;"></i> Sohbet</a>
+    <a onclick="goToSection('sohbet')"><i class="fas fa-comments" style="color: var(--accent-color);"></i> Sohbet</a>
   </div>
 
   <div class="nav-right">
+    <!-- TEMA SEÇİCİ -->
+    <div class="theme-selector" title="Renk Teması Seç">
+      <div class="theme-dot" style="background: #6c5ce7;" onclick="setTheme('default')"></div>
+      <div class="theme-dot" style="background: #00b894;" onclick="setTheme('matrix')"></div>
+      <div class="theme-dot" style="background: #d63031;" onclick="setTheme('cyberpunk')"></div>
+      <div class="theme-dot" style="background: #0984e3;" onclick="setTheme('ocean')"></div>
+      <div class="theme-dot" style="background: #fdcb6e;" onclick="setTheme('amber')"></div>
+    </div>
+
+    <!-- SİTE & ODA GÖRÜNTÜLENME SAYACI -->
+    <div class="view-counter-badge" title="Toplam Görüntülenme (Oda)">
+      <i class="fas fa-eye" style="color: var(--accent-color);"></i> <span id="totalViewCount">0</span>
+    </div>
+
+    <!-- GİRİŞ / KAYIT BUTONU -->
+    <button class="auth-btn" id="userAuthBtn" onclick="openAuthModal()">Giriş Yap</button>
+
     <div class="status-badge" title="Canlı Sistem">
       <div class="status-dot"></div> ONLINE
     </div>
@@ -827,7 +981,7 @@
     </form>
     <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
       <div style="font-size: 20px; font-weight: 600;">Efe Can Ülker</div>
-      <div style="color: #aaa;"><i class="fas fa-envelope" style="color: #6c5ce7;"></i> ulkerefecan98@gmail.com</div>
+      <div style="color: #aaa;"><i class="fas fa-envelope" style="color: var(--primary-color);"></i> ulkerefecan98@gmail.com</div>
     </div>
   </div>
 </section>
@@ -838,6 +992,34 @@
   const ADMIN_IP = "78.162.41.99";
   let userIP = "unknown";
   let isAdmin = false;
+  let currentUser = null;
+  let currentParticleColor = '#a29bfe';
+
+  // RENK TEMASI DEĞİŞTİRİCİ
+  function setTheme(theme) {
+    document.body.className = '';
+    if (theme !== 'default') {
+      document.body.classList.add('theme-' + theme);
+    }
+    const colorMap = {
+      default: '#a29bfe',
+      matrix: '#55efc4',
+      cyberpunk: '#ff7675',
+      ocean: '#74b9ff',
+      amber: '#fdcb6e'
+    };
+    currentParticleColor = colorMap[theme] || '#a29bfe';
+    localStorage.setItem('nyxven_theme', theme);
+    showToast('🎨 Tema güncellendi!');
+  }
+
+  // GÖRÜNTÜLENME SAYACI (SAYFA VE ODA)
+  function initViewCounter() {
+    let views = parseInt(localStorage.getItem('nyxven_views') || '142');
+    views++;
+    localStorage.setItem('nyxven_views', views);
+    document.getElementById('totalViewCount').textContent = views;
+  }
 
   // IP TANIMA
   function checkUserIP() {
@@ -860,6 +1042,88 @@
         loadChatMessages();
         loadSuggestions();
       });
+  }
+
+  // GİRİŞ / KAYIT SİSTEMİ (OTP'SİZ SADECE LOCALSTORAGE KONTROLLÜ)
+  function initAuth() {
+    const savedUser = localStorage.getItem('nyxven_logged_user');
+    if (savedUser) {
+      currentUser = savedUser;
+      updateAuthUI();
+    }
+  }
+
+  function openAuthModal() {
+    if (currentUser) {
+      if (confirm('Çıkış yapmak istiyor musun?')) {
+        currentUser = null;
+        localStorage.removeItem('nyxven_logged_user');
+        updateAuthUI();
+        showToast('Çıkış yapıldı.');
+      }
+      return;
+    }
+    document.getElementById('authModal').classList.add('active');
+  }
+
+  function closeAuthModal() {
+    document.getElementById('authModal').classList.remove('active');
+  }
+
+  function switchAuthTab(type) {
+    if (type === 'login') {
+      document.getElementById('tabLoginBtn').classList.add('active');
+      document.getElementById('tabRegisterBtn').classList.remove('active');
+      document.getElementById('loginForm').style.display = 'flex';
+      document.getElementById('registerForm').style.display = 'none';
+    } else {
+      document.getElementById('tabRegisterBtn').classList.add('active');
+      document.getElementById('tabLoginBtn').classList.remove('active');
+      document.getElementById('registerForm').style.display = 'flex';
+      document.getElementById('loginForm').style.display = 'none';
+    }
+  }
+
+  function handleRegister() {
+    const u = document.getElementById('regUsername').value.trim();
+    const p = document.getElementById('regPassword').value.trim();
+    if (!u || !p) { showToast('⚠️ Tüm alanları doldur!'); return; }
+
+    let users = JSON.parse(localStorage.getItem('nyxven_users')) || {};
+    if (users[u]) { showToast('⚠️ Bu kullanıcı adı zaten alınmış!'); return; }
+
+    users[u] = p;
+    localStorage.setItem('nyxven_users', JSON.stringify(users));
+    currentUser = u;
+    localStorage.setItem('nyxven_logged_user', u);
+    updateAuthUI();
+    closeAuthModal();
+    showToast('🚀 Hesabın oluşturuldu ve giriş yapıldı!');
+  }
+
+  function handleLogin() {
+    const u = document.getElementById('loginUsername').value.trim();
+    const p = document.getElementById('loginPassword').value.trim();
+    let users = JSON.parse(localStorage.getItem('nyxven_users')) || {};
+
+    if (users[u] && users[u] === p) {
+      currentUser = u;
+      localStorage.setItem('nyxven_logged_user', u);
+      updateAuthUI();
+      closeAuthModal();
+      showToast('⚡ Giriş başarılı!');
+    } else {
+      showToast('⚠️ Kullanıcı adı veya şifre hatalı!');
+    }
+  }
+
+  function updateAuthUI() {
+    const btn = document.getElementById('userAuthBtn');
+    if (currentUser) {
+      btn.textContent = '👤 ' + currentUser;
+    } else {
+      btn.textContent = 'Giriş Yap';
+    }
   }
 
   // AUDIO PLAYER
@@ -1021,7 +1285,7 @@
     showToast('🗑️ Anket Temizlendi!');
   }
 
-  // SOHBET (IP TEKİL BEĞENİ & SABİTLEME)
+  // SOHBET (GİRİŞ YAPMIŞ KULLANICI / ADMIN DESTEKLİ)
   function loadChatMessages() {
     const chatList = document.getElementById('chatMessageList');
     let messages = JSON.parse(localStorage.getItem('nyxven_chat')) || [];
@@ -1030,7 +1294,6 @@
       return;
     }
     
-    // Pinned messages on top
     messages.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
 
     chatList.innerHTML = '';
@@ -1060,7 +1323,11 @@
     const input = document.getElementById('chatInput');
     const text = input.value.trim();
     if (!text) return;
-    const user = isAdmin ? '👑 Efecan (Admin)' : 'Ziyaretçi';
+    
+    let user = 'Ziyaretçi';
+    if (isAdmin) user = '👑 Efecan (Admin)';
+    else if (currentUser) user = currentUser;
+
     const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     let messages = JSON.parse(localStorage.getItem('nyxven_chat')) || [];
     messages.push({ user, text, time, likedIPs: [], pinned: false });
@@ -1102,7 +1369,7 @@
     loadChatMessages();
   }
 
-  // ÖNERİ SİSTEMİ (IP TEKİL BEĞENİ)
+  // ÖNERİ SİSTEMİ
   function loadSuggestions() {
     const list = document.getElementById('suggestionList');
     let suggestions = JSON.parse(localStorage.getItem('nyxven_suggestions')) || [];
@@ -1136,7 +1403,11 @@
     const input = document.getElementById('suggestionInput');
     const text = input.value.trim();
     if (!text) return;
-    const user = isAdmin ? '👑 Efecan (Admin)' : 'Ziyaretçi';
+    
+    let user = 'Ziyaretçi';
+    if (isAdmin) user = '👑 Efecan (Admin)';
+    else if (currentUser) user = currentUser;
+
     const time = new Date().toLocaleDateString();
     let suggestions = JSON.parse(localStorage.getItem('nyxven_suggestions')) || [];
     suggestions.push({ user, text, time, likedIPs: [] });
@@ -1169,7 +1440,7 @@
     loadSuggestions();
   }
 
-  // CANVAS PARTICLES BACKGROUND
+  // CANVAS PARTICLES BACKGROUND (DİNAMİK RENKLİ)
   const canvas = document.getElementById('bgCanvas');
   const ctx = canvas.getContext('2d');
   let particles = [];
@@ -1197,9 +1468,9 @@
       ctx.globalAlpha = this.alpha;
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fillStyle = '#a29bfe';
+      ctx.fillStyle = currentParticleColor;
       ctx.shadowBlur = 10;
-      ctx.shadowColor = '#6c5ce7';
+      ctx.shadowColor = currentParticleColor;
       ctx.fill();
       ctx.restore();
     }
@@ -1283,6 +1554,10 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('nyxven_theme');
+    if (savedTheme) setTheme(savedTheme);
+    initViewCounter();
+    initAuth();
     checkUserIP();
     fetchVideos();
   });
