@@ -24,11 +24,11 @@
       position: relative;
     }
 
-    /* BİLDİRİM ANIMASYONU (CUSTOM TOAST) */
+    /* BİLDİRİM ANIMASYONU (CUSTOM TOAST - BOŞTAYKEN GİZLİ) */
     #customToast {
       position: fixed;
       top: 20px;
-      right: -350px;
+      right: 20px;
       background: rgba(22, 22, 30, 0.95);
       border: 1px solid #6c5ce7;
       border-left: 5px solid #a29bfe;
@@ -38,14 +38,23 @@
       box-shadow: 0 10px 30px rgba(108, 92, 231, 0.4);
       z-index: 999999;
       font-weight: 500;
-      transition: right 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       display: flex;
       align-items: center;
       gap: 10px;
       backdrop-filter: blur(10px);
+
+      /* Varsayılan olarak tamamen gizli */
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-20px) scale(0.95);
+      pointer-events: none;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
     #customToast.show {
-      right: 20px;
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
     }
 
     /* CLICK TO ENTER PERDESİ */
@@ -300,7 +309,7 @@
       margin-bottom: 20px;
     }
 
-    /* BÜYÜTÜLMÜŞ VİDEO GALERİSİ & YOUTUBE YÖNLENDİRMELİ KARTLAR */
+    /* VİDEO GALERİSİ & YOUTUBE KARTLARI */
     .video-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
@@ -363,7 +372,7 @@
       text-overflow: ellipsis;
     }
 
-    /* SOHBET VE ÖNERİ KUTULARI YAPISI */
+    /* SOHBET VE ÖNERİ KUTULARI */
     .chat-box, .suggestion-box {
       background: rgba(22, 22, 30, 0.85);
       border-radius: 16px;
@@ -670,13 +679,12 @@
     <a onclick="goToSection('projelerim')">Projelerim</a>
     <a onclick="goToSection('videolarim')">Videolarım</a>
     <a onclick="goToSection('kanallarim')">Kanallarım</a>
-    <!-- YENİ EKLENEN ÖNERİ VE SOHBET BUTONLARI -->
     <a onclick="goToSection('oneri')"><i class="fas fa-lightbulb" style="color: #f1c40f;"></i> Öneri</a>
     <a onclick="goToSection('sohbet')"><i class="fas fa-comments" style="color: #a29bfe;"></i> Sohbet</a>
   </div>
   <div class="nav-right">
     <!-- GÖRÜNTÜLENME SAYACI -->
-    <div class="view-counter" title="Sayfa Görüntülenmesi">
+    <div class="view-counter" title="Tekil IP Ziyaretçisi">
       <i class="fas fa-eye"></i> <span id="viewCount">0</span>
     </div>
 
@@ -764,12 +772,23 @@
 <section class="section" id="kanallarim">
   <h2>Kanallarım</h2>
 
+  <!-- ANA KANAL KUTUCUĞU -->
   <div class="channel-card">
     <div class="channel-icon"><i class="fab fa-youtube"></i></div>
     <div class="channel-info">
       <h3>Anakanalım</h3>
       <p>Ana YouTube kanalımda çeşitli içerikler bulabilirsin.</p>
       <a href="https://www.youtube.com/channel/UCM6EXLZFrqGu5Yd0gf1PCpg" target="_blank">Göz At</a>
+    </div>
+  </div>
+
+  <!-- YENİ EKLENEN 2. KANAL KUTUCUĞU -->
+  <div class="channel-card">
+    <div class="channel-icon"><i class="fab fa-youtube"></i></div>
+    <div class="channel-info">
+      <h3>2. Kanalım</h3>
+      <p>İkinci YouTube kanalımdaki yeni videoları kaçırma.</p>
+      <a href="https://www.youtube.com/channel/UCMlwfGb4x0IwAzuNlxeLcZQ" target="_blank">Göz At</a>
     </div>
   </div>
 
@@ -834,15 +853,21 @@
   const volumeValue = document.getElementById('volumeValue');
   const enterOverlay = document.getElementById('enterOverlay');
 
-  let lastSentTime = 0; // Cooldown kontrolü için
+  let lastSentTime = 0; // Cooldown kontrolü
+  let toastTimeout;     // Toast zamanlayıcısı
 
-  // ANİMASYONLU BİLDİRİM (TOAST)
+  // SADECE MESAJ VARKEN GÖZÜKEN VE KENDİLİĞİNDEN GİDEN ANİMASYONLU BİLDİRİM
   function showToast(message) {
     const toast = document.getElementById('customToast');
     const msgSpan = document.getElementById('toastMsg');
     msgSpan.textContent = message;
+    
+    // Var olan zamanlayıcıyı temizle (üst üste tıklanırsa çakışmasın)
+    clearTimeout(toastTimeout);
+
     toast.classList.add('show');
-    setTimeout(() => {
+    
+    toastTimeout = setTimeout(() => {
       toast.classList.remove('show');
     }, 3500);
   }
@@ -899,7 +924,7 @@
     }
   }
 
-  // YOUTUBE DÜZELTİLMİŞ & BÜYÜTÜLMÜŞ VİDEO ÇEKME (YOUTUBE LINKLI)
+  // YOUTUBE VİDEO ÇEKME
   const CHANNEL_ID = 'UCM6EXLZFrqGu5Yd0gf1PCpg';
   const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
   const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
@@ -947,15 +972,30 @@
       });
   }
 
-  // CANLI GÖRÜNTÜLENME SAYACI
+  // IP BAZLI GERÇEK GÖRÜNTÜLENME SAYACI (SADECE FARKLI IP GIRINCE ARTAR)
   function initViewCounter() {
-    let views = localStorage.getItem('nyxven_views') || 148;
-    views = parseInt(views) + 1;
-    localStorage.setItem('nyxven_views', views);
-    document.getElementById('viewCount').textContent = views;
+    let views = parseInt(localStorage.getItem('nyxven_views') || '148');
+    let visitedIPs = JSON.parse(localStorage.getItem('nyxven_visited_ips')) || [];
+
+    fetch('https://api.ipify.org?format=json')
+      .then(res => res.json())
+      .then(data => {
+        const userIP = data.ip;
+        if (!visitedIPs.includes(userIP)) {
+          visitedIPs.push(userIP);
+          views += 1;
+          localStorage.setItem('nyxven_views', views);
+          localStorage.setItem('nyxven_visited_ips', JSON.stringify(visitedIPs));
+        }
+        document.getElementById('viewCount').textContent = views;
+      })
+      .catch(err => {
+        // IP çekilemezse varsayılan sayacı göster
+        document.getElementById('viewCount').textContent = views;
+      });
   }
 
-  // SOHBET SISTEMI
+  // SOHBET SİSTEMİ
   function loadChatMessages() {
     const chatList = document.getElementById('chatMessageList');
     const messages = JSON.parse(localStorage.getItem('nyxven_chat')) || [];
@@ -1005,7 +1045,7 @@
     showToast('💬 Mesajın gönderildi!');
   }
 
-  // ONERI SISTEMI
+  // ÖNERİ SİSTEMİ
   function loadSuggestions() {
     const list = document.getElementById('suggestionList');
     const suggestions = JSON.parse(localStorage.getItem('nyxven_suggestions')) || [];
