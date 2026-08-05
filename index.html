@@ -24,6 +24,30 @@
       position: relative;
     }
 
+    /* BİLDİRİM ANIMASYONU (CUSTOM TOAST) */
+    #customToast {
+      position: fixed;
+      top: 20px;
+      right: -350px;
+      background: rgba(22, 22, 30, 0.95);
+      border: 1px solid #6c5ce7;
+      border-left: 5px solid #a29bfe;
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(108, 92, 231, 0.4);
+      z-index: 999999;
+      font-weight: 500;
+      transition: right 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      backdrop-filter: blur(10px);
+    }
+    #customToast.show {
+      right: 20px;
+    }
+
     /* CLICK TO ENTER PERDESİ */
     #enterOverlay {
       position: fixed;
@@ -80,7 +104,7 @@
     .nav-left {
       display: flex;
       align-items: center;
-      gap: 28px;
+      gap: 24px;
       flex-wrap: wrap;
     }
     .nav-left a, .nav-right a {
@@ -102,8 +126,22 @@
       gap: 18px;
       flex-wrap: wrap;
     }
+
+    /* GÖRÜNTÜLENME SAYACI */
+    .view-counter {
+      background: rgba(108, 92, 231, 0.2);
+      border: 1px solid rgba(162, 155, 254, 0.3);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      color: #a29bfe;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+    }
     
-    /* Medya Kontrol Paneli (Şarkı İçin) */
+    /* Medya Kontrol Paneli */
     .media-controls {
       display: flex;
       align-items: center;
@@ -127,7 +165,7 @@
       cursor: pointer;
     }
 
-    /* GUNS.LOL (SİLAH) NAV İKONU EFEKTİ */
+    /* GUNS.LOL NAV İKONU */
     .guns-nav-icon {
       font-size: 20px;
       color: #aaa;
@@ -165,7 +203,6 @@
       position: relative;
     }
 
-    /* Guns.lol Stili Yuvarlak Parlayan Profil Resmi */
     .hero .avatar-container {
       position: relative;
       width: 140px;
@@ -185,14 +222,8 @@
       animation: gunsGlow 3s ease-in-out infinite alternate;
     }
     @keyframes gunsGlow {
-      0% {
-        transform: scale(0.98);
-        filter: blur(8px) drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
-      }
-      100% {
-        transform: scale(1.04);
-        filter: blur(12px) drop-shadow(0 0 25px rgba(162, 155, 254, 1));
-      }
+      0% { transform: scale(0.98); filter: blur(8px) drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)); }
+      100% { transform: scale(1.04); filter: blur(12px) drop-shadow(0 0 25px rgba(162, 155, 254, 1)); }
     }
     .hero .avatar {
       position: relative;
@@ -247,7 +278,6 @@
       transform: translateY(0);
     }
 
-    /* VİDEOLARIM BÖLÜMÜ VARSAYILAN OLARAK AÇIK */
     #videolarim {
       display: block;
       opacity: 1;
@@ -270,28 +300,135 @@
       margin-bottom: 20px;
     }
 
-    /* Videolarım Galeri Yapısı */
+    /* BÜYÜTÜLMÜŞ VİDEO GALERİSİ & YOUTUBE YÖNLENDİRMELİ KARTLAR */
     .video-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 25px;
       margin-top: 20px;
     }
-    .video-card {
+    .video-card-link {
+      display: block;
+      text-decoration: none;
+      background: rgba(22, 22, 30, 0.85);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .video-card-link:hover {
+      transform: translateY(-5px) scale(1.02);
+      border-color: #6c5ce7;
+      box-shadow: 0 15px 35px rgba(108, 92, 231, 0.4);
+    }
+    .thumb-wrapper {
       position: relative;
       width: 100%;
       padding-top: 56.25%;
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.6);
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(22, 22, 30, 0.75);
+      background: #000;
     }
-    .video-card iframe {
+    .thumb-wrapper img {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .play-btn-overlay {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px; height: 60px;
+      background: rgba(255, 0, 0, 0.85);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-size: 24px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+    .video-card-link:hover .play-btn-overlay {
+      transform: translate(-50%, -50%) scale(1.15);
+      background: #ff0000;
+    }
+    .video-title-box {
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* SOHBET VE ÖNERİ KUTULARI YAPISI */
+    .chat-box, .suggestion-box {
+      background: rgba(22, 22, 30, 0.85);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 20px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .message-list, .suggestion-list {
+      max-height: 350px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-right: 8px;
+    }
+    .chat-item, .suggestion-item {
+      background: rgba(11, 11, 16, 0.7);
+      padding: 12px 16px;
+      border-radius: 12px;
+      border-left: 3px solid #6c5ce7;
+    }
+    .chat-user {
+      font-size: 13px;
+      color: #a29bfe;
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .chat-time {
+      color: #666;
+      font-size: 11px;
+    }
+    .chat-text {
+      font-size: 15px;
+      color: #eee;
+      word-break: break-word;
+    }
+    .chat-input-area {
+      display: flex;
+      gap: 10px;
+    }
+    .chat-input-area input, .chat-input-area textarea {
+      flex: 1;
+      background: #111116;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: #fff;
+      outline: none;
+    }
+    .chat-input-area button {
+      background: #6c5ce7;
+      color: #fff;
       border: none;
+      padding: 0 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .chat-input-area button:hover {
+      background: #5a4bd1;
     }
 
     /* Form Design */
@@ -387,19 +524,9 @@
       text-align: center;
       color: #ff0000;
     }
-    .channel-card .channel-info {
-      flex: 1;
-    }
-    .channel-card h3 {
-      font-size: 22px;
-      margin-bottom: 4px;
-      color: #f0f0f0;
-    }
-    .channel-card p {
-      color: #aaa;
-      font-size: 15px;
-      margin-bottom: 8px;
-    }
+    .channel-card .channel-info { flex: 1; }
+    .channel-card h3 { font-size: 22px; margin-bottom: 4px; color: #f0f0f0; }
+    .channel-card p { color: #aaa; font-size: 15px; margin-bottom: 8px; }
     .channel-card a {
       display: inline-block;
       background: #6c5ce7;
@@ -433,13 +560,10 @@
       justify-content: center;
       text-decoration: none;
     }
-    .social-channels a:hover {
-      transform: scale(1.2);
-    }
+    .social-channels a:hover { transform: scale(1.2); }
     .social-channels a.youtube-channel:hover { color: #ff0000; filter: drop-shadow(0 0 10px #ff0000); }
     .social-channels a.tiktok-channel:hover { color: #ee1d52; filter: drop-shadow(0 0 10px #ee1d52); }
 
-    /* GUNS.LOL SOSYAL MEDYA İKONU EFEKTİ */
     .social-channels a.guns-channel {
       border-bottom: 2px solid #555;
       padding-bottom: 2px;
@@ -473,9 +597,7 @@
       outline: none;
       transition: border 0.3s;
     }
-    .login-box input:focus, .register-box input:focus {
-      border-color: #6c5ce7;
-    }
+    .login-box input:focus, .register-box input:focus { border-color: #6c5ce7; }
     .login-box button, .register-box button {
       width: 100%;
       padding: 14px;
@@ -491,16 +613,8 @@
     .login-box button:hover, .register-box button:hover {
       box-shadow: 0 0 20px rgba(108, 92, 231, 0.5);
     }
-    .switch-form {
-      text-align: center;
-      margin-top: 12px;
-      color: #888;
-    }
-    .switch-form a {
-      color: #a29bfe;
-      cursor: pointer;
-      text-decoration: underline;
-    }
+    .switch-form { text-align: center; margin-top: 12px; color: #888; }
+    .switch-form a { color: #a29bfe; cursor: pointer; text-decoration: underline; }
 
     .footer {
       text-align: center;
@@ -523,27 +637,22 @@
         gap: 14px;
         flex-wrap: wrap;
       }
-      .hero h1 {
-        font-size: 42px;
-      }
-      .hero .avatar-container {
-        width: 110px;
-        height: 110px;
-      }
-      .section {
-        padding: 60px 16px 30px;
-      }
-      .section h2 {
-        font-size: 28px;
-      }
-      .channel-card {
-        flex-direction: column;
-        text-align: center;
-      }
+      .hero h1 { font-size: 42px; }
+      .hero .avatar-container { width: 110px; height: 110px; }
+      .section { padding: 60px 16px 30px; }
+      .section h2 { font-size: 28px; }
+      .channel-card { flex-direction: column; text-align: center; }
+      .video-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
+
+<!-- ÖZEL ANİMASYONLU BİLDİRİM KUTUSU (TOAST) -->
+<div id="customToast">
+  <i class="fas fa-bell" style="color: #a29bfe;"></i>
+  <span id="toastMsg">Sistem bildirimi.</span>
+</div>
 
 <!-- KARŞILAMA EKRANI -->
 <div id="enterOverlay" onclick="enterSite()">
@@ -561,8 +670,16 @@
     <a onclick="goToSection('projelerim')">Projelerim</a>
     <a onclick="goToSection('videolarim')">Videolarım</a>
     <a onclick="goToSection('kanallarim')">Kanallarım</a>
+    <!-- YENİ EKLENEN ÖNERİ VE SOHBET BUTONLARI -->
+    <a onclick="goToSection('oneri')"><i class="fas fa-lightbulb" style="color: #f1c40f;"></i> Öneri</a>
+    <a onclick="goToSection('sohbet')"><i class="fas fa-comments" style="color: #a29bfe;"></i> Sohbet</a>
   </div>
   <div class="nav-right">
+    <!-- GÖRÜNTÜLENME SAYACI -->
+    <div class="view-counter" title="Sayfa Görüntülenmesi">
+      <i class="fas fa-eye"></i> <span id="viewCount">0</span>
+    </div>
+
     <a onclick="goToSection('iletisim')">İletişim</a>
 
     <div class="media-controls">
@@ -573,7 +690,7 @@
       </div>
     </div>
 
-    <!-- GUNS.LOL (SİLAH) SAĞ ÜST İKON -->
+    <!-- GUNS.LOL SAĞ ÜST İKON -->
     <a href="https://guns.lol/nyxven" target="_blank" class="guns-nav-icon" title="guns.lol/nyxven">
       <i class="fas fa-gun"></i>
     </a>
@@ -585,7 +702,6 @@
 
 <section class="hero" id="anasayfa">
   <div class="avatar-container">
-    <!-- Düzeltilmiş Avatar/Profil Resmi Mantığı -->
     <img src="profile.png" id="userAvatar" alt="Profile" class="avatar" onerror="this.onerror=null; this.src=getFallbackAvatar();">
   </div>
   <h1>Editor.</h1>
@@ -606,12 +722,42 @@
   <p style="font-size: 20px; color: #8888aa;">Şu an için aktif bir projem yok.</p>
 </section>
 
-<!-- OTOMATİK YÜKLENEN VİDEOLARIM SEKMESİ (AÇIK VE GÖRÜNÜR DUMDA) -->
+<!-- BÜYÜTÜLMÜŞ VİDEOLARIM BÖLÜMÜ -->
 <section class="section visible" id="videolarim" style="display: block;">
   <h2>Videolarım</h2>
-  <p>YouTube kanalıma yüklediğim son içerikler otomatik olarak burada listelenir:</p>
+  <p>Son yüklenen içeriklerim (Tıklayarak YouTube'da izleyebilirsin):</p>
   <div class="video-grid" id="youtubeVideoGrid">
     <p style="color: #888;">Videolar yükleniyor...</p>
+  </div>
+</section>
+
+<!-- ÖNERİ SEKMESİ -->
+<section class="section" id="oneri">
+  <h2>Fikir & Öneri Ver</h2>
+  <p>Site veya kanallar için önerini bırakabilirsin. Gönderilen öneriler kalıcı olarak listelenir:</p>
+  <div class="suggestion-box">
+    <div class="suggestion-list" id="suggestionList">
+      <p style="color: #777;">Henüz öneri yapılmamış. İlk öneriyi sen yaz!</p>
+    </div>
+    <div class="chat-input-area">
+      <input type="text" id="suggestionInput" placeholder="Bir öneri yaz...">
+      <button onclick="sendSuggestion()">Gönder</button>
+    </div>
+  </div>
+</section>
+
+<!-- CANLI SOHBET SEKMESİ -->
+<section class="section" id="sohbet">
+  <h2>Sohbet Odası</h2>
+  <p>Toplulukla sohbet et! (Mesajlar silinmez, 5 saniyede bir mesaj yazılabilir):</p>
+  <div class="chat-box">
+    <div class="message-list" id="chatMessageList">
+      <p style="color: #777;">Sohbet ortamı sessiz. İlk mesajı sen gönder!</p>
+    </div>
+    <div class="chat-input-area">
+      <input type="text" id="chatInput" placeholder="Mesajını yaz...">
+      <button onclick="sendChatMessage()">Gönder</button>
+    </div>
   </div>
 </section>
 
@@ -630,8 +776,6 @@
   <div class="social-channels">
     <a href="https://www.youtube.com/@RENXC-c3d" target="_blank" class="youtube-channel" title="YouTube"><i class="fab fa-youtube"></i></a>
     <a href="https://www.tiktok.com/@nyxven.inc" target="_blank" class="tiktok-channel" title="TikTok"><i class="fab fa-tiktok"></i></a>
-    
-    <!-- GUNS.LOL (SİLAH) SOSYAL MEDYA İKONU -->
     <a href="https://guns.lol/nyxven" target="_blank" class="guns-channel" title="guns.lol/nyxven"><i class="fas fa-gun"></i></a>
   </div>
 </section>
@@ -690,13 +834,25 @@
   const volumeValue = document.getElementById('volumeValue');
   const enterOverlay = document.getElementById('enterOverlay');
 
+  let lastSentTime = 0; // Cooldown kontrolü için
+
+  // ANİMASYONLU BİLDİRİM (TOAST)
+  function showToast(message) {
+    const toast = document.getElementById('customToast');
+    const msgSpan = document.getElementById('toastMsg');
+    msgSpan.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3500);
+  }
+
   function enterSite() {
     enterOverlay.classList.add('hidden');
     bgMusic.volume = volumeSlider.value / 100;
     bgMusic.play().catch(e => console.log('Müzik çalınamadı:', e));
   }
 
-  // Profil resmi yüklenemezse devreye giren dinamik Canvas profil logosu
   function getFallbackAvatar() {
     const canvas = document.createElement('canvas');
     canvas.width = 140;
@@ -743,7 +899,7 @@
     }
   }
 
-  // YOUTUBE KANALINDAN OTOMATİK VİDEO ÇEKME
+  // YOUTUBE DÜZELTİLMİŞ & BÜYÜTÜLMÜŞ VİDEO ÇEKME (YOUTUBE LINKLI)
   const CHANNEL_ID = 'UCM6EXLZFrqGu5Yd0gf1PCpg';
   const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
   const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
@@ -756,11 +912,28 @@
         if (data.status === 'ok' && data.items.length > 0) {
           grid.innerHTML = '';
           data.items.forEach(item => {
-            const videoId = item.link.split('v=')[1];
+            let videoId = '';
+            if (item.link.includes('v=')) {
+              videoId = item.link.split('v=')[1].split('&')[0];
+            } else if (item.link.includes('shorts/')) {
+              videoId = item.link.split('shorts/')[1].split('?')[0];
+            }
+
             if (videoId) {
-              const card = document.createElement('div');
-              card.className = 'video-card';
-              card.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>`;
+              const card = document.createElement('a');
+              card.className = 'video-card-link';
+              card.href = `https://www.youtube.com/watch?v=${videoId}`;
+              card.target = '_blank';
+              
+              const thumbUrl = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+              
+              card.innerHTML = `
+                <div class="thumb-wrapper">
+                  <img src="${thumbUrl}" alt="${item.title}">
+                  <div class="play-btn-overlay"><i class="fas fa-play"></i></div>
+                </div>
+                <div class="video-title-box">${item.title}</div>
+              `;
               grid.appendChild(card);
             }
           });
@@ -774,8 +947,115 @@
       });
   }
 
+  // CANLI GÖRÜNTÜLENME SAYACI
+  function initViewCounter() {
+    let views = localStorage.getItem('nyxven_views') || 148;
+    views = parseInt(views) + 1;
+    localStorage.setItem('nyxven_views', views);
+    document.getElementById('viewCount').textContent = views;
+  }
+
+  // SOHBET SISTEMI
+  function loadChatMessages() {
+    const chatList = document.getElementById('chatMessageList');
+    const messages = JSON.parse(localStorage.getItem('nyxven_chat')) || [];
+    if (messages.length === 0) return;
+
+    chatList.innerHTML = '';
+    messages.forEach(msg => {
+      const item = document.createElement('div');
+      item.className = 'chat-item';
+      item.innerHTML = `
+        <div class="chat-user"><span>${msg.user}</span><span class="chat-time">${msg.time}</span></div>
+        <div class="chat-text">${msg.text}</div>
+      `;
+      chatList.appendChild(item);
+    });
+    chatList.scrollTop = chatList.scrollHeight;
+  }
+
+  function sendChatMessage() {
+    const isLogged = localStorage.getItem('nyxven_login') === 'true';
+    if (!isLogged) {
+      showToast('⚠️ Sohbet etmek için önce giriş yapmalısın!');
+      goToSection('giris');
+      return;
+    }
+
+    const now = Date.now();
+    if (now - lastSentTime < 5000) {
+      showToast('⏳ Yavaş ol! 5 saniyede bir mesaj yazabilirsin.');
+      return;
+    }
+
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const currentUser = localStorage.getItem('nyxven_current_user') || 'Anonim';
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    let messages = JSON.parse(localStorage.getItem('nyxven_chat')) || [];
+    messages.push({ user: currentUser, text: text, time: timeStr });
+    localStorage.setItem('nyxven_chat', JSON.stringify(messages));
+
+    input.value = '';
+    lastSentTime = now;
+    loadChatMessages();
+    showToast('💬 Mesajın gönderildi!');
+  }
+
+  // ONERI SISTEMI
+  function loadSuggestions() {
+    const list = document.getElementById('suggestionList');
+    const suggestions = JSON.parse(localStorage.getItem('nyxven_suggestions')) || [];
+    if (suggestions.length === 0) return;
+
+    list.innerHTML = '';
+    suggestions.forEach(sug => {
+      const item = document.createElement('div');
+      item.className = 'suggestion-item';
+      item.innerHTML = `
+        <div class="chat-user"><span>💡 ${sug.user}</span><span class="chat-time">${sug.time}</span></div>
+        <div class="chat-text">${sug.text}</div>
+      `;
+      list.appendChild(item);
+    });
+    list.scrollTop = list.scrollHeight;
+  }
+
+  function sendSuggestion() {
+    const isLogged = localStorage.getItem('nyxven_login') === 'true';
+    if (!isLogged) {
+      showToast('⚠️ Öneri vermek için önce giriş yapmalısın!');
+      goToSection('giris');
+      return;
+    }
+
+    const now = Date.now();
+    if (now - lastSentTime < 5000) {
+      showToast('⏳ Yavaş ol! 5 saniyede bir öneri yazabilirsin.');
+      return;
+    }
+
+    const input = document.getElementById('suggestionInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const currentUser = localStorage.getItem('nyxven_current_user') || 'Anonim';
+    const timeStr = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    let suggestions = JSON.parse(localStorage.getItem('nyxven_suggestions')) || [];
+    suggestions.push({ user: currentUser, text: text, time: timeStr });
+    localStorage.setItem('nyxven_suggestions', JSON.stringify(suggestions));
+
+    input.value = '';
+    lastSentTime = now;
+    loadSuggestions();
+    showToast('🚀 Öneriniz başarıyla eklendi!');
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
-    // Videolarım dışındaki diğer bölümleri başlangıçta gizle
     document.querySelectorAll('.section').forEach(sec => {
       if (sec.id !== 'videolarim') {
         sec.style.display = 'none';
@@ -784,6 +1064,9 @@
     });
     checkLoginStatus();
     fetchVideos();
+    initViewCounter();
+    loadChatMessages();
+    loadSuggestions();
   });
 
   function register() {
@@ -791,21 +1074,21 @@
     const email = document.getElementById('regEmail').value.trim();
     const pass = document.getElementById('regPass').value.trim();
     if (!name || !email || !pass) {
-      alert('Tüm alanları doldurun.');
+      showToast('⚠️ Tüm alanları doldurmalısın.');
       return;
     }
     let users = JSON.parse(localStorage.getItem('nyxven_users')) || [];
     if (users.find(u => u.name === name)) {
-      alert('Bu kullanıcı adı zaten alınmış.');
+      showToast('❌ Bu kullanıcı adı zaten alınmış.');
       return;
     }
     if (users.find(u => u.email === email)) {
-      alert('Bu e-posta zaten kayıtlı.');
+      showToast('❌ Bu e-posta zaten kayıtlı.');
       return;
     }
     users.push({ name, email, password: pass });
     localStorage.setItem('nyxven_users', JSON.stringify(users));
-    alert('Kayıt başarılı! Şimdi giriş yapabilirsin.');
+    showToast('🎉 Kayıt başarılı! Şimdi giriş yapabilirsin.');
     goToSection('giris');
   }
 
@@ -813,7 +1096,7 @@
     const userInput = document.getElementById('loginUser').value.trim();
     const passInput = document.getElementById('loginPass').value.trim();
     if (!userInput || !passInput) {
-      alert('Kullanıcı adı/e-posta ve şifre girin.');
+      showToast('⚠️ Kullanıcı adı/e-posta ve şifre girin.');
       return;
     }
     const users = JSON.parse(localStorage.getItem('nyxven_users')) || [];
@@ -821,21 +1104,21 @@
     if (found) {
       localStorage.setItem('nyxven_login', 'true');
       localStorage.setItem('nyxven_current_user', found.name);
-      alert('Giriş başarılı!');
+      showToast('✅ Giriş başarılı! Hoş geldin ' + found.name);
       document.getElementById('giris').style.display = 'none';
       document.getElementById('giris').classList.remove('visible');
       checkLoginStatus();
-      location.reload();
+      goToSection('videolarim');
     } else {
-      alert('Kullanıcı adı/e-posta veya şifre hatalı.');
+      showToast('❌ Kullanıcı adı/e-posta veya şifre hatalı.');
     }
   }
 
   function logout() {
     localStorage.removeItem('nyxven_login');
     localStorage.removeItem('nyxven_current_user');
-    alert('Çıkış yapıldı.');
-    location.reload();
+    showToast('👋 Çıkış yapıldı.');
+    checkLoginStatus();
   }
 
   function checkLoginStatus() {
