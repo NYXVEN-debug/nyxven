@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>nyxven.com | Editor & İçerik Üreticisi</title>
+  <link rel="icon" type="image/png" href="profile.png">
+  
+  <meta name="description" content="Efecan Ülker (nyxven) - Editor & İçerik Üreticisi. Videolar, projeler, sohbet ve iletişim.">
+  <meta name="keywords" content="nyxven, Efecan Ülker, editor, video editör, içerik üreticisi">
+  <meta name="author" content="Efecan Ülker">
+  
+  <meta property="og:title" content="nyxven.com - Efecan Ülker">
+  <meta property="og:description" content="Editor & İçerik Üreticisi. En son videolar, anketler ve topluluk sohbeti.">
+  <meta property="og:image" content="profile.png">
+  <meta property="og:type" content="website">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      cursor: url('arrow.cur'), auto !important;
+    }
+    a, button, input, textarea, .player-btn, .guns-nav-icon, .menu-toggle, .poll-option, .mini-game-btn {
+      cursor: url('arrow.cur'), pointer !important;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      background-color: #08080c;
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      color: #f0f0f0;
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* VISUALIZER CANVAS */
+    #bgCanvas {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* SCANLINE CRT EFFECT */
+    body::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px;
+      z-index: 999990;
+      pointer-events: none;
+      opacity: 0.35;
+    }
+
+    /* CUSTOM TOAST BİLDİRİMİ */
+    #customToast {
+      position: fixed;
+      top: 25px;
+      right: 25px;
+      background: rgba(18, 18, 26, 0.95);
+      border: 1px solid rgba(162, 155, 254, 0.4);
+      border-left: 5px solid #a29bfe;
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(108, 92, 231, 0.4);
+      z-index: 999999;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      backdrop-filter: blur(15px);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-20px) scale(0.95);
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    #customToast.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+
+    /* ENTER OVERLAY */
+    #enterOverlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(8, 8, 12, 0.98);
+      backdrop-filter: blur(25px);
+      z-index: 999999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    #enterOverlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    #enterOverlay h2 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 5px;
+      color: #fff;
+      text-transform: uppercase;
+      text-shadow: 0 0 25px rgba(108, 92, 231, 0.9);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 1; }
+    }
+
+    /* NAVBAR */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; width: 100%;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(12, 12, 18, 0.75);
+      backdrop-filter: blur(20px);
+      z-index: 9999;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .brand {
+      font-weight: 800;
+      color: #a29bfe;
+      font-size: 20px;
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px rgba(162, 155, 254, 0.5);
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+    .nav-left a, .nav-right a {
+      color: #e0e0e0;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .nav-left a:hover, .nav-right a:hover {
+      color: #a29bfe;
+      text-shadow: 0 0 12px rgba(162, 155, 254, 0.8);
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 24px;
+      color: #fff;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(46, 204, 113, 0.15);
+      border: 1px solid rgba(46, 204, 113, 0.4);
+      color: #2ecc71;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .status-dot {
+      width: 7px; height: 7px;
+      background: #2ecc71;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #2ecc71;
+      animation: blink 1.5s infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    .admin-badge {
+      display: none;
+      background: rgba(46, 204, 113, 0.2);
+      border: 1px solid #2ecc71;
+      color: #2ecc71;
+      padding: 4px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* MEDIA CONTROLS */
+    .media-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 6px 16px;
+      border-radius: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+    }
+    .player-btn {
+      color: #a29bfe;
+      font-size: 14px;
+      transition: transform 0.2s, color 0.2s;
+    }
+    .player-btn:hover {
+      transform: scale(1.2);
+      color: #fff;
+    }
+    .track-title {
+      font-size: 12px;
+      color: #ddd;
+      max-width: 110px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 500;
+    }
+    .eq-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 14px;
+    }
+    .eq-bar {
+      width: 3px;
+      background: #a29bfe;
+      border-radius: 2px;
+      height: 3px;
+      transition: height 0.1s ease;
+    }
+    .eq-bars.playing .eq-bar:nth-child(1) { animation: eq 0.6s infinite alternate; }
+    .eq-bars.playing .eq-bar:nth-child(2) { animation: eq 0.8s infinite alternate 0.2s; }
+    .eq-bars.playing .eq-bar:nth-child(3) { animation: eq 0.5s infinite alternate 0.4s; }
+    @keyframes eq { 0% { height: 3px; } 100% { height: 14px; } }
+
+    .volume-control input[type="range"] {
+      width: 50px;
+      accent-color: #6c5ce7;
+    }
+
+    .guns-nav-icon {
+      font-size: 20px;
+      color: #aaa;
+      transition: all 0.3s ease;
+    }
+    .guns-nav-icon:hover {
+      color: #a29bfe !important;
+      transform: scale(1.2) rotate(-5deg);
+      filter: drop-shadow(0 0 10px #6c5ce7);
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 120px 20px 60px;
+      background: radial-gradient(circle at 50% 35%, rgba(108, 92, 231, 0.22) 0%, rgba(8, 8, 12, 0.85) 70%);
+    }
+    .hero .avatar-container {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      margin-bottom: 24px;
+      border-radius: 50%;
+    }
+    .hero .avatar-container::before {
+      content: '';
+      position: absolute;
+      top: -6px; left: -6px; right: -6px; bottom: -6px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(162, 155, 254, 0.6) 50%, rgba(0,0,0,0) 70%);
+      border-radius: 50%;
+      z-index: 1;
+      filter: blur(10px);
+      animation: gunsGlow 3s ease-in-out infinite alternate;
+    }
+    @keyframes gunsGlow {
+      0% { transform: scale(0.98); filter: blur(8px) drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)); }
+      100% { transform: scale(1.05); filter: blur(14px) drop-shadow(0 0 30px rgba(162, 155, 254, 1)); }
+    }
+    .hero .avatar {
+      position: relative;
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      z-index: 2;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .hero h1 {
+      font-size: 58px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      background: linear-gradient(135deg, #ffffff 30%, #a29bfe 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 4px;
+    }
+    .hero .cc {
+      font-size: 20px;
+      color: #e0e0e0;
+      font-weight: 600;
+      letter-spacing: 3px;
+      margin-bottom: 4px;
+    }
+    .hero .tagline {
+      font-size: 16px;
+      color: #cccccc;
+      font-weight: 500;
+    }
+
+    /* GLASS CARDS */
+    .glass-card {
+      background: rgba(22, 22, 32, 0.55);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      transition: transform 0.2s ease-out, border-color 0.3s ease, box-shadow 0.3s ease;
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+    .glass-card:hover {
+      border-color: rgba(162, 155, 254, 0.4);
+      box-shadow: 0 20px 40px rgba(108, 92, 231, 0.25);
+    }
+
+    /* SECTIONS */
+    .section {
+      display: none;
+      padding: 80px 20px 40px;
+      max-width: 900px;
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .section.visible {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .section h2 {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 25px;
+      border-left: 4px solid #6c5ce7;
+      padding-left: 18px;
+      background: linear-gradient(to right, #fff, #a29bfe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* VIDEO GRID */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 25px;
+      margin-top: 20px;
+    }
+    .video-card-link {
+      display: block;
+      text-decoration: none;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .thumb-wrapper {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: #000;
+    }
+    .thumb-wrapper img {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .play-btn-overlay {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 55px; height: 55px;
+      background: rgba(255, 0, 0, 0.85);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-size: 22px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+      transition: transform 0.3s ease;
+    }
+    .video-card-link:hover .play-btn-overlay {
+      transform: translate(-50%, -50%) scale(1.15);
+    }
+    .video-title-box {
+      padding: 16px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ANKET */
+    .poll-card { max-width: 700px; margin: 0 auto; }
+    .poll-question { font-size: 20px; font-weight: 600; margin-bottom: 20px; color: #fff; }
+    .poll-options { display: flex; flex-direction: column; gap: 14px; }
+    .poll-option {
+      position: relative;
+      background: rgba(12, 12, 18, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    .poll-option:hover { border-color: #6c5ce7; background: rgba(20, 20, 30, 0.9); }
+    .poll-bg-bar {
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      background: rgba(108, 92, 231, 0.3);
+      width: 0%;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1;
+    }
+    .poll-text { position: relative; z-index: 2; font-weight: 500; }
+    .poll-percent { position: relative; z-index: 2; font-weight: 700; color: #a29bfe; }
+
+    .admin-poll-control {
+      display: none;
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px dashed rgba(162, 155, 254, 0.3);
+    }
+    .admin-poll-control h4 { color: #2ecc71; margin-bottom: 12px; font-size: 16px; }
+    .admin-poll-inputs { display: flex; flex-direction: column; gap: 10px; }
+    .admin-poll-inputs input {
+      background: rgba(10, 10, 15, 0.8);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px;
+      color: #fff;
+    }
+    .admin-poll-btns { display: flex; gap: 10px; margin-top: 10px; }
+    .admin-poll-btns button { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: 600; }
+
+    /* CHAT & SUGGESTIONS */
+    .chat-box, .suggestion-box { max-width: 700px; margin: 0 auto; }
+    .message-list, .suggestion-list {
+      max-height: 350px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-right: 6px;
+    }
+    .chat-item, .suggestion-item {
+      background: rgba(12, 12, 18, 0.8);
+      padding: 12px 16px;
+      border-radius: 12px;
+      border-left: 3px solid #6c5ce7;
+      position: relative;
+    }
+    .chat-item.pinned { border-left: 3px solid #f1c40f; background: rgba(241, 196, 15, 0.08); }
+    .chat-user {
+      font-size: 13px;
+      color: #a29bfe;
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chat-actions { display: flex; align-items: center; gap: 10px; }
+    .like-btn {
+      color: #888;
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: color 0.2s;
+    }
+    .like-btn.liked { color: #ff4757; }
+    .delete-btn, .pin-btn {
+      display: none;
+      font-size: 12px;
+      cursor: pointer;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .delete-btn { color: #e74c3c; background: rgba(231, 76, 60, 0.15); }
+    .pin-btn { color: #f1c40f; background: rgba(241, 196, 15, 0.15); }
+
+    .chat-time { color: #666; font-size: 11px; }
+    .chat-text { font-size: 15px; color: #eee; word-break: break-word; }
+    .chat-input-area { display: flex; gap: 10px; }
+    .chat-input-area input, .chat-input-area textarea {
+      flex: 1;
+      background: rgba(10, 10, 15, 0.9);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: #fff;
+      outline: none;
+    }
+    .chat-input-area button {
+      background: #6c5ce7;
+      color: #fff;
+      border: none;
+      padding: 0 24px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    /* MINI GAME FLOATING WIDGET */
+    .mini-game-widget {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: rgba(18, 18, 26, 0.9);
+      border: 1px solid rgba(162, 155, 254, 0.3);
+      backdrop-filter: blur(15px);
+      padding: 12px 18px;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      z-index: 9999;
+    }
+    .mini-game-btn {
+      background: #6c5ce7;
+      border: none;
+      color: #fff;
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.1s;
+    }
+    .mini-game-btn:active { transform: scale(0.85); }
+    .score-text { font-weight: 700; color: #a29bfe; font-size: 14px; }
+
+    /* FORM & KANALLAR */
+    .contact-form { display: flex; flex-direction: column; gap: 16px; margin-top: 15px; }
+    .contact-form input, .contact-form textarea {
+      background: rgba(12, 12, 18, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 15px;
+      color: #f0f0f0;
+      outline: none;
+    }
+    .contact-form button {
+      background: linear-gradient(135deg, #6c5ce7, #8e74ff);
+      border: none;
+      padding: 15px;
+      border-radius: 30px;
+      font-size: 17px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .channel-card { margin-bottom: 20px; display: flex; align-items: center; gap: 20px; }
+    .channel-card .channel-icon { font-size: 38px; color: #ff0000; width: 50px; text-align: center; }
+    .channel-card .channel-info { flex: 1; }
+    .channel-card a {
+      display: inline-block;
+      background: #6c5ce7;
+      color: #fff;
+      padding: 8px 22px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .social-channels { display: flex; gap: 30px; justify-content: center; margin-top: 30px; font-size: 32px; }
+    .social-channels a { color: #aaa; transition: all 0.3s; }
+    .social-channels a:hover { color: #a29bfe; transform: scale(1.2); }
+
+    .footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: #666;
+      font-size: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      margin-top: 50px;
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle { display: block; }
+      .nav-left {
+        display: none;
+        position: absolute;
+        top: 70px; left: 0; width: 100%;
+        background: rgba(10, 10, 15, 0.95);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 20px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .nav-left.active { display: flex; }
+      .navbar { padding: 12px 20px; }
+      .nav-right { gap: 10px; }
+      .hero h1 { font-size: 42px; }
+      .video-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<div id="customToast">
+  <i class="fas fa-bell" style="color: #a29bfe;"></i>
+  <span id="toastMsg">Sistem bildirimi.</span>
+</div>
+
+<div id="enterOverlay" onclick="enterSite()">
+  <h2>[ CLICK TO ENTER ]</h2>
+</div>
+
+<!-- MINI GUN CLICKER WIDGET -->
+<div class="mini-game-widget">
+  <button class="mini-game-btn" onclick="clickGun()"><i class="fas fa-crosshair"></i></button>
+  <span class="score-text">Skor: <span id="gunScore">0</span></span>
+</div>
+
+<audio id="bgMusic" loop preload="auto"></audio>
+
+<nav class="navbar">
+  <span class="brand">nyxven.com</span>
+  <div class="menu-toggle" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></div>
+
+  <div class="nav-left" id="navLeftMenu">
+    <a onclick="goToSection('hakkimda')">Hakkımda</a>
+    <a onclick="goToSection('projelerim')">Projelerim</a>
+    <a onclick="goToSection('videolarim')">Videolarım</a>
+    <a onclick="goToSection('anket')"><i class="fas fa-poll" style="color: #a29bfe;"></i> Anket</a>
+    <a onclick="goToSection('kanallarim')">Kanallarım</a>
+    <a onclick="goToSection('oneri')"><i class="fas fa-lightbulb" style="color: #f1c40f;"></i> Öneri</a>
+    <a onclick="goToSection('sohbet')"><i class="fas fa-comments" style="color: #a29bfe;"></i> Sohbet</a>
+  </div>
+
+  <div class="nav-right">
+    <div class="status-badge" title="Canlı Sistem">
+      <div class="status-dot"></div> ONLINE
+    </div>
+
+    <div class="admin-badge" id="adminBadge">👑 ADMIN</div>
+
+    <a onclick="goToSection('iletisim')">İletişim</a>
+
+    <!-- MEDIA PLAYER -->
+    <div class="media-controls">
+      <i class="fas fa-step-backward player-btn" onclick="prevTrack()"></i>
+      <i class="fas fa-play player-btn" id="playPauseBtn" onclick="togglePlay()"></i>
+      <i class="fas fa-step-forward player-btn" onclick="nextTrack()"></i>
+      
+      <div class="eq-bars" id="eqBars">
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+      </div>
+
+      <span class="track-title" id="trackTitle">Yükleniyor...</span>
+      
+      <div class="volume-control">
+        <input type="range" id="volumeSlider" min="0" max="100" value="50">
+      </div>
+    </div>
+
+    <a href="https://guns.lol/nyxven" target="_blank" class="guns-nav-icon" title="guns.lol/nyxven">
+      <i class="fas fa-gun"></i>
+    </a>
+  </div>
+</nav>
+
+<section class="hero" id="anasayfa">
+  <div class="avatar-container">
+    <img src="profile.png" id="userAvatar" alt="Profile" class="avatar" onerror="this.onerror=null; this.src=getFallbackAvatar();">
+  </div>
+  <h1>Editor.</h1>
+  <div class="cc">CC</div>
+  <div class="tagline">İçerik Üreticisi</div>
+</section>
+
+<section class="section" id="hakkimda">
+  <div class="glass-card">
+    <h2>Hakkımda</h2>
+    <p style="color: #bbb; font-size: 17px;">
+      Ben Efecan, içerik üreticisi ve video editörüyüm. Kurgu, tasarım, yazılım ve dijital projelerle ilgileniyorum. 
+      Siteden videolarıma göz atabilir, ankete katılabilir veya sohbet alanından selam verebilirsin!
+    </p>
+  </div>
+</section>
+
+<section class="section" id="projelerim">
+  <div class="glass-card">
+    <h2>Projelerim</h2>
+    <p style="font-size: 18px; color: #8888aa;">Şu an için aktif bir projem bulunmuyor.</p>
+  </div>
+</section>
+
+<section class="section visible" id="videolarim" style="display: block;">
+  <h2>Videolarım</h2>
+  <p style="color: #aaa; margin-bottom: 15px;">En son yüklenen içeriklerim (Tıklayarak izleyebilirsin):</p>
+  <div class="video-grid" id="youtubeVideoGrid">
+    <p style="color: #888;">Videolar yükleniyor...</p>
+  </div>
+</section>
+
+<!-- ANKET BÖLÜMÜ -->
+<section class="section" id="anket">
+  <h2>Anket & Oylama</h2>
+  <div class="glass-card poll-card">
+    <div class="poll-question" id="pollQuestionText">🎮 Kanalda görmek istediğin içeriği seç ve oy ver:</div>
+    <div class="poll-options" id="pollOptionsContainer"></div>
+
+    <!-- ADMIN ANKET YÖNETİMİ -->
+    <div class="admin-poll-control" id="adminPollControl">
+      <h4>👑 Admin Anket Yönetimi (Sana Özel)</h4>
+      <div class="admin-poll-inputs">
+        <input type="text" id="newPollQuestion" placeholder="Anket Sorusu">
+        <input type="text" id="opt1" placeholder="1. Seçenek">
+        <input type="text" id="opt2" placeholder="2. Seçenek">
+        <input type="text" id="opt3" placeholder="3. Seçenek">
+        <input type="text" id="opt4" placeholder="4. Seçenek">
+      </div>
+      <div class="admin-poll-btns">
+        <button style="background: #2ecc71; color: #fff;" onclick="createAdminPoll()">Yeni Anketi Yayınla</button>
+        <button style="background: #e74c3c; color: #fff;" onclick="deleteAdminPoll()">Anketi Temizle</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="oneri">
+  <h2>Fikir & Öneri Ver</h2>
+  <div class="glass-card suggestion-box">
+    <div class="suggestion-list" id="suggestionList"></div>
+    <div class="chat-input-area">
+      <input type="text" id="suggestionInput" placeholder="Bir fikir/öneri yaz...">
+      <button onclick="sendSuggestion()">Gönder</button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="sohbet">
+  <h2>Sohbet Odası</h2>
+  <div class="glass-card chat-box">
+    <div class="message-list" id="chatMessageList"></div>
+    <div class="chat-input-area">
+      <input type="text" id="chatInput" placeholder="Mesajını yaz...">
+      <button onclick="sendChatMessage()">Gönder</button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="kanallarim">
+  <h2>Kanallarım</h2>
+  <div class="glass-card channel-card">
+    <div class="channel-icon"><i class="fab fa-youtube"></i></div>
+    <div class="channel-info">
+      <h3>Anakanalım</h3>
+      <p style="color: #aaa; font-size: 14px;">Ana YouTube kanalımdaki en yeni videolar.</p>
+    </div>
+    <a href="https://www.youtube.com/channel/UCM6EXLZFrqGu5Yd0gf1PCpg" target="_blank">Göz At</a>
+  </div>
+
+  <div class="glass-card channel-card" style="margin-top: 15px;">
+    <div class="channel-icon"><i class="fab fa-youtube"></i></div>
+    <div class="channel-info">
+      <h3>2. Kanalım</h3>
+      <p style="color: #aaa; font-size: 14px;">Yedek ve ekstra içerik kanalı.</p>
+    </div>
+    <a href="https://www.youtube.com/channel/UCMlwfGb4x0IwAzuNlxeLcZQ" target="_blank">Göz At</a>
+  </div>
+
+  <div class="social-channels">
+    <a href="https://www.youtube.com/@RENXC-c3d" target="_blank"><i class="fab fa-youtube"></i></a>
+    <a href="https://www.tiktok.com/@nyxven.inc" target="_blank"><i class="fab fa-tiktok"></i></a>
+    <a href="https://guns.lol/nyxven" target="_blank"><i class="fas fa-gun"></i></a>
+  </div>
+</section>
+
+<section class="section" id="iletisim">
+  <div class="glass-card">
+    <h2>İletişim</h2>
+    <p style="color: #bbb;">İş teklifleri, sponsorluk ve iletişim için formu doldurabilirsiniz.</p>
+    <form class="contact-form" action="https://formspree.io/f/mlgqvper" method="POST">
+      <input type="text" name="name" placeholder="İsim / Kullanıcı adı" required>
+      <input type="email" name="email" placeholder="E-posta adresiniz" required>
+      <textarea name="message" placeholder="Mesajınız..." required></textarea>
+      <button type="submit">Gönder</button>
+    </form>
+    <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+      <div style="font-size: 20px; font-weight: 600;">Efe Can Ülker</div>
+      <div style="color: #aaa;"><i class="fas fa-envelope" style="color: #6c5ce7;"></i> ulkerefecan98@gmail.com</div>
+    </div>
+  </div>
+</section>
+
+<div class="footer">&copy; 2026 nyxven.com - All Rights Reserved.</div>
+
+<script>
+  const ADMIN_IP = "78.162.41.99";
+  let userIP = "unknown";
+  let isAdmin = false;
+
+  // IP TANIMA
+  function checkUserIP() {
+    fetch('https://api.ipify.org?format=json')
+      .then(res => res.json())
+      .then(data => {
+        userIP = data.ip;
+        if (userIP === ADMIN_IP) {
+          isAdmin = true;
+          document.getElementById('adminBadge').style.display = 'inline-block';
+          document.getElementById('adminPollControl').style.display = 'block';
+          showToast('👑 Efecan Hoş Geldin! Admin Paneli Aktif.');
+        }
+        renderPoll();
+        loadChatMessages();
+        loadSuggestions();
+      })
+      .catch(() => {
+        renderPoll();
+        loadChatMessages();
+        loadSuggestions();
+      });
+  }
+
+  // AUDIO PLAYER
+  const bgMusic = document.getElementById('bgMusic');
+  const volumeSlider = document.getElementById('volumeSlider');
+  const enterOverlay = document.getElementById('enterOverlay');
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const trackTitle = document.getElementById('trackTitle');
+  const eqBars = document.getElementById('eqBars');
+
+  const playlist = [
+    { title: "Sadece Sevilmek İstedim", src: "sadece-sevilmek-istedim.mp3" },
+    { title: "Day - No, I'm Not a Human OST", src: "day-no-im-not-a-human.mp3" }
+  ];
+  let currentTrackIndex = 0;
+
+  function loadTrack(index) {
+    currentTrackIndex = index;
+    bgMusic.src = playlist[currentTrackIndex].src;
+    trackTitle.textContent = playlist[currentTrackIndex].title;
+  }
+
+  function togglePlay() {
+    if (bgMusic.paused) {
+      bgMusic.play();
+      playPauseBtn.className = "fas fa-pause player-btn";
+      eqBars.classList.add('playing');
+    } else {
+      bgMusic.pause();
+      playPauseBtn.className = "fas fa-play player-btn";
+      eqBars.classList.remove('playing');
+    }
+  }
+
+  function nextTrack() {
+    currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+    loadTrack(currentTrackIndex);
+    bgMusic.play();
+    playPauseBtn.className = "fas fa-pause player-btn";
+  }
+
+  function prevTrack() {
+    currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+    loadTrack(currentTrackIndex);
+    bgMusic.play();
+    playPauseBtn.className = "fas fa-pause player-btn";
+  }
+
+  volumeSlider.addEventListener('input', (e) => { bgMusic.volume = e.target.value / 100; });
+
+  function enterSite() {
+    enterOverlay.classList.add('hidden');
+    loadTrack(0);
+    bgMusic.volume = volumeSlider.value / 100;
+    bgMusic.play().then(() => {
+      playPauseBtn.className = "fas fa-pause player-btn";
+      eqBars.classList.add('playing');
+    }).catch(e => console.log(e));
+  }
+
+  // FLOATING CLICKER GAME
+  let gunScore = parseInt(localStorage.getItem('nyxven_gun_score') || '0');
+  document.getElementById('gunScore').textContent = gunScore;
+
+  function clickGun() {
+    gunScore++;
+    document.getElementById('gunScore').textContent = gunScore;
+    localStorage.setItem('nyxven_gun_score', gunScore);
+  }
+
+  // ANKET
+  const defaultPoll = {
+    question: "🎮 Kanalda görmek istediğin içeriği seç ve oy ver:",
+    votedIPs: [],
+    options: [
+      { id: 1, text: "🔥 Valorant Highlights & Montage", votes: 0 },
+      { id: 2, text: "🎬 Edit Tutorial / FX Rehberi", votes: 0 },
+      { id: 3, text: "🎧 Phonk / Beats Production", votes: 0 },
+      { id: 4, text: "🎮 Minecraft / Gaming Vlog", votes: 0 }
+    ]
+  };
+
+  function renderPoll() {
+    let pollData = JSON.parse(localStorage.getItem('nyxven_poll')) || defaultPoll;
+    document.getElementById('pollQuestionText').textContent = pollData.question;
+    const container = document.getElementById('pollOptionsContainer');
+    container.innerHTML = '';
+
+    const totalVotes = pollData.options.reduce((acc, curr) => acc + curr.votes, 0);
+    const hasVoted = pollData.votedIPs && pollData.votedIPs.includes(userIP);
+
+    pollData.options.forEach(opt => {
+      const pct = totalVotes > 0 ? Math.round((opt.votes / totalVotes) * 100) : 0;
+      const optEl = document.createElement('div');
+      optEl.className = 'poll-option';
+      optEl.onclick = () => votePoll(opt.id);
+
+      optEl.innerHTML = `
+        <div class="poll-bg-bar" style="width: ${hasVoted ? pct : 0}%"></div>
+        <span class="poll-text">${opt.text}</span>
+        <span class="poll-percent">${hasVoted ? pct + '% (' + opt.votes + ' oy)' : opt.votes + ' oy'}</span>
+      `;
+      container.appendChild(optEl);
+    });
+  }
+
+  function votePoll(id) {
+    let pollData = JSON.parse(localStorage.getItem('nyxven_poll')) || defaultPoll;
+    if (!pollData.votedIPs) pollData.votedIPs = [];
+
+    if (pollData.votedIPs.includes(userIP)) {
+      showToast('⚠️ Bu IP adresinden zaten oy kullanıldı!');
+      return;
+    }
+
+    const option = pollData.options.find(o => o.id === id);
+    if (option) {
+      option.votes += 1;
+      pollData.votedIPs.push(userIP);
+      localStorage.setItem('nyxven_poll', JSON.stringify(pollData));
+      renderPoll();
+      showToast('🎉 Oyun başarıyla kaydedildi!');
+    }
+  }
+
+  function createAdminPoll() {
+    if (!isAdmin) return;
+    const q = document.getElementById('newPollQuestion').value.trim();
+    const o1 = document.getElementById('opt1').value.trim();
+    const o2 = document.getElementById('opt2').value.trim();
+    const o3 = document.getElementById('opt3').value.trim();
+    const o4 = document.getElementById('opt4').value.trim();
+
+    if (!q || !o1 || !o2) {
+      showToast('⚠️ En az soru ve 2 şık girmelisin!');
+      return;
+    }
+
+    const newPoll = {
+      question: q,
+      votedIPs: [],
+      options: [
+        { id: 1, text: o1, votes: 0 },
+        { id: 2, text: o2, votes: 0 }
+      ]
+    };
+    if (o3) newPoll.options.push({ id: 3, text: o3, votes: 0 });
+    if (o4) newPoll.options.push({ id: 4, text: o4, votes: 0 });
+
+    localStorage.setItem('nyxven_poll', JSON.stringify(newPoll));
+    renderPoll();
+    showToast('🚀 Anket Yayınlandı!');
+  }
+
+  function deleteAdminPoll() {
+    if (!isAdmin) return;
+    localStorage.removeItem('nyxven_poll');
+    renderPoll();
+    showToast('🗑️ Anket Temizlendi!');
+  }
+
+  // SOHBET (IP TEKİL BEĞENİ & SABİTLEME)
+  function loadChatMessages() {
+    const chatList = document.getElementById('chatMessageList');
+    let messages = JSON.parse(localStorage.getItem('nyxven_chat')) || [];
+    if (!messages.length) {
+      chatList.innerHTML = '<p style="color: #777;">Sohbet sessiz. İlk mesajı sen gönder!</p>';
+      return;
+    }
+    
+    // Pinned messages on top
+    messages.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+
+    chatList.innerHTML = '';
+    messages.forEach((msg, idx) => {
+      const likedByMe = msg.likedIPs && msg.likedIPs.includes(userIP);
+      const item = document.createElement('div');
+      item.className = `chat-item ${msg.pinned ? 'pinned' : ''}`;
+      item.innerHTML = `
+        <div class="chat-user">
+          <span>${msg.pinned ? '📌 ' : ''}${msg.user}</span>
+          <div class="chat-actions">
+            <span class="chat-time">${msg.time}</span>
+            <span class="like-btn ${likedByMe ? 'liked' : ''}" onclick="toggleLikeChat(${idx})">
+              <i class="fas fa-heart"></i> ${msg.likedIPs ? msg.likedIPs.length : 0}
+            </span>
+            <span class="pin-btn" style="display: ${isAdmin ? 'inline-block' : 'none'};" onclick="togglePinChat(${idx})">📌</span>
+            <span class="delete-btn" style="display: ${isAdmin ? 'inline-block' : 'none'};" onclick="deleteChatMessage(${idx})">🗑️ Sil</span>
+          </div>
+        </div>
+        <div class="chat-text">${msg.text}</div>
+      `;
+      chatList.appendChild(item);
+    });
+  }
+
+  function sendChatMessage() {
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+    const user = isAdmin ? '👑 Efecan (Admin)' : 'Ziyaretçi';
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    let messages = JSON.parse(localStorage.getItem('nyxven_chat')) || [];
+    messages.push({ user, text, time, likedIPs: [], pinned: false });
+    localStorage.setItem('nyxven_chat', JSON.stringify(messages));
+    input.value = '';
+    loadChatMessages();
+  }
+
+  function toggleLikeChat(idx) {
+    let messages = JSON.parse(localStorage.getItem('nyxven_chat')) || [];
+    if (!messages[idx]) return;
+    if (!messages[idx].likedIPs) messages[idx].likedIPs = [];
+
+    const ipIndex = messages[idx].likedIPs.indexOf(userIP);
+    if (ipIndex === -1) {
+      messages[idx].likedIPs.push(userIP);
+    } else {
+      messages[idx].likedIPs.splice(ipIndex, 1);
+    }
+    localStorage.setItem('nyxven_chat', JSON.stringify(messages));
+    loadChatMessages();
+  }
+
+  function togglePinChat(idx) {
+    if (!isAdmin) return;
+    let messages = JSON.parse(localStorage.getItem('nyxven_chat')) || [];
+    if (messages[idx]) {
+      messages[idx].pinned = !messages[idx].pinned;
+      localStorage.setItem('nyxven_chat', JSON.stringify(messages));
+      loadChatMessages();
+    }
+  }
+
+  function deleteChatMessage(idx) {
+    if (!isAdmin) return;
+    let messages = JSON.parse(localStorage.getItem('nyxven_chat')) || [];
+    messages.splice(idx, 1);
+    localStorage.setItem('nyxven_chat', JSON.stringify(messages));
+    loadChatMessages();
+  }
+
+  // ÖNERİ SİSTEMİ (IP TEKİL BEĞENİ)
+  function loadSuggestions() {
+    const list = document.getElementById('suggestionList');
+    let suggestions = JSON.parse(localStorage.getItem('nyxven_suggestions')) || [];
+    if (!suggestions.length) {
+      list.innerHTML = '<p style="color: #777;">Henüz öneri yapılmamış. İlk öneriyi sen yaz!</p>';
+      return;
+    }
+    list.innerHTML = '';
+    suggestions.forEach((s, idx) => {
+      const likedByMe = s.likedIPs && s.likedIPs.includes(userIP);
+      const item = document.createElement('div');
+      item.className = 'suggestion-item';
+      item.innerHTML = `
+        <div class="chat-user">
+          <span>💡 ${s.user}</span>
+          <div class="chat-actions">
+            <span class="chat-time">${s.time}</span>
+            <span class="like-btn ${likedByMe ? 'liked' : ''}" onclick="toggleLikeSuggestion(${idx})">
+              <i class="fas fa-heart"></i> ${s.likedIPs ? s.likedIPs.length : 0}
+            </span>
+            <span class="delete-btn" style="display: ${isAdmin ? 'inline-block' : 'none'};" onclick="deleteSuggestion(${idx})">🗑️ Sil</span>
+          </div>
+        </div>
+        <div class="chat-text">${s.text}</div>
+      `;
+      list.appendChild(item);
+    });
+  }
+
+  function sendSuggestion() {
+    const input = document.getElementById('suggestionInput');
+    const text = input.value.trim();
+    if (!text) return;
+    const user = isAdmin ? '👑 Efecan (Admin)' : 'Ziyaretçi';
+    const time = new Date().toLocaleDateString();
+    let suggestions = JSON.parse(localStorage.getItem('nyxven_suggestions')) || [];
+    suggestions.push({ user, text, time, likedIPs: [] });
+    localStorage.setItem('nyxven_suggestions', JSON.stringify(suggestions));
+    input.value = '';
+    loadSuggestions();
+    showToast('🚀 Öneri kaydedildi!');
+  }
+
+  function toggleLikeSuggestion(idx) {
+    let suggestions = JSON.parse(localStorage.getItem('nyxven_suggestions')) || [];
+    if (!suggestions[idx]) return;
+    if (!suggestions[idx].likedIPs) suggestions[idx].likedIPs = [];
+
+    const ipIndex = suggestions[idx].likedIPs.indexOf(userIP);
+    if (ipIndex === -1) {
+      suggestions[idx].likedIPs.push(userIP);
+    } else {
+      suggestions[idx].likedIPs.splice(ipIndex, 1);
+    }
+    localStorage.setItem('nyxven_suggestions', JSON.stringify(suggestions));
+    loadSuggestions();
+  }
+
+  function deleteSuggestion(idx) {
+    if (!isAdmin) return;
+    let suggestions = JSON.parse(localStorage.getItem('nyxven_suggestions')) || [];
+    suggestions.splice(idx, 1);
+    localStorage.setItem('nyxven_suggestions', JSON.stringify(suggestions));
+    loadSuggestions();
+  }
+
+  // CANVAS PARTICLES BACKGROUND
+  const canvas = document.getElementById('bgCanvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+
+  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  class Particle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.radius = Math.random() * 2 + 1;
+      this.speedX = (Math.random() - 0.5) * 0.6;
+      this.speedY = (Math.random() - 0.5) * 0.6;
+      this.alpha = Math.random() * 0.5 + 0.2;
+    }
+    update() {
+      this.x += this.speedX; this.y += this.speedY;
+      if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+      if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+    }
+    draw() {
+      ctx.save();
+      ctx.globalAlpha = this.alpha;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#a29bfe';
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = '#6c5ce7';
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+  for (let i = 0; i < 50; i++) particles.push(new Particle());
+
+  function animateCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animateCanvas);
+  }
+  animateCanvas();
+
+  let toastTimeout;
+  function showToast(msg) {
+    const toast = document.getElementById('customToast');
+    document.getElementById('toastMsg').textContent = msg;
+    clearTimeout(toastTimeout);
+    toast.classList.add('show');
+    toastTimeout = setTimeout(() => toast.classList.remove('show'), 3500);
+  }
+
+  function toggleMobileMenu() {
+    document.getElementById('navLeftMenu').classList.toggle('active');
+  }
+
+  function goToSection(id) {
+    document.querySelectorAll('.section').forEach(sec => {
+      sec.classList.remove('visible');
+      sec.style.display = 'none';
+    });
+    const target = document.getElementById(id);
+    if (target) {
+      target.style.display = 'block';
+      requestAnimationFrame(() => target.classList.add('visible'));
+      setTimeout(() => {
+        const y = target.getBoundingClientRect().top + window.scrollY - 90;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }, 50);
+    }
+  }
+
+  function fetchVideos() {
+    const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=UCM6EXLZFrqGu5Yd0gf1PCpg`;
+    fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`)
+      .then(res => res.json())
+      .then(data => {
+        const grid = document.getElementById('youtubeVideoGrid');
+        if (data.status === 'ok' && data.items.length > 0) {
+          grid.innerHTML = '';
+          data.items.forEach(item => {
+            let vId = item.link.includes('v=') ? item.link.split('v=')[1].split('&')[0] : (item.link.includes('shorts/') ? item.link.split('shorts/')[1].split('?')[0] : '');
+            if (vId) {
+              const card = document.createElement('a');
+              card.className = 'video-card-link glass-card';
+              card.href = `https://www.youtube.com/watch?v=${vId}`;
+              card.target = '_blank';
+              card.innerHTML = `
+                <div class="thumb-wrapper">
+                  <img src="https://i.ytimg.com/vi/${vId}/hqdefault.jpg" alt="${item.title}">
+                  <div class="play-btn-overlay"><i class="fas fa-play"></i></div>
+                </div>
+                <div class="video-title-box">${item.title}</div>
+              `;
+              grid.appendChild(card);
+            }
+          });
+        }
+      }).catch(e => console.log(e));
+  }
+
+  function getFallbackAvatar() {
+    const c = document.createElement('canvas');
+    c.width = 140; c.height = 140;
+    const x = c.getContext('2d');
+    x.fillStyle = '#6c5ce7'; x.fillRect(0,0,140,140);
+    x.fillStyle = '#fff'; x.font = 'bold 64px sans-serif';
+    x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.fillText('N', 70, 70);
+    return c.toDataURL();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    checkUserIP();
+    fetchVideos();
+  });
+</script>
+</body>
+</html>
