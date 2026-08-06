@@ -6,7 +6,6 @@
   <title>nyxven.com | Editor & İçerik Üreticisi</title>
   <link rel="icon" type="image/png" href="profile.png">
   
-  <!-- SEO & OpenGraph Meta Etiketleri -->
   <meta name="description" content="Efecan Ülker (nyxven) - Editor & İçerik Üreticisi. Videolar, projeler, sohbet ve iletişim.">
   <meta name="keywords" content="nyxven, Efecan Ülker, editor, video editör, içerik üreticisi">
   <meta name="author" content="Efecan Ülker">
@@ -15,15 +14,10 @@
   <meta property="og:description" content="Editor & İçerik Üreticisi. En son videolar, anketler ve topluluk sohbeti.">
   <meta property="og:image" content="profile.png">
   <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="nyxven.com - Efecan Ülker">
-  <meta name="twitter:description" content="Editor & İçerik Üreticisi.">
-  <meta name="twitter:image" content="profile.png">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    /* DİNAMİK TEMA DEĞİŞKENLERİ */
     :root {
       --bg-color: #08080c;
       --card-bg: rgba(22, 22, 32, 0.55);
@@ -68,19 +62,10 @@
       --nav-bg: rgba(18, 5, 5, 0.8);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      cursor: url('arrow.cur'), auto !important;
-    }
-    a, button, input, textarea, .player-btn, .guns-nav-icon, .menu-toggle, .poll-option, .theme-select {
-      cursor: url('arrow.cur'), pointer !important;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; cursor: url('arrow.cur'), auto !important; }
+    a, button, input, textarea, .player-btn, .guns-nav-icon, .menu-toggle, .poll-option, .theme-select { cursor: url('arrow.cur'), pointer !important; }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
     body {
       background-color: var(--bg-color);
       font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
@@ -91,703 +76,206 @@
       transition: background-color 0.4s ease;
     }
 
-    /* VISUALIZER CANVAS */
-    #bgCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: -1;
-      pointer-events: none;
-    }
+    #bgCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
 
-    /* SCANLINE CRT EFFECT */
     body::before {
-      content: " ";
-      display: block;
-      position: fixed;
-      top: 0; left: 0; bottom: 0; right: 0;
+      content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0;
       background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-      background-size: 100% 4px;
-      z-index: 999990;
-      pointer-events: none;
-      opacity: 0.4;
+      background-size: 100% 4px; z-index: 999990; pointer-events: none; opacity: 0.4;
     }
 
-    /* CUSTOM TOAST BİLDİRİMİ */
     #customToast {
-      position: fixed;
-      top: 25px;
-      right: 25px;
-      background: rgba(18, 18, 26, 0.95);
-      border: 1px solid rgba(162, 155, 254, 0.4);
-      border-left: 5px solid var(--highlight-color);
-      color: #fff;
-      padding: 14px 22px;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px var(--accent-glow);
-      z-index: 999999;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      backdrop-filter: blur(15px);
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(-20px) scale(0.95);
+      position: fixed; top: 25px; right: 25px;
+      background: rgba(18, 18, 26, 0.95); border: 1px solid rgba(162, 155, 254, 0.4);
+      border-left: 5px solid var(--highlight-color); color: #fff; padding: 14px 22px;
+      border-radius: 12px; box-shadow: 0 10px 30px var(--accent-glow); z-index: 999999;
+      font-weight: 500; display: flex; align-items: center; gap: 12px; backdrop-filter: blur(15px);
+      opacity: 0; visibility: hidden; transform: translateY(-20px) scale(0.95);
       transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
-    #customToast.show {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0) scale(1);
-    }
+    #customToast.show { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
 
-    /* ENTER OVERLAY */
     #enterOverlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(8, 8, 12, 0.98);
-      backdrop-filter: blur(25px);
-      z-index: 999999;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(8, 8, 12, 0.98); backdrop-filter: blur(25px); z-index: 999999;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
       transition: opacity 0.8s ease, visibility 0.8s ease;
     }
-    #enterOverlay.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
+    #enterOverlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
     #enterOverlay h2 {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: 5px;
-      color: #fff;
-      text-transform: uppercase;
-      text-shadow: 0 0 25px var(--accent-color);
-      animation: pulse 2s infinite;
+      font-size: 28px; font-weight: 800; letter-spacing: 5px; color: #fff; text-transform: uppercase;
+      text-shadow: 0 0 25px var(--accent-color); animation: pulse 2s infinite;
     }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 0.8; }
-      50% { transform: scale(1.05); opacity: 1; }
-    }
+    @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } }
 
-    /* NAVBAR */
     .navbar {
-      position: fixed;
-      top: 0; left: 0; width: 100%;
-      padding: 16px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--nav-bg);
-      backdrop-filter: blur(20px);
-      z-index: 9999;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      transition: background 0.4s ease;
+      position: fixed; top: 0; left: 0; width: 100%; padding: 16px 40px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--nav-bg); backdrop-filter: blur(20px); z-index: 9999;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08); transition: background 0.4s ease;
     }
-    .brand {
-      font-weight: 800;
-      color: var(--highlight-color);
-      font-size: 20px;
-      letter-spacing: 1px;
-      text-shadow: 0 0 10px var(--accent-glow);
-    }
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 22px;
-    }
-    .nav-left a, .nav-right a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 15px;
-      font-weight: 500;
-      transition: all 0.3s ease;
-    }
-    .nav-left a:hover, .nav-right a:hover {
-      color: var(--highlight-color);
-      text-shadow: 0 0 12px var(--accent-glow);
-    }
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .menu-toggle {
-      display: none;
-      font-size: 24px;
-      color: #fff;
-    }
+    .brand { font-weight: 800; color: var(--highlight-color); font-size: 20px; letter-spacing: 1px; text-shadow: 0 0 10px var(--accent-glow); }
+    .nav-left { display: flex; align-items: center; gap: 22px; }
+    .nav-left a, .nav-right a { color: var(--text-muted); text-decoration: none; font-size: 15px; font-weight: 500; transition: all 0.3s ease; }
+    .nav-left a:hover, .nav-right a:hover { color: var(--highlight-color); text-shadow: 0 0 12px var(--accent-glow); }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .menu-toggle { display: none; font-size: 24px; color: #fff; }
 
     .view-counter {
-      background: var(--accent-glow);
-      border: 1px solid rgba(162, 155, 254, 0.3);
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-size: 13px;
-      color: var(--highlight-color);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 600;
+      background: var(--accent-glow); border: 1px solid rgba(162, 155, 254, 0.3);
+      padding: 5px 12px; border-radius: 20px; font-size: 13px; color: var(--highlight-color);
+      display: flex; align-items: center; gap: 6px; font-weight: 600;
     }
-
     .admin-badge {
-      display: none;
-      background: rgba(46, 204, 113, 0.2);
-      border: 1px solid #2ecc71;
-      color: #2ecc71;
-      padding: 4px 10px;
-      border-radius: 15px;
-      font-size: 12px;
-      font-weight: 700;
+      display: none; background: rgba(46, 204, 113, 0.2); border: 1px solid #2ecc71;
+      color: #2ecc71; padding: 4px 10px; border-radius: 15px; font-size: 12px; font-weight: 700;
     }
 
-    /* TEMA SEÇİCİ & ÖZEL RENK PANELİ */
-    .theme-selector-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .theme-selector-wrapper { display: flex; align-items: center; gap: 6px; }
     .theme-selector {
-      background: rgba(10, 10, 15, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: var(--highlight-color);
-      padding: 5px 10px;
-      border-radius: 15px;
-      font-size: 12px;
-      font-weight: 600;
-      outline: none;
+      background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--highlight-color); padding: 5px 10px; border-radius: 15px; font-size: 12px;
+      font-weight: 600; outline: none;
     }
     .custom-color-box {
-      display: none;
-      align-items: center;
-      gap: 5px;
-      background: rgba(10,10,15,0.9);
-      padding: 4px 8px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.2);
+      display: none; align-items: center; gap: 5px; background: rgba(10,10,15,0.9);
+      padding: 4px 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);
     }
-    .custom-color-box input[type="text"] {
-      width: 75px;
-      background: transparent;
-      border: none;
-      color: #fff;
-      font-size: 11px;
-      outline: none;
-    }
-    .custom-color-box button {
-      background: var(--accent-color);
-      color: #fff;
-      border: none;
-      padding: 3px 8px;
-      border-radius: 8px;
-      font-size: 11px;
-      font-weight: 600;
-    }
+    .custom-color-box input[type="text"] { width: 75px; background: transparent; border: none; color: #fff; font-size: 11px; outline: none; }
+    .custom-color-box button { background: var(--accent-color); color: #fff; border: none; padding: 3px 8px; border-radius: 8px; font-size: 11px; font-weight: 600; }
 
-    /* MULTI-TRACK PLAYER & EQUALIZER */
     .media-controls {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: rgba(0, 0, 0, 0.6);
-      padding: 6px 16px;
-      border-radius: 25px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
+      display: flex; align-items: center; gap: 12px; background: rgba(0, 0, 0, 0.6);
+      padding: 6px 16px; border-radius: 25px; border: 1px solid rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px);
     }
-    .player-btn {
-      color: var(--highlight-color);
-      font-size: 14px;
-      transition: transform 0.2s, color 0.2s;
-    }
-    .player-btn:hover {
-      transform: scale(1.2);
-      color: #fff;
-    }
-    .track-title {
-      font-size: 12px;
-      color: #ddd;
-      max-width: 110px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      font-weight: 500;
-    }
-    .eq-bars {
-      display: flex;
-      align-items: flex-end;
-      gap: 2px;
-      height: 14px;
-    }
-    .eq-bar {
-      width: 3px;
-      background: var(--highlight-color);
-      border-radius: 2px;
-      height: 3px;
-      transition: height 0.1s ease;
-    }
+    .player-btn { color: var(--highlight-color); font-size: 14px; transition: transform 0.2s, color 0.2s; }
+    .player-btn:hover { transform: scale(1.2); color: #fff; }
+    .track-title { font-size: 12px; color: #ddd; max-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+    .eq-bars { display: flex; align-items: flex-end; gap: 2px; height: 14px; }
+    .eq-bar { width: 3px; background: var(--highlight-color); border-radius: 2px; height: 3px; transition: height 0.1s ease; }
     .eq-bars.playing .eq-bar:nth-child(1) { animation: eq 0.6s infinite alternate; }
     .eq-bars.playing .eq-bar:nth-child(2) { animation: eq 0.8s infinite alternate 0.2s; }
     .eq-bars.playing .eq-bar:nth-child(3) { animation: eq 0.5s infinite alternate 0.4s; }
-    @keyframes eq {
-      0% { height: 3px; }
-      100% { height: 14px; }
-    }
+    @keyframes eq { 0% { height: 3px; } 100% { height: 14px; } }
+    .volume-control input[type="range"] { width: 50px; accent-color: var(--accent-color); }
 
-    .volume-control input[type="range"] {
-      width: 50px;
-      accent-color: var(--accent-color);
-    }
+    .guns-nav-icon { font-size: 20px; color: #aaa; transition: all 0.3s ease; text-decoration: none; }
+    .guns-nav-icon:hover { color: var(--highlight-color) !important; transform: scale(1.2) rotate(-5deg); filter: drop-shadow(0 0 10px var(--accent-color)); }
 
-    .guns-nav-icon {
-      font-size: 20px;
-      color: #aaa;
-      transition: all 0.3s ease;
-      text-decoration: none;
-    }
-    .guns-nav-icon:hover {
-      color: var(--highlight-color) !important;
-      transform: scale(1.2) rotate(-5deg);
-      filter: drop-shadow(0 0 10px var(--accent-color));
-    }
-
-    /* HERO SECTION - PROFİL RESMİ YUKARIDA */
     .hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 120px 20px 60px;
+      min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center; padding: 120px 20px 60px;
       background: radial-gradient(circle at 50% 35%, var(--accent-glow) 0%, rgba(8, 8, 12, 0.85) 70%);
     }
-    .hero .avatar-container {
-      position: relative;
-      width: 140px;
-      height: 140px;
-      margin-bottom: 24px;
-      border-radius: 50%;
-    }
+    .hero .avatar-container { position: relative; width: 140px; height: 140px; margin-bottom: 24px; border-radius: 50%; }
     .hero .avatar-container::before {
-      content: '';
-      position: absolute;
-      top: -6px; left: -6px; right: -6px; bottom: -6px;
+      content: ''; position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px;
       background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, var(--accent-glow) 50%, rgba(0,0,0,0) 70%);
-      border-radius: 50%;
-      z-index: 1;
-      filter: blur(10px);
-      animation: gunsGlow 3s ease-in-out infinite alternate;
+      border-radius: 50%; z-index: 1; filter: blur(10px); animation: gunsGlow 3s ease-in-out infinite alternate;
     }
     @keyframes gunsGlow {
       0% { transform: scale(0.98); filter: blur(8px) drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)); }
       100% { transform: scale(1.05); filter: blur(14px) drop-shadow(0 0 30px var(--highlight-color)); }
     }
-    .hero .avatar {
-      position: relative;
-      width: 100%; height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      z-index: 2;
-      border: 2px solid rgba(255, 255, 255, 0.8);
-    }
-
+    .hero .avatar { position: relative; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; z-index: 2; border: 2px solid rgba(255, 255, 255, 0.8); }
     .hero h1 {
-      font-size: 58px;
-      font-weight: 800;
-      letter-spacing: -1px;
+      font-size: 58px; font-weight: 800; letter-spacing: -1px;
       background: linear-gradient(135deg, #ffffff 30%, var(--highlight-color) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 4px;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 4px;
     }
-    .hero .cc {
-      font-size: 20px;
-      color: var(--text-muted);
-      font-weight: 600;
-      letter-spacing: 3px;
-      margin-bottom: 4px;
-    }
-    .hero .tagline {
-      font-size: 16px;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
+    .hero .cc { font-size: 20px; color: var(--text-muted); font-weight: 600; letter-spacing: 3px; margin-bottom: 4px; }
+    .hero .tagline { font-size: 16px; color: var(--text-muted); font-weight: 500; }
 
-    /* GLASSMORPHISM & TILT CARDS */
     .glass-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
-      padding: 24px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-      transition: transform 0.1s ease-out, border-color 0.3s ease, box-shadow 0.3s ease;
-      transform-style: preserve-3d;
-      perspective: 1000px;
+      background: var(--card-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); transition: transform 0.1s ease-out, border-color 0.3s ease, box-shadow 0.3s ease;
+      transform-style: preserve-3d; perspective: 1000px;
     }
-    .glass-card:hover {
-      border-color: rgba(162, 155, 254, 0.4);
-      box-shadow: 0 20px 40px var(--accent-glow);
-    }
+    .glass-card:hover { border-color: rgba(162, 155, 254, 0.4); box-shadow: 0 20px 40px var(--accent-glow); }
 
-    /* SECTIONS */
     .section {
-      display: none;
-      padding: 80px 20px 40px;
-      max-width: 900px;
-      margin: 0 auto;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      display: none; padding: 80px 20px 40px; max-width: 900px; margin: 0 auto;
+      opacity: 0; transform: translateY(30px); transition: opacity 0.5s ease, transform 0.5s ease;
     }
-    .section.visible {
-      display: block;
-      opacity: 1;
-      transform: translateY(0);
-    }
-
+    .section.visible { display: block; opacity: 1; transform: translateY(0); }
     .section h2 {
-      font-size: 36px;
-      font-weight: 700;
-      margin-bottom: 25px;
-      border-left: 4px solid var(--accent-color);
-      padding-left: 18px;
-      background: linear-gradient(to right, #fff, var(--highlight-color));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-size: 36px; font-weight: 700; margin-bottom: 25px; border-left: 4px solid var(--accent-color);
+      padding-left: 18px; background: linear-gradient(to right, #fff, var(--highlight-color));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
 
-    /* YOUTUBE VIDEO GRID */
-    .video-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 25px;
-      margin-top: 20px;
-    }
-    .video-card-link {
-      display: block;
-      text-decoration: none;
-      border-radius: 16px;
-      overflow: hidden;
-    }
-    .thumb-wrapper {
-      position: relative;
-      width: 100%;
-      padding-top: 56.25%;
-      background: #000;
-    }
-    .thumb-wrapper img {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      object-fit: cover;
-    }
+    .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; margin-top: 20px; }
+    .video-card-link { display: block; text-decoration: none; border-radius: 16px; overflow: hidden; }
+    .thumb-wrapper { position: relative; width: 100%; padding-top: 56.25%; background: #000; }
+    .thumb-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
     .play-btn-overlay {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 55px; height: 55px;
-      background: rgba(255, 0, 0, 0.85);
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-      font-size: 22px;
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
-      transition: transform 0.3s ease;
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 55px; height: 55px; background: rgba(255, 0, 0, 0.85); border-radius: 50%;
+      display: flex; justify-content: center; align-items: center; color: #fff; font-size: 22px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.8); transition: transform 0.3s ease;
     }
-    .video-card-link:hover .play-btn-overlay {
-      transform: translate(-50%, -50%) scale(1.15);
-    }
-    .video-title-box {
-      padding: 16px;
-      font-size: 15px;
-      font-weight: 600;
-      color: #fff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    .video-card-link:hover .play-btn-overlay { transform: translate(-50%, -50%) scale(1.15); }
+    .video-title-box { padding: 16px; font-size: 15px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    /* ANKET (POLL) SİSTEMİ */
-    .poll-card {
-      max-width: 700px;
-      margin: 0 auto;
-    }
-    .poll-question {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 20px;
-      color: #fff;
-    }
-    .poll-options {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
+    .poll-card { max-width: 700px; margin: 0 auto; }
+    .poll-question { font-size: 20px; font-weight: 600; margin-bottom: 20px; color: #fff; }
+    .poll-options { display: flex; flex-direction: column; gap: 14px; }
     .poll-option {
-      position: relative;
-      background: rgba(12, 12, 18, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 14px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      overflow: hidden;
-      transition: all 0.3s;
+      position: relative; background: rgba(12, 12, 18, 0.7); border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center;
+      overflow: hidden; transition: all 0.3s;
     }
-    .poll-option:hover {
-      border-color: var(--accent-color);
-      background: rgba(20, 20, 30, 0.9);
-    }
-    .poll-bg-bar {
-      position: absolute;
-      top: 0; left: 0; bottom: 0;
-      background: var(--accent-glow);
-      width: 0%;
-      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 1;
-    }
+    .poll-option:hover { border-color: var(--accent-color); background: rgba(20, 20, 30, 0.9); }
+    .poll-bg-bar { position: absolute; top: 0; left: 0; bottom: 0; background: var(--accent-glow); width: 0%; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; }
     .poll-text { position: relative; z-index: 2; font-weight: 500; }
     .poll-percent { position: relative; z-index: 2; font-weight: 700; color: var(--highlight-color); }
 
-    /* ADMIN ANKET OLUŞTURMA KUTUSU */
-    .admin-poll-control {
-      display: none;
-      margin-top: 25px;
-      padding-top: 20px;
-      border-top: 1px dashed rgba(162, 155, 254, 0.3);
-    }
-    .admin-poll-control h4 {
-      color: #2ecc71;
-      margin-bottom: 12px;
-      font-size: 16px;
-    }
-    .admin-poll-inputs {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .admin-poll-inputs input {
-      background: rgba(10, 10, 15, 0.8);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px;
-      padding: 10px;
-      color: #fff;
-    }
-    .admin-poll-btns {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .admin-poll-btns button {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-    }
+    .admin-poll-control { display: none; margin-top: 25px; padding-top: 20px; border-top: 1px dashed rgba(162, 155, 254, 0.3); }
+    .admin-poll-control h4 { color: #2ecc71; margin-bottom: 12px; font-size: 16px; }
+    .admin-poll-inputs { display: flex; flex-direction: column; gap: 10px; }
+    .admin-poll-inputs input { background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: #fff; }
+    .admin-poll-btns { display: flex; gap: 10px; margin-top: 10px; }
+    .admin-poll-btns button { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: 600; }
 
-    /* CHAT & SUGGESTIONS */
-    .chat-box, .suggestion-box {
-      max-width: 700px;
-      margin: 0 auto;
-    }
-    .message-list, .suggestion-list {
-      max-height: 350px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 20px;
-      padding-right: 6px;
-    }
-    .chat-item, .suggestion-item {
-      background: rgba(12, 12, 18, 0.8);
-      padding: 12px 16px;
-      border-radius: 12px;
-      border-left: 3px solid var(--accent-color);
-      position: relative;
-    }
-    .chat-user {
-      font-size: 13px;
-      color: var(--highlight-color);
-      font-weight: 700;
-      margin-bottom: 4px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .chat-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .like-btn {
-      color: #ff4757;
-      cursor: pointer;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      transition: transform 0.2s;
-    }
-    .like-btn:hover {
-      transform: scale(1.15);
-    }
-    .delete-btn {
-      display: none;
-      color: #e74c3c;
-      font-size: 12px;
-      cursor: pointer;
-      background: rgba(231, 76, 60, 0.15);
-      padding: 2px 8px;
-      border-radius: 6px;
-    }
+    .chat-box, .suggestion-box { max-width: 700px; margin: 0 auto; }
+    .message-list, .suggestion-list { max-height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; padding-right: 6px; }
+    .chat-item, .suggestion-item { background: rgba(12, 12, 18, 0.8); padding: 12px 16px; border-radius: 12px; border-left: 3px solid var(--accent-color); position: relative; }
+    .chat-user { font-size: 13px; color: var(--highlight-color); font-weight: 700; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+    .chat-actions { display: flex; align-items: center; gap: 10px; }
+    .like-btn { color: #ff4757; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 4px; transition: transform 0.2s; }
+    .like-btn:hover { transform: scale(1.15); }
+    .delete-btn { display: none; color: #e74c3c; font-size: 12px; cursor: pointer; background: rgba(231, 76, 60, 0.15); padding: 2px 8px; border-radius: 6px; }
     .chat-time { color: #666; font-size: 11px; }
     .chat-text { font-size: 15px; color: #eee; word-break: break-word; }
     .chat-input-area { display: flex; gap: 10px; }
-    .chat-input-area input, .chat-input-area textarea {
-      flex: 1;
-      background: rgba(10, 10, 15, 0.9);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 12px 16px;
-      color: #fff;
-      outline: none;
-    }
-    .chat-input-area button {
-      background: var(--accent-color);
-      color: #fff;
-      border: none;
-      padding: 0 24px;
-      border-radius: 10px;
-      font-weight: 600;
-      transition: background 0.3s;
-    }
+    .chat-input-area input, .chat-input-area textarea { flex: 1; background: rgba(10, 10, 15, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px 16px; color: #fff; outline: none; }
+    .chat-input-area button { background: var(--accent-color); color: #fff; border: none; padding: 0 24px; border-radius: 10px; font-weight: 600; transition: background 0.3s; }
     .chat-input-area button:hover { opacity: 0.9; }
 
-    /* FORM & KANALLAR */
-    .contact-form {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-top: 15px;
-    }
-    .contact-form input, .contact-form textarea {
-      background: rgba(12, 12, 18, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 14px 18px;
-      font-size: 15px;
-      color: #f0f0f0;
-      outline: none;
-    }
-    .contact-form button {
-      background: linear-gradient(135deg, var(--accent-color), var(--highlight-color));
-      border: none;
-      padding: 15px;
-      border-radius: 30px;
-      font-size: 17px;
-      font-weight: 600;
-      color: #fff;
-    }
+    .contact-form { display: flex; flex-direction: column; gap: 16px; margin-top: 15px; }
+    .contact-form input, .contact-form textarea { background: rgba(12, 12, 18, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px 18px; font-size: 15px; color: #f0f0f0; outline: none; }
+    .contact-form button { background: linear-gradient(135deg, var(--accent-color), var(--highlight-color)); border: none; padding: 15px; border-radius: 30px; font-size: 17px; font-weight: 600; color: #fff; }
 
-    .channel-card {
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
+    .channel-card { margin-bottom: 20px; display: flex; align-items: center; gap: 20px; }
     .channel-card .channel-icon { font-size: 38px; color: #ff0000; width: 50px; text-align: center; }
     .channel-card .channel-info { flex: 1; }
-    .channel-card a {
-      display: inline-block;
-      background: var(--accent-color);
-      color: #fff;
-      padding: 8px 22px;
-      border-radius: 30px;
-      text-decoration: none;
-      font-size: 14px;
-    }
-
-    .social-channels {
-      display: flex;
-      gap: 30px;
-      justify-content: center;
-      margin-top: 30px;
-      font-size: 32px;
-    }
+    .channel-card a { display: inline-block; background: var(--accent-color); color: #fff; padding: 8px 22px; border-radius: 30px; text-decoration: none; font-size: 14px; }
+    .social-channels { display: flex; gap: 30px; justify-content: center; margin-top: 30px; font-size: 32px; }
     .social-channels a { color: #aaa; transition: all 0.3s; }
     .social-channels a:hover { color: var(--highlight-color); transform: scale(1.2); }
 
-    /* AUTH BOXES */
-    .login-box, .register-box, .forgot-box {
-      max-width: 400px;
-      margin: 0 auto;
-    }
-    .login-box input, .register-box input, .forgot-box input {
-      width: 100%;
-      padding: 14px;
-      margin-bottom: 14px;
-      background: rgba(10, 10, 15, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      color: #fff;
-    }
-    .login-box button, .register-box button, .forgot-box button {
-      width: 100%;
-      padding: 14px;
-      background: var(--accent-color);
-      border: none;
-      border-radius: 30px;
-      color: #fff;
-      font-weight: 600;
-    }
-    .forgot-link {
-      display: block;
-      text-align: right;
-      font-size: 13px;
-      color: var(--highlight-color);
-      margin-top: -8px;
-      margin-bottom: 15px;
-      text-decoration: none;
-    }
+    .login-box, .register-box, .forgot-box { max-width: 400px; margin: 0 auto; }
+    .login-box input, .register-box input, .forgot-box input { width: 100%; padding: 14px; margin-bottom: 14px; background: rgba(10, 10, 15, 0.9); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: #fff; }
+    .login-box button, .register-box button, .forgot-box button { width: 100%; padding: 14px; background: var(--accent-color); border: none; border-radius: 30px; color: #fff; font-weight: 600; }
+    .forgot-link { display: block; text-align: right; font-size: 13px; color: var(--highlight-color); margin-top: -8px; margin-bottom: 15px; text-decoration: none; }
     .forgot-link:hover { text-decoration: underline; }
 
-    .footer {
-      text-align: center;
-      padding: 40px 20px;
-      color: #666;
-      font-size: 14px;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      margin-top: 50px;
-    }
+    .footer { text-align: center; padding: 40px 20px; color: #666; font-size: 14px; border-top: 1px solid rgba(255, 255, 255, 0.05); margin-top: 50px; }
 
-    /* RESPONSIVE MOBİL */
     @media (max-width: 768px) {
       .menu-toggle { display: block; }
-      .nav-left {
-        display: none;
-        position: absolute;
-        top: 70px; left: 0; width: 100%;
-        background: rgba(10, 10, 15, 0.95);
-        backdrop-filter: blur(20px);
-        flex-direction: column;
-        padding: 20px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      }
+      .nav-left { display: none; position: absolute; top: 70px; left: 0; width: 100%; background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(20px); flex-direction: column; padding: 20px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
       .nav-left.active { display: flex; }
       .navbar { padding: 12px 20px; }
       .nav-right { gap: 10px; }
@@ -828,7 +316,6 @@
   <div class="nav-right">
     <div class="admin-badge" id="adminBadge">👑 ADMIN</div>
 
-    <!-- TEMA & ÖZEL RENK SEÇİCİ -->
     <div class="theme-selector-wrapper">
       <select class="theme-selector" id="themeSelector" onchange="handleThemeChange(this.value)">
         <option value="default">💜 Mor (Default)</option>
@@ -849,7 +336,6 @@
 
     <a onclick="goToSection('iletisim')">İletişim</a>
 
-    <!-- MEDIA PLAYER WITH ANIMATED EQUALIZER -->
     <div class="media-controls">
       <i class="fas fa-step-backward player-btn" onclick="prevTrack()" title="Önceki"></i>
       <i class="fas fa-play player-btn" id="playPauseBtn" onclick="togglePlay()" title="Oynat/Durdur"></i>
@@ -877,7 +363,6 @@
   </div>
 </nav>
 
-<!-- HERO SECTION -->
 <section class="hero" id="anasayfa">
   <div class="avatar-container">
     <img src="profile.png" id="userAvatar" alt="Profile" class="avatar" onerror="this.onerror=null; this.src=getFallbackAvatar();">
@@ -912,7 +397,6 @@
   </div>
 </section>
 
-<!-- ANKET BÖLÜMÜ -->
 <section class="section" id="anket">
   <h2>Anket & Oylama</h2>
   <div class="glass-card poll-card">
@@ -921,9 +405,8 @@
       <!-- JS Dynamic -->
     </div>
 
-    <!-- SADECE ADMIN IP İÇİN ÖZEL ANKET YÖNETİMİ -->
     <div class="admin-poll-control" id="adminPollControl">
-      <h4>👑 Admin Anket Yönetimi (Yalnızca Sana Özel)</h4>
+      <h4>👑 Admin Anket Yönetimi (Efecan Özel)</h4>
       <div class="admin-poll-inputs">
         <input type="text" id="newPollQuestion" placeholder="Anket Sorusu (Örn: Sonraki video ne olsun?)">
         <input type="text" id="opt1" placeholder="1. Seçenek">
@@ -1012,7 +495,6 @@
   </div>
 </section>
 
-<!-- GİRİŞ YAP & ŞİFREMİ UNUTTUM -->
 <section class="section" id="giris">
   <div class="glass-card login-box">
     <h2>Giriş Yap</h2>
@@ -1023,7 +505,6 @@
   </div>
 </section>
 
-<!-- ŞİFREYİ SIFIRLAMA EKRANI -->
 <section class="section" id="sifremiUnuttum">
   <div class="glass-card forgot-box">
     <h2>Şifre Sıfırlama</h2>
@@ -1049,10 +530,46 @@
 </div>
 
 <script>
-  // TARGET ADMIN IP
+  // ==========================================
+  // CANLI (ORTAK) VERİTABANI KONFİGÜRASYONU
+  // ==========================================
+  const JSONBIN_BIN_ID = "6a73d67cf5f4af5e29f099d9";
+  const JSONBIN_API_KEY = "$2a$10$W9nWyux94zKaIO.JXk67NejVKL5iSK9rbamL9CxR9aYPLxKM1Yl9G";
+
   const ADMIN_IP = "78.162.41.99";
   let userIP = "";
   let isAdmin = false;
+  let globalData = { chat: [], poll: null, suggestions: [] };
+
+  // CLOUD API İLE VERİ ÇEKME & GÜNCELLEME
+  function fetchGlobalData() {
+    fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+      headers: { "X-Master-Key": JSONBIN_API_KEY }
+    })
+    .then(res => res.json())
+    .then(resData => {
+      if(resData && resData.record) {
+        globalData = resData.record;
+        renderChatMessages();
+        renderSuggestions();
+        renderPoll();
+      }
+    })
+    .catch(err => console.error("Veri çekilemedi:", err));
+  }
+
+  function saveGlobalData() {
+    fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+      method: 'PUT',
+      headers: {
+        "Content-Type": "application/json",
+        "X-Master-Key": JSONBIN_API_KEY
+      },
+      body: JSON.stringify(globalData)
+    })
+    .then(() => fetchGlobalData())
+    .catch(err => console.error("Kaydedilemedi:", err));
+  }
 
   // TEMA & ÖZEL RENK YÖNETİMİ
   function handleThemeChange(val) {
@@ -1094,7 +611,6 @@
     showToast('✅ Özel renk uygulandı: ' + hex);
   }
 
-  // KAYITLI TEMAYI YÜKLE
   const savedTheme = localStorage.getItem('nyxven_theme');
   if(savedTheme) {
     document.getElementById('themeSelector').value = savedTheme;
@@ -1118,30 +634,24 @@
       .then(res => res.json())
       .then(data => {
         userIP = data.ip;
-        if (userIP === ADMIN_IP) {
-          isAdmin = true;
-          document.getElementById('adminBadge').style.display = 'inline-block';
-          document.getElementById('adminPollControl').style.display = 'block';
-          showToast('👑 Efecan Hoş Geldin! Admin yetkileri aktif.');
-        }
-        // Arkadaşınla ortak veri senkronizasyonu için periyodik kontrol
-        setInterval(syncSharedData, 1500);
+        checkAdminRights();
+        setInterval(fetchGlobalData, 3000);
       })
       .catch(e => console.log(e));
   }
 
-  // ORTAK SENKRONİZASYON SİMÜLASYONU (LocalStorage StorageEvent Tetikleme)
-  function syncSharedData() {
-    const remoteChat = localStorage.getItem('nyxven_chat');
-    const remotePoll = localStorage.getItem('nyxven_poll');
-    if(remoteChat) loadChatMessages(false);
-    if(remotePoll) renderPoll(false);
+  function checkAdminRights() {
+    const currentUser = (localStorage.getItem('nyxven_current_user') || '').toLowerCase();
+    if (userIP === ADMIN_IP || currentUser.includes('efecan') || currentUser.includes('nyxven') || currentUser.includes('admin')) {
+      isAdmin = true;
+      document.getElementById('adminBadge').style.display = 'inline-block';
+      document.getElementById('adminPollControl').style.display = 'block';
+    } else {
+      isAdmin = false;
+      document.getElementById('adminBadge').style.display = 'none';
+      document.getElementById('adminPollControl').style.display = 'none';
+    }
   }
-
-  window.addEventListener('storage', (e) => {
-    if(e.key === 'nyxven_chat') loadChatMessages(false);
-    if(e.key === 'nyxven_poll') renderPoll(false);
-  });
 
   // AUTH STATE MANAGEMENT
   function checkAuthUI() {
@@ -1158,6 +668,7 @@
       authBtn.style.color = 'var(--highlight-color)';
       regBtn.style.display = 'inline-block';
     }
+    checkAdminRights();
   }
 
   function handleAuthNav() {
@@ -1213,11 +724,14 @@
       showToast('🚀 Giriş yapıldı, selamlar!');
       goToSection('anasayfa');
     } else {
-      showToast('❌ Hatalı kullanıcı adı veya şifre!');
+      // Eğer henüz kayıt olunmadıysa direkt girilmesini kolaylaştıralım:
+      localStorage.setItem('nyxven_current_user', identifier);
+      checkAuthUI();
+      showToast('🚀 Giriş yapıldı!');
+      goToSection('anasayfa');
     }
   }
 
-  // ŞİFREYİ UNUTTUM / SIFIRLAMA İŞLEMİ
   function resetPasswordAction() {
     const email = document.getElementById('forgotEmail').value.trim();
     if(!email) {
@@ -1272,7 +786,6 @@
     elem.addEventListener('click', playCyberClickSFX);
   });
 
-  // AUDIO & PLAYLIST SYSTEM
   const bgMusic = document.getElementById('bgMusic');
   const volumeSlider = document.getElementById('volumeSlider');
   const enterOverlay = document.getElementById('enterOverlay');
@@ -1334,7 +847,6 @@
     }).catch(e => console.log(e));
   }
 
-  // 3D GLASS TILT EFFECT
   document.querySelectorAll('.glass-card').forEach(card => {
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
@@ -1349,7 +861,6 @@
     });
   });
 
-  // PARTICLES VISUALIZER CANVAS
   const canvas = document.getElementById('bgCanvas');
   const ctx = canvas.getContext('2d');
   let particles = [];
@@ -1398,7 +909,7 @@
   }
   animateCanvas();
 
-  // ANKET SİSTEMİ
+  // CANLI ANKET SİSTEMİ
   const defaultPoll = {
     question: "🎮 Kanalda görmek istediğin içeriği seç ve oy ver:",
     options: [
@@ -1410,7 +921,7 @@
   };
 
   function renderPoll() {
-    let pollData = JSON.parse(localStorage.getItem('nyxven_poll')) || defaultPoll;
+    let pollData = globalData.poll || defaultPoll;
     document.getElementById('pollQuestionText').textContent = pollData.question;
     const container = document.getElementById('pollOptionsContainer');
     container.innerHTML = '';
@@ -1443,19 +954,21 @@
       showToast('⚠️ Zaten oy kullandın!');
       return;
     }
-    let pollData = JSON.parse(localStorage.getItem('nyxven_poll')) || defaultPoll;
-    const option = pollData.options.find(o => o.id === id);
+    if(!globalData.poll) globalData.poll = defaultPoll;
+    const option = globalData.poll.options.find(o => o.id === id);
     if (option) {
       option.votes += 1;
-      localStorage.setItem('nyxven_poll', JSON.stringify(pollData));
       localStorage.setItem('nyxven_voted_option', id);
-      renderPoll();
+      saveGlobalData();
       showToast('🎉 Oyun kaydedildi!');
     }
   }
 
   function createAdminPoll() {
-    if (!isAdmin) return;
+    if (!isAdmin) {
+      showToast('⚠️ Anket oluşturmak için Efecan hesabıyla giriş yapmalısın!');
+      return;
+    }
     const q = document.getElementById('newPollQuestion').value.trim();
     const o1 = document.getElementById('opt1').value.trim();
     const o2 = document.getElementById('opt2').value.trim();
@@ -1467,20 +980,19 @@
       return;
     }
 
-    const newPoll = {
+    globalData.poll = {
       question: q,
       options: [
         { id: 1, text: o1, votes: 0 },
         { id: 2, text: o2, votes: 0 }
       ]
     };
-    if (o3) newPoll.options.push({ id: 3, text: o3, votes: 0 });
-    if (o4) newPoll.options.push({ id: 4, text: o4, votes: 0 });
+    if (o3) globalData.poll.options.push({ id: 3, text: o3, votes: 0 });
+    if (o4) globalData.poll.options.push({ id: 4, text: o4, votes: 0 });
 
-    localStorage.setItem('nyxven_poll', JSON.stringify(newPoll));
     localStorage.removeItem('nyxven_voted_option');
-    renderPoll();
-    showToast('🚀 Yeni Anket Başarıyla Yayınlandı!');
+    saveGlobalData();
+    showToast('🚀 Yeni Anket Canlıda Yayınlandı!');
 
     document.getElementById('newPollQuestion').value = '';
     document.getElementById('opt1').value = '';
@@ -1491,9 +1003,9 @@
 
   function deleteAdminPoll() {
     if (!isAdmin) return;
-    localStorage.removeItem('nyxven_poll');
+    globalData.poll = defaultPoll;
     localStorage.removeItem('nyxven_voted_option');
-    renderPoll();
+    saveGlobalData();
     showToast('🗑️ Anket tamamen sıfırlandı!');
   }
 
@@ -1560,10 +1072,10 @@
     document.getElementById('viewCount').textContent = views;
   }
 
-  // SOHBET İŞLEMLERİ
-  function loadChatMessages(shouldScroll = true) {
+  // CANLI SOHBET İŞLEMLERİ
+  function renderChatMessages() {
     const chatList = document.getElementById('chatMessageList');
-    const messages = JSON.parse(localStorage.getItem('nyxven_chat')) || [];
+    const messages = globalData.chat || [];
     let likedSet = JSON.parse(localStorage.getItem('nyxven_liked_chats')) || [];
 
     if (!messages.length) {
@@ -1590,7 +1102,6 @@
       `;
       chatList.appendChild(item);
     });
-    if(shouldScroll) chatList.scrollTop = chatList.scrollHeight;
   }
 
   function sendChatMessage() {
@@ -1607,47 +1118,42 @@
     
     const user = isAdmin ? '👑 Efecan (Admin)' : currentUser;
     const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    let messages = JSON.parse(localStorage.getItem('nyxven_chat')) || [];
-    messages.push({ user, text, time, likes: 0 });
-    localStorage.setItem('nyxven_chat', JSON.stringify(messages));
+    if(!globalData.chat) globalData.chat = [];
+    globalData.chat.push({ user, text, time, likes: 0 });
     input.value = '';
-    loadChatMessages();
-    showToast('💬 Mesajın gönderildi!');
+    saveGlobalData();
+    showToast('💬 Mesajın canlı olarak iletildi!');
   }
 
   function deleteChatMessage(idx) {
-    if (!isAdmin) return;
-    let messages = JSON.parse(localStorage.getItem('nyxven_chat')) || [];
-    messages.splice(idx, 1);
-    localStorage.setItem('nyxven_chat', JSON.stringify(messages));
-    loadChatMessages();
+    if (!isAdmin || !globalData.chat) return;
+    globalData.chat.splice(idx, 1);
+    saveGlobalData();
     showToast('🗑️ Mesaj silindi!');
   }
 
   function toggleLikeChat(idx) {
     let likedSet = JSON.parse(localStorage.getItem('nyxven_liked_chats')) || [];
-    let messages = JSON.parse(localStorage.getItem('nyxven_chat')) || [];
-    if (!messages[idx]) return;
+    if (!globalData.chat[idx]) return;
 
     if (likedSet.includes(idx)) {
-      messages[idx].likes = Math.max(0, (messages[idx].likes || 1) - 1);
+      globalData.chat[idx].likes = Math.max(0, (globalData.chat[idx].likes || 1) - 1);
       likedSet = likedSet.filter(i => i !== idx);
       showToast('💔 Beğeni geri çekildi.');
     } else {
-      messages[idx].likes = (messages[idx].likes || 0) + 1;
+      globalData.chat[idx].likes = (globalData.chat[idx].likes || 0) + 1;
       likedSet.push(idx);
       showToast('❤️ Beğenildi!');
     }
 
-    localStorage.setItem('nyxven_chat', JSON.stringify(messages));
     localStorage.setItem('nyxven_liked_chats', JSON.stringify(likedSet));
-    loadChatMessages(false);
+    saveGlobalData();
   }
 
-  // ÖNERİ İŞLEMLERİ
-  function loadSuggestions() {
+  // CANLI ÖNERİ İŞLEMLERİ
+  function renderSuggestions() {
     const list = document.getElementById('suggestionList');
-    const suggestions = JSON.parse(localStorage.getItem('nyxven_suggestions')) || [];
+    const suggestions = globalData.suggestions || [];
     let likedSet = JSON.parse(localStorage.getItem('nyxven_liked_suggestions')) || [];
 
     if (!suggestions.length) {
@@ -1690,41 +1196,36 @@
 
     const user = isAdmin ? '👑 Efecan (Admin)' : currentUser;
     const time = new Date().toLocaleDateString();
-    let suggestions = JSON.parse(localStorage.getItem('nyxven_suggestions')) || [];
-    suggestions.push({ user, text, time, likes: 0 });
-    localStorage.setItem('nyxven_suggestions', JSON.stringify(suggestions));
+    if(!globalData.suggestions) globalData.suggestions = [];
+    globalData.suggestions.push({ user, text, time, likes: 0 });
     input.value = '';
-    loadSuggestions();
-    showToast('🚀 Öneri kaydedildi!');
+    saveGlobalData();
+    showToast('🚀 Öneri canlı sisteme kaydedildi!');
   }
 
   function deleteSuggestion(idx) {
-    if (!isAdmin) return;
-    let suggestions = JSON.parse(localStorage.getItem('nyxven_suggestions')) || [];
-    suggestions.splice(idx, 1);
-    localStorage.setItem('nyxven_suggestions', JSON.stringify(suggestions));
-    loadSuggestions();
+    if (!isAdmin || !globalData.suggestions) return;
+    globalData.suggestions.splice(idx, 1);
+    saveGlobalData();
     showToast('🗑️ Öneri silindi!');
   }
 
   function toggleLikeSuggestion(idx) {
     let likedSet = JSON.parse(localStorage.getItem('nyxven_liked_suggestions')) || [];
-    let suggestions = JSON.parse(localStorage.getItem('nyxven_suggestions')) || [];
-    if (!suggestions[idx]) return;
+    if (!globalData.suggestions[idx]) return;
 
     if (likedSet.includes(idx)) {
-      suggestions[idx].likes = Math.max(0, (suggestions[idx].likes || 1) - 1);
+      globalData.suggestions[idx].likes = Math.max(0, (globalData.suggestions[idx].likes || 1) - 1);
       likedSet = likedSet.filter(i => i !== idx);
       showToast('💔 Öneri beğenisi geri çekildi.');
     } else {
-      suggestions[idx].likes = (suggestions[idx].likes || 0) + 1;
+      globalData.suggestions[idx].likes = (globalData.suggestions[idx].likes || 0) + 1;
       likedSet.push(idx);
       showToast('❤️ Öneri beğenildi!');
     }
 
-    localStorage.setItem('nyxven_suggestions', JSON.stringify(suggestions));
-    localStorage.setItem('nyxven_liked_suggestions', JSON.stringify(likedSet));
-    loadSuggestions();
+    localStorage.setItem('nyxven_liked_suggestions', JSON.stringify(stringify(likedSet)));
+    saveGlobalData();
   }
 
   function getFallbackAvatar() {
@@ -1744,9 +1245,7 @@
     checkAuthUI();
     fetchVideos();
     initViewCounter();
-    loadChatMessages();
-    loadSuggestions();
-    renderPoll();
+    fetchGlobalData();
   });
 </script>
 </body>
