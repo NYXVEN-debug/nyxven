@@ -328,7 +328,7 @@
       filter: drop-shadow(0 0 10px var(--accent-color));
     }
 
-    /* HERO SECTION */
+    /* HERO SECTION - PROFİL RESMİ YUKARIDA */
     .hero {
       min-height: 100vh;
       display: flex;
@@ -702,11 +702,11 @@
     .social-channels a:hover { color: var(--highlight-color); transform: scale(1.2); }
 
     /* AUTH BOXES */
-    .login-box, .register-box {
+    .login-box, .register-box, .forgot-box {
       max-width: 400px;
       margin: 0 auto;
     }
-    .login-box input, .register-box input {
+    .login-box input, .register-box input, .forgot-box input {
       width: 100%;
       padding: 14px;
       margin-bottom: 14px;
@@ -715,7 +715,7 @@
       border-radius: 10px;
       color: #fff;
     }
-    .login-box button, .register-box button {
+    .login-box button, .register-box button, .forgot-box button {
       width: 100%;
       padding: 14px;
       background: var(--accent-color);
@@ -724,6 +724,16 @@
       color: #fff;
       font-weight: 600;
     }
+    .forgot-link {
+      display: block;
+      text-align: right;
+      font-size: 13px;
+      color: var(--highlight-color);
+      margin-top: -8px;
+      margin-bottom: 15px;
+      text-decoration: none;
+    }
+    .forgot-link:hover { text-decoration: underline; }
 
     .footer {
       text-align: center;
@@ -829,6 +839,7 @@
   </div>
 </nav>
 
+<!-- HERO SECTION (PROFİL RESMİ DÜZELTİLDİ: "Editor." YAZISININ ÜSTÜNDE) -->
 <section class="hero" id="anasayfa">
   <div class="avatar-container">
     <img src="profile.png" id="userAvatar" alt="Profile" class="avatar" onerror="this.onerror=null; this.src=getFallbackAvatar();">
@@ -963,12 +974,25 @@
   </div>
 </section>
 
+<!-- GİRİŞ YAP & ŞİFREMİ UNUTTUM -->
 <section class="section" id="giris">
   <div class="glass-card login-box">
     <h2>Giriş Yap</h2>
     <input type="text" id="loginUser" placeholder="Kullanıcı adı veya e-posta">
     <input type="password" id="loginPass" placeholder="Şifre">
+    <a class="forgot-link" onclick="goToSection('sifremiUnuttum')">Şifreni mi unuttun?</a>
     <button onclick="loginUserAccount()">Giriş Yap</button>
+  </div>
+</section>
+
+<!-- ŞİFREYİ SIFIRLAMA EKRANI -->
+<section class="section" id="sifremiUnuttum">
+  <div class="glass-card forgot-box">
+    <h2>Şifre Sıfırlama</h2>
+    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 15px;">Kayıtlı e-posta adresini gir, şifren sıfırlanıp geçici şifre tanımlansın.</p>
+    <input type="email" id="forgotEmail" placeholder="Kayıtlı e-posta adresin">
+    <button onclick="resetPasswordAction()">Şifreyi Sıfırla</button>
+    <a class="forgot-link" style="text-align: center; display: block; margin-top: 15px;" onclick="goToSection('giris')">Giriş Ekranına Dön</a>
   </div>
 </section>
 
@@ -1103,6 +1127,32 @@
     }
   }
 
+  // ŞİFREYİ UNUTTUM / SIFIRLAMA İŞLEMİ
+  function resetPasswordAction() {
+    const email = document.getElementById('forgotEmail').value.trim();
+    if(!email) {
+      showToast('⚠️ E-posta adresini yazmalısın!');
+      return;
+    }
+
+    let users = JSON.parse(localStorage.getItem('nyxven_users')) || [];
+    const userIndex = users.findIndex(u => u.email === email);
+
+    if(userIndex === -1) {
+      showToast('❌ Böyle bir eposta yok!');
+      return;
+    }
+
+    // Yeni rastgele şifre üret ve kaydet
+    const newPass = 'nyx_' + Math.floor(1000 + Math.random() * 9000);
+    users[userIndex].pass = newPass;
+    localStorage.setItem('nyxven_users', JSON.stringify(users));
+
+    showToast('✅ Şifren sıfırlandı! Yeni geçici şifren: ' + newPass);
+    document.getElementById('forgotEmail').value = '';
+    setTimeout(() => goToSection('giris'), 4000);
+  }
+
   // AUDIO CONTEXT & SFX GENERATOR
   let audioCtx;
   function getAudioContext() {
@@ -1201,7 +1251,6 @@
       const rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left - rect.width / 2;
       const y = e.clientY - rect.top - rect.height / 2;
-      // Mouse nereye giderse eksene göre ters veya düz yönde doğal eğim
       const rotateX = (-y / rect.height) * 20;
       const rotateY = (x / rect.width) * 20;
       card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
@@ -1422,7 +1471,7 @@
     document.getElementById('viewCount').textContent = views;
   }
 
-  // SOHBET İŞLEMLERİ (GİRİŞ KONTROLÜ + BEĞENİYİ GERİ ÇEKME / TOGGLE LIKE)
+  // SOHBET İŞLEMLERİ
   function loadChatMessages() {
     const chatList = document.getElementById('chatMessageList');
     const messages = JSON.parse(localStorage.getItem('nyxven_chat')) || [];
@@ -1492,12 +1541,10 @@
     if (!messages[idx]) return;
 
     if (likedSet.includes(idx)) {
-      // Beğeniyi geri çek
       messages[idx].likes = Math.max(0, (messages[idx].likes || 1) - 1);
       likedSet = likedSet.filter(i => i !== idx);
       showToast('💔 Beğeni geri çekildi.');
     } else {
-      // Beğen
       messages[idx].likes = (messages[idx].likes || 0) + 1;
       likedSet.push(idx);
       showToast('❤️ Beğenildi!');
@@ -1508,7 +1555,7 @@
     loadChatMessages();
   }
 
-  // ÖNERİ İŞLEMLERİ (GİRİŞ KONTROLÜ + BEĞENİYİ GERİ ÇEKME / TOGGLE LIKE)
+  // ÖNERİ İŞLEMLERİ
   function loadSuggestions() {
     const list = document.getElementById('suggestionList');
     const suggestions = JSON.parse(localStorage.getItem('nyxven_suggestions')) || [];
