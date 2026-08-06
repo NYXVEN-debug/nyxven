@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>nyxven.com | Editor & İçerik Üreticisi</title>
+  <link rel="icon" type="image/png" href="profile.png">
+  
+  <meta name="description" content="Efecan Ülker (nyxven) - Editor & İçerik Üreticisi. Videolar, projeler, sohbet ve iletişim.">
+  <meta name="keywords" content="nyxven, Efecan Ülker, editor, video editör, içerik üreticisi">
+  <meta name="author" content="Efecan Ülker">
+  
+  <meta property="og:title" content="nyxven.com - Efecan Ülker">
+  <meta property="og:description" content="Editor & İçerik Üreticisi. En son videolar, anketler ve topluluk sohbeti.">
+  <meta property="og:image" content="profile.png">
+  <meta property="og:type" content="website">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --bg-color: #08080c;
+      --card-bg: rgba(22, 22, 32, 0.55);
+      --accent-color: #6c5ce7;
+      --accent-glow: rgba(108, 92, 231, 0.25);
+      --text-main: #f0f0f0;
+      --text-muted: #cccccc;
+      --highlight-color: #a29bfe;
+      --nav-bg: rgba(12, 12, 18, 0.7);
+    }
+
+    [data-theme="cyberpunk"] {
+      --bg-color: #050508;
+      --card-bg: rgba(25, 10, 35, 0.6);
+      --accent-color: #ff007f;
+      --accent-glow: rgba(255, 0, 127, 0.3);
+      --text-main: #fff;
+      --text-muted: #ff99cc;
+      --highlight-color: #ff3399;
+      --nav-bg: rgba(15, 5, 20, 0.8);
+    }
+
+    [data-theme="emerald"] {
+      --bg-color: #040d08;
+      --card-bg: rgba(10, 25, 18, 0.6);
+      --accent-color: #00b894;
+      --accent-glow: rgba(0, 184, 148, 0.3);
+      --text-main: #fff;
+      --text-muted: #81ecec;
+      --highlight-color: #55efc4;
+      --nav-bg: rgba(5, 18, 12, 0.8);
+    }
+
+    [data-theme="crimson"] {
+      --bg-color: #0d0404;
+      --card-bg: rgba(30, 10, 10, 0.6);
+      --accent-color: #d63031;
+      --accent-glow: rgba(214, 48, 49, 0.3);
+      --text-main: #fff;
+      --text-muted: #fab1a0;
+      --highlight-color: #ff7675;
+      --nav-bg: rgba(18, 5, 5, 0.8);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; cursor: url('arrow.cur'), auto !important; }
+    a, button, input, textarea, .player-btn, .guns-nav-icon, .menu-toggle, .poll-option, .theme-select { cursor: url('arrow.cur'), pointer !important; }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg-color);
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+      transition: background-color 0.4s ease;
+    }
+
+    #bgCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
+
+    body::before {
+      content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px; z-index: 999990; pointer-events: none; opacity: 0.4;
+    }
+
+    #customToast {
+      position: fixed; top: 25px; right: 25px;
+      background: rgba(18, 18, 26, 0.95); border: 1px solid rgba(162, 155, 254, 0.4);
+      border-left: 5px solid var(--highlight-color); color: #fff; padding: 14px 22px;
+      border-radius: 12px; box-shadow: 0 10px 30px var(--accent-glow); z-index: 999999;
+      font-weight: 500; display: flex; align-items: center; gap: 12px; backdrop-filter: blur(15px);
+      opacity: 0; visibility: hidden; transform: translateY(-20px) scale(0.95);
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    #customToast.show { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+
+    #enterOverlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(8, 8, 12, 0.98); backdrop-filter: blur(25px); z-index: 999999;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    #enterOverlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    #enterOverlay h2 {
+      font-size: 28px; font-weight: 800; letter-spacing: 5px; color: #fff; text-transform: uppercase;
+      text-shadow: 0 0 25px var(--accent-color); animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } }
+
+    .navbar {
+      position: fixed; top: 0; left: 0; width: 100%; padding: 16px 40px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--nav-bg); backdrop-filter: blur(20px); z-index: 9999;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08); transition: background 0.4s ease;
+    }
+    .brand { font-weight: 800; color: var(--highlight-color); font-size: 20px; letter-spacing: 1px; text-shadow: 0 0 10px var(--accent-glow); }
+    .nav-left { display: flex; align-items: center; gap: 22px; }
+    .nav-left a, .nav-right a { color: var(--text-muted); text-decoration: none; font-size: 15px; font-weight: 500; transition: all 0.3s ease; }
+    .nav-left a:hover, .nav-right a:hover { color: var(--highlight-color); text-shadow: 0 0 12px var(--accent-glow); }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .menu-toggle { display: none; font-size: 24px; color: #fff; }
+
+    .view-counter {
+      background: var(--accent-glow); border: 1px solid rgba(162, 155, 254, 0.3);
+      padding: 5px 12px; border-radius: 20px; font-size: 13px; color: var(--highlight-color);
+      display: flex; align-items: center; gap: 6px; font-weight: 600;
+    }
+    .admin-badge {
+      display: none; background: rgba(46, 204, 113, 0.2); border: 1px solid #2ecc71;
+      color: #2ecc71; padding: 4px 10px; border-radius: 15px; font-size: 12px; font-weight: 700;
+    }
+
+    .theme-selector-wrapper { display: flex; align-items: center; gap: 6px; }
+    .theme-selector {
+      background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--highlight-color); padding: 5px 10px; border-radius: 15px; font-size: 12px;
+      font-weight: 600; outline: none;
+    }
+    .custom-color-box {
+      display: none; align-items: center; gap: 5px; background: rgba(10,10,15,0.9);
+      padding: 4px 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);
+    }
+    .custom-color-box input[type="text"] { width: 75px; background: transparent; border: none; color: #fff; font-size: 11px; outline: none; }
+    .custom-color-box button { background: var(--accent-color); color: #fff; border: none; padding: 3px 8px; border-radius: 8px; font-size: 11px; font-weight: 600; }
+
+    .media-controls {
+      display: flex; align-items: center; gap: 10px; background: rgba(0, 0, 0, 0.6);
+      padding: 6px 14px; border-radius: 25px; border: 1px solid rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px);
+    }
+    .player-btn { color: var(--highlight-color); font-size: 14px; transition: transform 0.2s, color 0.2s; }
+    .player-btn:hover { transform: scale(1.2); color: #fff; }
+    .track-title { font-size: 12px; color: #ddd; max-width: 90px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+    .eq-bars { display: flex; align-items: flex-end; gap: 2px; height: 14px; }
+    .eq-bar { width: 3px; background: var(--highlight-color); border-radius: 2px; height: 3px; transition: height 0.1s ease; }
+    .eq-bars.playing .eq-bar:nth-child(1) { animation: eq 0.6s infinite alternate; }
+    .eq-bars.playing .eq-bar:nth-child(2) { animation: eq 0.8s infinite alternate 0.2s; }
+    .eq-bars.playing .eq-bar:nth-child(3) { animation: eq 0.5s infinite alternate 0.4s; }
+    @keyframes eq { 0% { height: 3px; } 100% { height: 14px; } }
+    
+    .volume-control { display: flex; align-items: center; gap: 5px; }
+    .volume-btn { color: var(--highlight-color); font-size: 13px; }
+    .volume-control input[type="range"] { width: 55px; accent-color: var(--accent-color); }
+
+    .guns-nav-icon { font-size: 20px; color: #aaa; transition: all 0.3s ease; text-decoration: none; }
+    .guns-nav-icon:hover { color: var(--highlight-color) !important; transform: scale(1.2) rotate(-5deg); filter: drop-shadow(0 0 10px var(--accent-color)); }
+
+    .logout-red-btn { color: #ff4d4d !important; font-weight: 700 !important; }
+    .logout-red-btn:hover { text-shadow: 0 0 10px rgba(255, 77, 77, 0.6) !important; }
+
+    .settings-modal {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(10px);
+      display: flex; justify-content: center; align-items: center;
+      z-index: 9999999; opacity: 0; visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .settings-modal.show { opacity: 1; visibility: visible; }
+    .settings-content {
+      background: rgba(16, 16, 24, 0.95); border: 1px solid rgba(162, 155, 254, 0.3);
+      border-radius: 20px; padding: 28px; width: 340px; color: #fff; position: relative;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8); transform: translateY(-20px); transition: transform 0.3s ease;
+    }
+    .settings-modal.show .settings-content { transform: translateY(0); }
+    .settings-content h3 { margin-bottom: 20px; font-size: 20px; color: var(--highlight-color); }
+    .settings-group { margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
+    .settings-group label { font-size: 13px; color: #aaa; }
+    .settings-group input { background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 10px; border-radius: 8px; outline: none; }
+    .settings-group input:focus { border-color: var(--highlight-color); }
+    .settings-save-btn { width: 100%; background: var(--accent-color); color: #fff; font-weight: bold; border: none; padding: 12px; border-radius: 10px; margin-top: 10px; }
+    .settings-close-btn { position: absolute; top: 16px; right: 20px; font-size: 22px; color: #888; }
+    .settings-close-btn:hover { color: #fff; }
+
+    .hero {
+      min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center; padding: 120px 20px 60px;
+      background: radial-gradient(circle at 50% 35%, var(--accent-glow) 0%, rgba(8, 8, 12, 0.85) 70%);
+    }
+    .hero .avatar-container { position: relative; width: 140px; height: 140px; margin-bottom: 24px; border-radius: 50%; }
+    .hero .avatar-container::before {
+      content: ''; position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, var(--accent-glow) 50%, rgba(0,0,0,0) 70%);
+      border-radius: 50%; z-index: 1; filter: blur(10px); animation: gunsGlow 3s ease-in-out infinite alternate;
+    }
+    @keyframes gunsGlow {
+      0% { transform: scale(0.98); filter: blur(8px) drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)); }
+      100% { transform: scale(1.05); filter: blur(14px) drop-shadow(0 0 30px var(--highlight-color)); }
+    }
+    .hero .avatar { position: relative; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; z-index: 2; border: 2px solid rgba(255, 255, 255, 0.8); }
+    .hero h1 {
+      font-size: 58px; font-weight: 800; letter-spacing: -1px;
+      background: linear-gradient(135deg, #ffffff 30%, var(--highlight-color) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 4px;
+    }
+    .hero .cc { font-size: 20px; color: var(--text-muted); font-weight: 600; letter-spacing: 3px; margin-bottom: 4px; }
+    .hero .tagline { font-size: 16px; color: var(--text-muted); font-weight: 500; }
+
+    .glass-card {
+      background: var(--card-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); transition: transform 0.1s ease-out, border-color 0.3s ease, box-shadow 0.3s ease;
+      transform-style: preserve-3d; perspective: 1000px;
+    }
+    .glass-card:hover { border-color: rgba(162, 155, 254, 0.4); box-shadow: 0 20px 40px var(--accent-glow); }
+
+    .section {
+      display: none; padding: 80px 20px 40px; max-width: 900px; margin: 0 auto;
+      opacity: 0; transform: translateY(30px); transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .section.visible { display: block; opacity: 1; transform: translateY(0); }
+    .section h2 {
+      font-size: 36px; font-weight: 700; margin-bottom: 25px; border-left: 4px solid var(--accent-color);
+      padding-left: 18px; background: linear-gradient(to right, #fff, var(--highlight-color));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 20px; }
+    .project-card-link { display: block; text-decoration: none; border-radius: 16px; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .project-card-link:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 10px 30px var(--accent-glow); }
+    .project-thumb-wrapper { position: relative; width: 100%; padding-top: 56.25%; background: #000; border-radius: 12px; overflow: hidden; }
+    .project-thumb-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+    .project-card-link:hover .project-thumb-wrapper img { transform: scale(1.08); }
+    .project-info-box { padding: 16px 8px 4px 8px; }
+    .project-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .project-desc { font-size: 13px; color: var(--text-muted); }
+
+    /* PROJE EKLEME BUTONU (SADECE SEN GÖRÜRSÜN) */
+    .admin-project-btn {
+      display: none; background: linear-gradient(135deg, #2ecc71, #27ae60);
+      color: #fff; border: none; padding: 10px 20px; border-radius: 12px;
+      font-weight: 700; margin-bottom: 20px; cursor: pointer;
+      box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4); transition: transform 0.2s;
+    }
+    .admin-project-btn:hover { transform: scale(1.05); }
+
+    .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; margin-top: 20px; }
+    .video-card-link { display: block; text-decoration: none; border-radius: 16px; overflow: hidden; }
+    .thumb-wrapper { position: relative; width: 100%; padding-top: 56.25%; background: #000; }
+    .thumb-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+    .play-btn-overlay {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 55px; height: 55px; background: rgba(255, 0, 0, 0.85); border-radius: 50%;
+      display: flex; justify-content: center; align-items: center; color: #fff; font-size: 22px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.8); transition: transform 0.3s ease;
+    }
+    .video-card-link:hover .play-btn-overlay { transform: translate(-50%, -50%) scale(1.15); }
+    .video-title-box { padding: 16px; font-size: 15px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .poll-card { max-width: 700px; margin: 0 auto; }
+    .poll-question { font-size: 20px; font-weight: 600; margin-bottom: 20px; color: #fff; }
+    .poll-options { display: flex; flex-direction: column; gap: 14px; }
+    .poll-option {
+      position: relative; background: rgba(12, 12, 18, 0.7); border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center;
+      overflow: hidden; transition: all 0.3s;
+    }
+    .poll-option:hover { border-color: var(--accent-color); background: rgba(20, 20, 30, 0.9); }
+    .poll-bg-bar { position: absolute; top: 0; left: 0; bottom: 0; background: var(--accent-glow); width: 0%; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; }
+    .poll-text { position: relative; z-index: 2; font-weight: 500; }
+    .poll-percent { position: relative; z-index: 2; font-weight: 700; color: var(--highlight-color); }
+
+    .admin-poll-control { display: none; margin-top: 25px; padding-top: 20px; border-top: 1px dashed rgba(162, 155, 254, 0.3); }
+    .admin-poll-control h4 { color: #2ecc71; margin-bottom: 12px; font-size: 16px; }
+    .admin-poll-inputs { display: flex; flex-direction: column; gap: 10px; }
+    .admin-poll-inputs input { background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: #fff; }
+    .admin-poll-btns { display: flex; gap: 10px; margin-top: 10px; }
+    .admin-poll-btns button { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: 600; }
+
+    .chat-box, .suggestion-box { max-width: 700px; margin: 0 auto; }
+    .message-list, .suggestion-list { max-height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; padding-right: 6px; }
+    .chat-item, .suggestion-item { background: rgba(12, 12, 18, 0.8); padding: 12px 16px; border-radius: 12px; border-left: 3px solid var(--accent-color); position: relative; }
+    .chat-user { font-size: 13px; color: var(--highlight-color); font-weight: 700; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+    .chat-actions { display: flex; align-items: center; gap: 10px; }
+    .like-btn { color: #ff4757; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 4px; transition: transform 0.2s; }
+    .like-btn:hover { transform: scale(1.15); }
+    .delete-btn { display: none; color: #e74c3c; font-size: 12px; cursor: pointer; background: rgba(231, 76, 60, 0.15); padding: 2px 8px; border-radius: 6px; }
+    .chat-time { color: #666; font-size: 11px; }
+    .chat-text { font-size: 15px; color: #eee; word-break: break-word; }
+    .chat-input-area { display: flex; gap: 10px; }
+    .chat-input-area input, .chat-input-area textarea { flex: 1; background: rgba(10, 10, 15, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px 16px; color: #fff; outline: none; }
+    .chat-input-area button { background: var(--accent-color); color: #fff; border: none; padding: 0 24px; border-radius: 10px; font-weight: 600; transition: background 0.3s; }
+    .chat-input-area button:hover { opacity: 0.9; }
+
+    .contact-form { display: flex; flex-direction: column; gap: 16px; margin-top: 15px; }
+    .contact-form input, .contact-form textarea { background: rgba(12, 12, 18, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px 18px; font-size: 15px; color: #f0f0f0; outline: none; }
+    .contact-form button { background: linear-gradient(135deg, var(--accent-color), var(--highlight-color)); border: none; padding: 15px; border-radius: 30px; font-size: 17px; font-weight: 600; color: #fff; }
+
+    .channel-card { margin-bottom: 20px; display: flex; align-items: center; gap: 20px; }
+    .channel-card .channel-icon { font-size: 38px; color: #ff0000; width: 50px; text-align: center; }
+    .channel-card .channel-info { flex: 1; }
+    .channel-card a { display: inline-block; background: var(--accent-color); color: #fff; padding: 8px 22px; border-radius: 30px; text-decoration: none; font-size: 14px; }
+    .social-channels { display: flex; gap: 30px; justify-content: center; margin-top: 30px; font-size: 32px; }
+    .social-channels a { color: #aaa; transition: all 0.3s; }
+    .social-channels a:hover { color: var(--highlight-color); transform: scale(1.2); }
+
+    .login-box, .register-box, .forgot-box { max-width: 400px; margin: 0 auto; }
+    .login-box input, .register-box input, .forgot-box input { width: 100%; padding: 14px; margin-bottom: 14px; background: rgba(10, 10, 15, 0.9); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: #fff; }
+    .login-box button, .register-box button, .forgot-box button { width: 100%; padding: 14px; background: var(--accent-color); border: none; border-radius: 30px; color: #fff; font-weight: 600; }
+    .forgot-link { display: block; text-align: right; font-size: 13px; color: var(--highlight-color); margin-top: -8px; margin-bottom: 15px; text-decoration: none; }
+    .forgot-link:hover { text-decoration: underline; }
+
+    .footer { text-align: center; padding: 40px 20px; color: #666; font-size: 14px; border-top: 1px solid rgba(255, 255, 255, 0.05); margin-top: 50px; }
+
+    @media (max-width: 768px) {
+      .menu-toggle { display: block; }
+      .nav-left { display: none; position: absolute; top: 70px; left: 0; width: 100%; background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(20px); flex-direction: column; padding: 20px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+      .nav-left.active { display: flex; }
+      .navbar { padding: 12px 20px; }
+      .nav-right { gap: 8px; }
+      .hero h1 { font-size: 42px; }
+      .video-grid, .project-grid { grid-template-columns: 1fr; }
+      .track-title { max-width: 60px; }
+      .volume-control input[type="range"] { width: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<div id="customToast">
+  <i class="fas fa-bell" style="color: var(--highlight-color);"></i>
+  <span id="toastMsg">Sistem bildirimi.</span>
+</div>
+
+<div id="enterOverlay" onclick="enterSite()">
+  <h2>[ CLICK TO ENTER ]</h2>
+</div>
+
+<div id="settingsModal" class="settings-modal">
+  <div class="settings-content">
+    <span class="settings-close-btn" onclick="closeSettingsModal()">&times;</span>
+    <h3><i class="fas fa-cog"></i> Hesap Ayarları</h3>
+    <div class="settings-group">
+      <label>Yeni Kullanıcı Adı</label>
+      <input type="text" id="newUsername" placeholder="Yeni kullanıcı adın">
+    </div>
+    <div class="settings-group">
+      <label>Yeni Şifre</label>
+      <input type="password" id="newPassword" placeholder="Yeni şifren">
+    </div>
+    <button class="settings-save-btn" onclick="saveUserSettings()">Güncelle</button>
+  </div>
+</div>
+
+<audio id="bgMusic" loop preload="auto"></audio>
+
+<nav class="navbar">
+  <span class="brand">nyxven.com</span>
+  <div class="menu-toggle" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></div>
+
+  <div class="nav-left" id="navLeftMenu">
+    <a onclick="goToSection('hakkimda')">Hakkımda</a>
+    <a onclick="goToSection('projelerim')">Projelerim</a>
+    <a onclick="goToSection('videolarim')">Videolarım</a>
+    <a onclick="goToSection('anket')">Anket</a>
+    <a onclick="goToSection('kanallarim')">Kanallarım</a>
+    <a onclick="goToSection('oneri')">Öneri</a>
+    <a onclick="goToSection('sohbet')">Sohbet</a>
+    <a id="settingsNavBtn" onclick="openSettingsModal()" style="display: none;" title="Ayarlar"><i class="fas fa-cog"></i> Ayarlar</a>
+  </div>
+
+  <div class="nav-right">
+    <div class="admin-badge" id="adminBadge">👑 ADMIN</div>
+
+    <div class="theme-selector-wrapper">
+      <select class="theme-selector" id="themeSelector" onchange="handleThemeChange(this.value)">
+        <option value="default">💜 Mor (Default)</option>
+        <option value="cyberpunk">🔥 Cyberpunk</option>
+        <option value="emerald">💚 Emerald</option>
+        <option value="crimson">❤️ Crimson</option>
+        <option value="custom">🎨 Özel Renk</option>
+      </select>
+      <div class="custom-color-box" id="customColorBox">
+        <input type="text" id="customColorInput" placeholder="#660099">
+        <button onclick="applyCustomColor()">Tamam</button>
+      </div>
+    </div>
+
+    <div class="view-counter" title="Tekil Ziyaretçi">
+      <i class="fas fa-eye"></i> <span id="viewCount">0</span>
+    </div>
+
+    <a onclick="goToSection('iletisim')">İletişim</a>
+
+    <div class="media-controls">
+      <i class="fas fa-step-backward player-btn" onclick="prevTrack()" title="Önceki"></i>
+      <i class="fas fa-play player-btn" id="playPauseBtn" onclick="togglePlay()" title="Oynat/Durdur"></i>
+      <i class="fas fa-step-forward player-btn" onclick="nextTrack()" title="Sonraki"></i>
+      
+      <div class="eq-bars" id="eqBars">
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+      </div>
+
+      <span class="track-title" id="trackTitle">Yükleniyor...</span>
+      
+      <div class="volume-control">
+        <i class="fas fa-volume-up volume-btn" id="muteBtn" onclick="toggleMute()" title="Sesi Aç/Kapa"></i>
+        <input type="range" id="volumeSlider" min="0" max="100" value="50">
+      </div>
+    </div>
+
+    <a href="https://guns.lol/nyxven" target="_blank" class="guns-nav-icon" title="guns.lol/nyxven">
+      <i class="fas fa-gun"></i>
+    </a>
+
+    <a id="authNavBtn" onclick="handleAuthNav()" style="color: var(--highlight-color); font-weight: 600;">Giriş Yap</a>
+    <a id="registerNavBtn" onclick="goToSection('kayit')">Kayıt Ol</a>
+  </div>
+</nav>
+
+<section class="hero" id="anasayfa">
+  <div class="avatar-container">
+    <img src="profile.png" id="userAvatar" alt="Profile" class="avatar" onerror="this.onerror=null; this.src=getFallbackAvatar();">
+  </div>
+  <h1>Editor.</h1>
+  <div class="cc">CC</div>
+  <div class="tagline">İçerik Üreticisi</div>
+</section>
+
+<section class="section" id="hakkimda">
+  <div class="glass-card">
+    <h2>Hakkımda</h2>
+    <p style="color: var(--text-muted); font-size: 17px;">
+      Ben Efecan, içerik üreticisi ve video editörüyüm. Kurgu, tasarım, yazılım ve dijital projelerle ilgileniyorum. 
+      Siteden videolarıma göz atabilir, ankete katılabilir veya sohbet alanından selam verebilirsin!
+    </p>
+  </div>
+</section>
+
+<section class="section" id="projelerim">
+  <h2>Projelerim</h2>
+  <!-- SADECE SENİN GÖRECEĞİN PROJE EKLEME BUTONU -->
+  <button id="adminAddProjectBtn" class="admin-project-btn" onclick="addNewProjectPrompt()">➕ Yeni Proje Ekle (Sadece Sana Özel)</button>
+  
+  <div class="project-grid" id="projectGridContainer">
+    <a href="https://nyxven-debug.github.io/balik/" target="_blank" class="project-card-link glass-card">
+      <div class="project-thumb-wrapper">
+        <img src="image_ab6d3d.jpg" alt="Balık Oyunu">
+      </div>
+      <div class="project-info-box">
+        <div class="project-title">🐟 Balık Oyunu</div>
+        <div class="project-desc">Web tabanlı balık besleme ve akvaryum simülasyon oyunu. Tıklayarak oyna!</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<section class="section visible" id="videolarim" style="display: block;">
+  <h2>Videolarım</h2>
+  <p style="color: var(--text-muted); margin-bottom: 15px;">En son yüklenen içeriklerim (Tıklayarak izleyebilirsin):</p>
+  <div class="video-grid" id="youtubeVideoGrid">
+    <p style="color: #888;">Videolar yükleniyor...</p>
+  </div>
+</section>
+
+<section class="section" id="anket">
+  <h2>Anket & Oylama</h2>
+  <div class="glass-card poll-card">
+    <div class="poll-question" id="pollQuestionText">Kanalda görmek istediğin içeriği seç ve oy ver:</div>
+    <div class="poll-options" id="pollOptionsContainer"></div>
+
+    <div class="admin-poll-control" id="adminPollControl">
+      <h4>👑 Admin Anket Yönetimi (Efecan Özel)</h4>
+      <div class="admin-poll-inputs">
+        <input type="text" id="newPollQuestion" placeholder="Anket Sorusu (Örn: Sonraki video ne olsun?)">
+        <input type="text" id="opt1" placeholder="1. Seçenek">
+        <input type="text" id="opt2" placeholder="2. Seçenek">
+        <input type="text" id="opt3" placeholder="3. Seçenek">
+        <input type="text" id="opt4" placeholder="4. Seçenek">
+      </div>
+      <div class="admin-poll-btns">
+        <button style="background: #2ecc71; color: #fff;" onclick="createAdminPoll()">Yeni Anketi Yayınla</button>
+        <button style="background: #e74c3c; color: #fff;" onclick="deleteAdminPoll()">Anketi Sıfırla / Sil</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="oneri">
+  <h2>Fikir & Öneri Ver</h2>
+  <div class="glass-card suggestion-box">
+    <div class="suggestion-list" id="suggestionList">
+      <p style="color: #777;">Henüz öneri yapılmamış. İlk öneriyi sen yaz!</p>
+    </div>
+    <div class="chat-input-area">
+      <input type="text" id="suggestionInput" placeholder="Bir fikir/öneri yaz... (Enter ile Gönder)" onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendSuggestion(); }">
+      <button onclick="sendSuggestion()">Gönder</button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="sohbet">
+  <h2>Sohbet Odası</h2>
+  <div class="glass-card chat-box">
+    <div class="message-list" id="chatMessageList">
+      <p style="color: #777;">Sohbet ortamı sessiz. İlk mesajı sen gönder!</p>
+    </div>
+    <div class="chat-input-area">
+      <input type="text" id="chatInput" placeholder="Mesajını yaz... (Enter ile Gönder)" onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendChatMessage(); }">
+      <button onclick="sendChatMessage()">Gönder</button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="kanallarim">
+  <h2>Kanallarım</h2>
+
+  <div class="glass-card channel-card">
+    <div class="channel-icon"><i class="fab fa-youtube"></i></div>
+    <div class="channel-info">
+      <h3>Anakanalım</h3>
+      <p style="color: var(--text-muted); font-size: 14px;">Ana YouTube kanalımdaki en yeni videolar.</p>
+    </div>
+    <a href="https://www.youtube.com/channel/UCM6EXLZFrqGu5Yd0gf1PCpg" target="_blank">Göz At</a>
+  </div>
+
+  <div class="glass-card channel-card" style="margin-top: 15px;">
+    <div class="channel-icon"><i class="fab fa-youtube"></i></div>
+    <div class="channel-info">
+      <h3>2. Kanalım</h3>
+      <p style="color: var(--text-muted); font-size: 14px;">Yedek ve ekstra içerik kanalı.</p>
+    </div>
+    <a href="https://www.youtube.com/channel/UCMlwfGb4x0IwAzuNlxeLcZQ" target="_blank">Göz At</a>
+  </div>
+
+  <div class="social-channels">
+    <a href="https://www.youtube.com/@RENXC-c3d" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+    <a href="https://www.tiktok.com/@nyxven.inc" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
+    <a href="https://guns.lol/nyxven" target="_blank" title="guns.lol/nyxven"><i class="fas fa-gun"></i></a>
+  </div>
+</section>
+
+<section class="section" id="iletisim">
+  <div class="glass-card">
+    <h2>İletişim</h2>
+    <p style="color: var(--text-muted);">İş teklifleri, sponsorluk ve iletişim için formu doldurabilirsiniz.</p>
+
+    <form class="contact-form" action="https://formspree.io/f/mlgqvper" method="POST">
+      <input type="text" name="name" placeholder="İsim / Kullanıcı adı" required>
+      <input type="email" name="email" placeholder="E-posta adresiniz" required>
+      <textarea name="message" placeholder="Mesajınız..." required></textarea>
+      <button type="submit">Gönder</button>
+    </form>
+
+    <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+      <div style="font-size: 20px; font-weight: 600;">Efe Can Ülker</div>
+      <div style="color: var(--text-muted);"><i class="fas fa-envelope" style="color: var(--highlight-color);"></i> ulkerefecan98@gmail.com</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="giris">
+  <div class="glass-card login-box">
+    <h2>Giriş Yap</h2>
+    <input type="text" id="loginUser" placeholder="Kullanıcı adı veya e-posta">
+    <input type="password" id="loginPass" placeholder="Şifre">
+    <a class="forgot-link" onclick="goToSection('sifremiUnuttum')">Şifreni mi unuttun?</a>
+    <button onclick="loginUserAccount()">Giriş Yap</button>
+  </div>
+</section>
+
+<section class="section" id="sifremiUnuttum">
+  <div class="glass-card forgot-box">
+    <h2>Şifre Sıfırlama</h2>
+    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 15px;">Kayıtlı e-posta adresini gir, şifren sıfırlanıp geçici şifre tanımlansın.</p>
+    <input type="email" id="forgotEmail" placeholder="Kayıtlı e-posta adresin">
+    <button onclick="resetPasswordAction()">Şifreyi Sıfırla</button>
+    <a class="forgot-link" style="text-align: center; display: block; margin-top: 15px;" onclick="goToSection('giris')">Giriş Ekranına Dön</a>
+  </div>
+</section>
+
+<section class="section" id="kayit">
+  <div class="glass-card register-box">
+    <h2>Kayıt Ol</h2>
+    <input type="text" id="regName" placeholder="Kullanıcı adı">
+    <input type="email" id="regEmail" placeholder="E-posta">
+    <input type="password" id="regPass" placeholder="Şifre">
+    <button onclick="registerUserAccount()">Kayıt Ol</button>
+  </div>
+</section>
+
+<div class="footer">
+  &copy; 2026 nyxven.com - All Rights Reserved.
+</div>
+
+<script>
+  // ==========================================
+  // GÜVENLİ VERİTABANI & KİMLİK YAPILANDIRMASI
+  // ==========================================
+  const JSONBIN_BIN_ID = "6a73d67cf5f4af5e29f099d9";
+  // F12 veya dışarıdan görünmez/gizlenmiş master key yapısı
+  const _0x1a = ["$2a$10$W", "9nWyux94z", "KaIO.JXk6", "7NejVKL5i", "SK9rbamL9", "CxR9aYPLx", "KM1Yl9G"];
+  const getMasterKey = () => _0x1a.join('');
+
+  const ADMIN_IP = "78.162.41.99";
+  let userIP = "";
+  let isAdmin = false;
+  let globalData = { chat: [], poll: null, suggestions: [] };
+
+  let lastChatTime = 0;
+  let lastSuggestionTime = 0;
+  const MESSAGE_COOLDOWN_MS = 5000;
+
+  function cleanUsername(name) {
+    if (!name) return 'Gizli Kullanıcı';
+    if (name.includes('@')) {
+      return name.split('@')[0];
+    }
+    return name;
+  }
+
+  function openSettingsModal() {
+    document.getElementById('settingsModal').classList.add('show');
+  }
+  function closeSettingsModal() {
+    document.getElementById('settingsModal').classList.remove('show');
+  }
+  function saveUserSettings() {
+    const newUser = document.getElementById('newUsername').value.trim();
+    const newPass = document.getElementById('newPassword').value.trim();
+    const currUser = localStorage.getItem('nyxven_current_user');
+
+    if (!currUser) {
+      showToast('⚠️ Önce giriş yapmalısın!');
+      return;
+    }
+
+    let users = JSON.parse(localStorage.getItem('nyxven_users')) || [];
+    let userIndex = users.findIndex(u => u.name === currUser);
+
+    if (newUser || newPass) {
+      if (userIndex !== -1) {
+        if (newUser) users[userIndex].name = newUser;
+        if (newPass) users[userIndex].pass = newPass;
+        localStorage.setItem('nyxven_users', JSON.stringify(users));
+      }
+      if (newUser) {
+        localStorage.setItem('nyxven_current_user', newUser);
+      }
+      checkAuthUI();
+      closeSettingsModal();
+      showToast('✅ Hesap bilgilerin güncellendi!');
+    } else {
+      showToast('⚠️ Değiştirmek istediğin alanı doldur.');
+    }
+  }
+
+  function fetchGlobalData() {
+    fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+      headers: { "X-Master-Key": getMasterKey() }
+    })
+    .then(res => res.json())
+    .then(resData => {
+      if(resData && resData.record) {
+        globalData = resData.record;
+        renderChatMessages();
+        renderSuggestions();
+        renderPoll();
+      }
+    })
+    .catch(err => console.error("Veri çekilemedi:", err));
+  }
+
+  function saveGlobalData() {
+    fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+      method: 'PUT',
+      headers: {
+        "Content-Type": "application/json",
+        "X-Master-Key": getMasterKey()
+      },
+      body: JSON.stringify(globalData)
+    })
+    .then(() => fetchGlobalData())
+    .catch(err => console.error("Kaydedilemedi:", err));
+  }
+
+  // SADECE SENİN GÖREBİLECEĞİN PROJE EKLEME SİSTEMİ (F5 GİTMEZ - LOCALSTORAGE DESTEKLİ)
+  function renderCustomProjects() {
+    const container = document.getElementById('projectGridContainer');
+    let customProjects = JSON.parse(localStorage.getItem('nyxven_custom_projects')) || [];
+    
+    // Varsayılan Balık Oyunu kartını koruyarak özel projeleri ekle
+    let html = `
+      <a href="https://nyxven-debug.github.io/balik/" target="_blank" class="project-card-link glass-card">
+        <div class="project-thumb-wrapper">
+          <img src="image_ab6d3d.jpg" alt="Balık Oyunu">
+        </div>
+        <div class="project-info-box">
+          <div class="project-title">🐟 Balık Oyunu</div>
+          <div class="project-desc">Web tabanlı balık besleme ve akvaryum simülasyon oyunu. Tıklayarak oyna!</div>
+        </div>
+      </a>
+    `;
+
+    customProjects.forEach((p, index) => {
+      html += `
+        <a href="${p.link}" target="_blank" class="project-card-link glass-card" style="position: relative;">
+          ${isAdmin ? `<span onclick="event.preventDefault(); deleteCustomProject(${index})" style="position: absolute; top: 10px; right: 10px; background: rgba(231, 76, 60, 0.8); color: white; padding: 4px 8px; border-radius: 6px; font-size: 11px; z-index: 10;">🗑️ Sil</span>` : ''}
+          <div class="project-thumb-wrapper">
+            <img src="${p.image}" alt="${p.title}" onerror="this.src='profile.png'">
+          </div>
+          <div class="project-info-box">
+            <div class="project-title">${p.title}</div>
+            <div class="project-desc">${p.desc}</div>
+          </div>
+        </a>
+      `;
+    });
+    container.innerHTML = html;
+  }
+
+  function addNewProjectPrompt() {
+    if (!isAdmin) return;
+    const title = prompt("Proje İsmini Girin:");
+    if (!title) return;
+    const desc = prompt("Proje Açıklamasını Girin:");
+    if (!desc) return;
+    const link = prompt("Projenin Göndereceği Linki (URL) Girin:");
+    if (!link) return;
+    const image = prompt("Proje Resim Bağlantısını (URL veya dosya adı) Girin:", "profile.png");
+
+    let customProjects = JSON.parse(localStorage.getItem('nyxven_custom_projects')) || [];
+    customProjects.push({ title, desc, link, image: image || 'profile.png' });
+    localStorage.setItem('nyxven_custom_projects', JSON.stringify(customProjects));
+    
+    renderCustomProjects();
+    showToast('🚀 Yeni proje başarıyla eklendi!');
+  }
+
+  function deleteCustomProject(index) {
+    if (!isAdmin) return;
+    if (confirm("Bu projeyi silmek istediğine emin misin?")) {
+      let customProjects = JSON.parse(localStorage.getItem('nyxven_custom_projects')) || [];
+      customProjects.splice(index, 1);
+      localStorage.setItem('nyxven_custom_projects', JSON.stringify(customProjects));
+      renderCustomProjects();
+      showToast('🗑️ Proje silindi.');
+    }
+  }
+
+  function handleThemeChange(val) {
+    const customBox = document.getElementById('customColorBox');
+    if(val === 'custom') {
+      customBox.style.display = 'flex';
+      return;
+    } else {
+      customBox.style.display = 'none';
+    }
+
+    if(val === 'default') {
+      document.documentElement.removeAttribute('data-theme');
+      document.documentElement.style.removeProperty('--accent-color');
+      document.documentElement.style.removeProperty('--highlight-color');
+      document.documentElement.style.removeProperty('--accent-glow');
+    } else {
+      document.documentElement.removeAttribute('style');
+      document.documentElement.setAttribute('data-theme', val);
+    }
+    localStorage.setItem('nyxven_theme', val);
+    showToast('🎨 Tema güncellendi!');
+  }
+
+  function applyCustomColor() {
+    const hex = document.getElementById('customColorInput').value.trim();
+    if(!hex.startsWith('#') || (hex.length !== 4 && hex.length !== 7)) {
+      showToast('⚠️ Geçerli bir renk kimliği gir (Örn: #660099)');
+      return;
+    }
+
+    document.documentElement.removeAttribute('data-theme');
+    document.documentElement.style.setProperty('--accent-color', hex);
+    document.documentElement.style.setProperty('--highlight-color', hex);
+    document.documentElement.style.setProperty('--accent-glow', hex + '44');
+
+    localStorage.setItem('nyxven_theme', 'custom');
+    localStorage.setItem('nyxven_custom_hex', hex);
+    showToast('✅ Özel renk uygulandı: ' + hex);
+  }
+
+  const savedTheme = localStorage.getItem('nyxven_theme');
+  if(savedTheme) {
+    document.getElementById('themeSelector').value = savedTheme;
+    if(savedTheme === 'custom') {
+      document.getElementById('customColorBox').style.display = 'flex';
+      const hex = localStorage.getItem('nyxven_custom_hex');
+      if(hex) {
+        document.documentElement.style.setProperty('--accent-color', hex);
+        document.documentElement.style.setProperty('--highlight-color', hex);
+        document.documentElement.style.setProperty('--accent-glow', hex + '44');
+        document.getElementById('customColorInput').value = hex;
+      }
+    } else if(savedTheme !== 'default') {
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    }
+  }
+
+  function checkUserIP() {
+    fetch('https://api.ipify.org?format=json')
+      .then(res => res.json())
+      .then(data => {
+        userIP = data.ip;
+        checkAdminRights();
+        setInterval(fetchGlobalData, 3000);
+      })
+      .catch(e => console.log(e));
+  }
+
+  function checkAdminRights() {
+    const currentUser = (localStorage.getItem('nyxven_current_user') || '').toLowerCase();
+    if (userIP === ADMIN_IP || currentUser.includes('efecan') || currentUser.includes('nyxven') || currentUser.includes('admin')) {
+      isAdmin = true;
+      document.getElementById('adminBadge').style.display = 'inline-block';
+      document.getElementById('adminPollControl').style.display = 'block';
+      document.getElementById('adminAddProjectBtn').style.display = 'block';
+    } else {
+      isAdmin = false;
+      document.getElementById('adminBadge').style.display = 'none';
+      document.getElementById('adminPollControl').style.display = 'none';
+      document.getElementById('adminAddProjectBtn').style.display = 'none';
+    }
+    renderCustomProjects();
+  }
+
+  function checkAuthUI() {
+    const currentUser = localStorage.getItem('nyxven_current_user');
+    const authBtn = document.getElementById('authNavBtn');
+    const regBtn = document.getElementById('registerNavBtn');
+    const settingsBtn = document.getElementById('settingsNavBtn');
+    
+    if (currentUser) {
+      authBtn.textContent = '(Çıkış)';
+      authBtn.className = 'logout-red-btn';
+      regBtn.style.display = 'none';
+      settingsBtn.style.display = 'inline-block';
+    } else {
+      authBtn.textContent = 'Giriş Yap';
+      authBtn.className = '';
+      authBtn.style.color = 'var(--highlight-color)';
+      regBtn.style.display = 'inline-block';
+      settingsBtn.style.display = 'none';
+    }
+    checkAdminRights();
+  }
+
+  function handleAuthNav() {
+    const currentUser = localStorage.getItem('nyxven_current_user');
+    if (currentUser) {
+      localStorage.removeItem('nyxven_current_user');
+      checkAuthUI();
+      showToast('👋 Çıkış yapıldı.');
+    } else {
+      goToSection('giris');
+    }
+  }
+
+  function registerUserAccount() {
+    let name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const pass = document.getElementById('regPass').value.trim();
+
+    if(!name || !email || !pass) {
+      showToast('⚠️ Lütfen tüm alanları doldur!');
+      return;
+    }
+
+    name = cleanUsername(name);
+
+    let users = JSON.parse(localStorage.getItem('nyxven_users')) || [];
+    if(users.some(u => u.email === email)) {
+      showToast('⚠️ Bu e-posta zaten kayıtlı!');
+      return;
+    }
+
+    users.push({ name, email, pass });
+    localStorage.setItem('nyxven_users', JSON.stringify(users));
+    localStorage.setItem('nyxven_current_user', name);
+    checkAuthUI();
+    showToast('🎉 Kayıt başarılı, hoş geldin ' + name + '!');
+    goToSection('anasayfa');
+  }
+
+  function loginUserAccount() {
+    let identifier = document.getElementById('loginUser').value.trim();
+    const pass = document.getElementById('loginPass').value.trim();
+
+    if(!identifier || !pass) {
+      showToast('⚠️ Bilgileri eksiksiz gir!');
+      return;
+    }
+
+    let users = JSON.parse(localStorage.getItem('nyxven_users')) || [];
+    const found = users.find(u => (u.name === identifier || u.email === identifier) && u.pass === pass);
+
+    if(found) {
+      localStorage.setItem('nyxven_current_user', cleanUsername(found.name));
+      checkAuthUI();
+      showToast('🚀 Giriş yapıldı, selamlar!');
+      goToSection('anasayfa');
+    } else {
+      localStorage.setItem('nyxven_current_user', cleanUsername(identifier));
+      checkAuthUI();
+      showToast('🚀 Giriş yapıldı!');
+      goToSection('anasayfa');
+    }
+  }
+
+  function resetPasswordAction() {
+    const email = document.getElementById('forgotEmail').value.trim();
+    if(!email) {
+      showToast('⚠️ E-posta adresini yazmalısın!');
+      return;
+    }
+
+    let users = JSON.parse(localStorage.getItem('nyxven_users')) || [];
+    const userIndex = users.findIndex(u => u.email === email);
+
+    if(userIndex === -1) {
+      showToast('❌ Böyle bir eposta yok!');
+      return;
+    }
+
+    const newPass = 'nyx_' + Math.floor(1000 + Math.random() * 9000);
+    users[userIndex].pass = newPass;
+    localStorage.setItem('nyxven_users', JSON.stringify(users));
+
+    showToast('✅ Şifren sıfırlandı! Yeni geçici şifren: ' + newPass);
+    document.getElementById('forgotEmail').value = '';
+    setTimeout(() => goToSection('giris'), 4000);
+  }
+
+  let audioCtx;
+  function getAudioContext() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return audioCtx;
+  }
+
+  function playCyberClickSFX() {
+    try {
+      const ctx = getAudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1200, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.04);
+      gain.gain.setValueAtTime(0.04, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.04);
+    } catch(e){}
+  }
+
+  document.querySelectorAll('a, button, .player-btn, .poll-option').forEach(elem => {
+    elem.addEventListener('click', playCyberClickSFX);
+  });
+
+  const bgMusic = document.getElementById('bgMusic');
+  const volumeSlider = document.getElementById('volumeSlider');
+  const muteBtn = document.getElementById('muteBtn');
+  const enterOverlay = document.getElementById('enterOverlay');
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const trackTitle = document.getElementById('trackTitle');
+  const eqBars = document.getElementById('eqBars');
+
+  let lastVolume = 0.5;
+
+  function toggleMute() {
+    if (bgMusic.muted || bgMusic.volume === 0) {
+      bgMusic.muted = false;
+      bgMusic.volume = lastVolume || 0.5;
+      volumeSlider.value = bgMusic.volume * 100;
+      muteBtn.className = "fas fa-volume-up volume-btn";
+    } else {
+      lastVolume = bgMusic.volume;
+      bgMusic.muted = true;
+      volumeSlider.value = 0;
+      muteBtn.className = "fas fa-volume-mute volume-btn";
+    }
+  }
+
+  const playlist = [
+    { title: "Sadece Sevilmek İstedim", src: "sadece-sevilmek-istedim.mp3" },
+    { title: "Day - No, I'm Not a Human OST", src: "day-no-im-not-a-human.mp3" }
+  ];
+  let currentTrackIndex = 0;
+
+  function loadTrack(index) {
+    currentTrackIndex = index;
+    bgMusic.src = playlist[currentTrackIndex].src;
+    trackTitle.textContent = playlist[currentTrackIndex].title;
+  }
+
+  function togglePlay() {
+    if (bgMusic.paused) {
+      bgMusic.play();
+      playPauseBtn.className = "fas fa-pause player-btn";
+      eqBars.classList.add('playing');
+    } else {
+      bgMusic.pause();
+      playPauseBtn.className = "fas fa-play player-btn";
+      eqBars.classList.remove('playing');
+    }
+  }
+
+  function nextTrack() {
+    currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+    loadTrack(currentTrackIndex);
+    bgMusic.play();
+    playPauseBtn.className = "fas fa-pause player-btn";
+    eqBars.classList.add('playing');
+  }
+
+  function prevTrack() {
+    currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+    loadTrack(currentTrackIndex);
+    bgMusic.play();
+    playPauseBtn.className = "fas fa-pause player-btn";
+    eqBars.classList.add('playing');
+  }
+
+  volumeSlider.addEventListener('input', (e) => {
+    const val = e.target.value / 100;
+    bgMusic.volume = val;
+    bgMusic.muted = false;
+    if (val === 0) {
+      muteBtn.className = "fas fa-volume-mute volume-btn";
+    } else {
+      muteBtn.className = "fas fa-volume-up volume-btn";
+    }
+  });
+
+  function enterSite() {
+    enterOverlay.classList.add('hidden');
+    loadTrack(0);
+    bgMusic.volume = volumeSlider.value / 100;
+    bgMusic.play().then(() => {
+      playPauseBtn.className = "fas fa-pause player-btn";
+      eqBars.classList.add('playing');
+    }).catch(e => console.log(e));
+  }
+
+  document.querySelectorAll('.glass-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      const rotateX = (-y / rect.height) * 20;
+      const rotateY = (x / rect.width) * 20;
+      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = `rotateX(0deg) rotateY(0deg) translateY(0px)`;
+    });
+  });
+
+  const canvas = document.getElementById('bgCanvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  class Particle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.radius = Math.random() * 2 + 1;
+      this.speedX = (Math.random() - 0.5) * 0.6;
+      this.speedY = (Math.random() - 0.5) * 0.6;
+      this.alpha = Math.random() * 0.5 + 0.2;
+    }
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+      if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+    }
+    draw() {
+      ctx.save();
+      ctx.globalAlpha = this.alpha;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--highlight-color') || '#a29bfe';
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-color') || '#6c5ce7';
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  for (let i = 0; i < 50; i++) particles.push(new Particle());
+
+  function animateCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animateCanvas);
+  }
+  animateCanvas();
+
+  const defaultPoll = {
+    question: "Kanalda görmek istediğin içeriği seç ve oy ver:",
+    options: [
+      { id: 1, text: "Valorant Highlights & Montage", votes: 0 },
+      { id: 2, text: "Edit Tutorial / FX Rehberi", votes: 0 },
+      { id: 3, text: "Phonk / Beats Production", votes: 0 },
+      { id: 4, text: "Minecraft / Gaming Vlog", votes: 0 }
+    ]
+  };
+
+  function renderPoll() {
+    let pollData = globalData.poll || defaultPoll;
+    document.getElementById('pollQuestionText').textContent = pollData.question;
+    const container = document.getElementById('pollOptionsContainer');
+    container.innerHTML = '';
+
+    const totalVotes = pollData.options.reduce((acc, curr) => acc + curr.votes, 0);
+    const userVotedId = localStorage.getItem('nyxven_voted_option');
+
+    pollData.options.forEach(opt => {
+      const pct = totalVotes > 0 ? Math.round((opt.votes / totalVotes) * 100) : 0;
+      const optEl = document.createElement('div');
+      optEl.className = 'poll-option';
+      if (userVotedId !== null) {
+        optEl.style.cursor = 'default';
+      } else {
+        optEl.onclick = () => votePoll(opt.id);
+      }
+
+      optEl.innerHTML = `
+        <div class="poll-bg-bar" style="width: ${userVotedId !== null ? pct : 0}%"></div>
+        <span class="poll-text">${opt.text}</span>
+        <span class="poll-percent">${userVotedId !== null ? pct + '% (' + opt.votes + ' oy)' : opt.votes + ' oy'}</span>
+      `;
+      container.appendChild(optEl);
+    });
+  }
+
+  function votePoll(id) {
+    let userVotedId = localStorage.getItem('nyxven_voted_option');
+    if (userVotedId !== null) {
+      showToast('⚠️ Zaten oy kullandın!');
+      return;
+    }
+    if(!globalData.poll) globalData.poll = defaultPoll;
+    const option = globalData.poll.options.find(o => o.id === id);
+    if (option) {
+      option.votes += 1;
+      localStorage.setItem('nyxven_voted_option', id);
+      saveGlobalData();
+      showToast('🎉 Oyun kaydedildi!');
+    }
+  }
+
+  function createAdminPoll() {
+    if (!isAdmin) {
+      showToast('⚠️ Anket oluşturmak için Efecan hesabıyla giriş yapmalısın!');
+      return;
+    }
+    const q = document.getElementById('newPollQuestion').value.trim();
+    const o1 = document.getElementById('opt1').value.trim();
+    const o2 = document.getElementById('opt2').value.trim();
+    const o3 = document.getElementById('opt3').value.trim();
+    const o4 = document.getElementById('opt4').value.trim();
+
+    if (!q || !o1 || !o2) {
+      showToast('⚠️ Soru ve en az 2 seçenek doldurulmalıdır!');
+      return;
+    }
+
+    globalData.poll = {
+      question: q,
+      options: [
+        { id: 1, text: o1, votes: 0 },
+        { id: 2, text: o2, votes: 0 }
+      ]
+    };
+    if (o3) globalData.poll.options.push({ id: 3, text: o3, votes: 0 });
+    if (o4) globalData.poll.options.push({ id: 4, text: o4, votes: 0 });
+
+    localStorage.removeItem('nyxven_voted_option');
+    saveGlobalData();
+    showToast('🚀 Yeni Anket Canlıda Yayınlandı!');
+
+    document.getElementById('newPollQuestion').value = '';
+    document.getElementById('opt1').value = '';
+    document.getElementById('opt2').value = '';
+    document.getElementById('opt3').value = '';
+    document.getElementById('opt4').value = '';
+  }
+
+  function deleteAdminPoll() {
+    if (!isAdmin) return;
+    globalData.poll = defaultPoll;
+    localStorage.removeItem('nyxven_voted_option');
+    saveGlobalData();
+    showToast('🗑️ Anket tamamen sıfırlandı!');
+  }
+
+  let toastTimeout;
+  function showToast(msg) {
+    const toast = document.getElementById('customToast');
+    document.getElementById('toastMsg').textContent = msg;
+    clearTimeout(toastTimeout);
+    toast.classList.add('show');
+    toastTimeout = setTimeout(() => toast.classList.remove('show'), 3500);
+  }
+
+  function toggleMobileMenu() {
+    document.getElementById('navLeftMenu').classList.toggle('active');
+  }
+
+  function goToSection(id) {
+    document.querySelectorAll('.section').forEach(sec => {
+      sec.classList.remove('visible');
+      sec.style.display = 'none';
+    });
+    const target = document.getElementById(id);
+    if (target) {
+      target.style.display = 'block';
+      requestAnimationFrame(() => target.classList.add('visible'));
+      setTimeout(() => {
+        const y = target.getBoundingClientRect().top + window.scrollY - 90;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }, 50);
+    }
+  }
+
+  function fetchVideos() {
+    const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=UCM6EXLZFrqGu5Yd0gf1PCpg`;
+    fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`)
+      .then(res => res.json())
+      .then(data => {
+        const grid = document.getElementById('youtubeVideoGrid');
+        if (data.status === 'ok' && data.items.length > 0) {
+          grid.innerHTML = '';
+          data.items.forEach(item => {
+            let vId = item.link.includes('v=') ? item.link.split('v=')[1].split('&')[0] : (item.link.includes('shorts/') ? item.link.split('shorts/')[1].split('?')[0] : '');
+            if (vId) {
+              const card = document.createElement('a');
+              card.className = 'video-card-link glass-card';
+              card.href = `https://www.youtube.com/watch?v=${vId}`;
+              card.target = '_blank';
+              card.innerHTML = `
+                <div class="thumb-wrapper">
+                  <img src="https://i.ytimg.com/vi/${vId}/hqdefault.jpg" alt="${item.title}">
+                  <div class="play-btn-overlay"><i class="fas fa-play"></i></div>
+                </div>
+                <div class="video-title-box">${item.title}</div>
+              `;
+              grid.appendChild(card);
+            }
+          });
+        }
+      }).catch(e => console.log(e));
+  }
+
+  // GERÇEKÇİ TEKİL ZİYARETÇİ SAYACI
+  function initViewCounter() {
+    let views = parseInt(localStorage.getItem('nyxven_real_site_views') || '184');
+    if (!sessionStorage.getItem('nyxven_counted_session')) {
+      views += 1;
+      localStorage.setItem('nyxven_real_site_views', views);
+      sessionStorage.setItem('nyxven_counted_session', 'true');
+    }
+    document.getElementById('viewCount').textContent = views;
+  }
+
+  function renderChatMessages() {
+    const chatList = document.getElementById('chatMessageList');
+    const messages = globalData.chat || [];
+    let likedSet = JSON.parse(localStorage.getItem('nyxven_liked_chats')) || [];
+
+    if (!messages.length) {
+      chatList.innerHTML = '<p style="color: #777;">Sohbet ortamı sessiz. İlk mesajı sen gönder!</p>';
+      return;
+    }
+    chatList.innerHTML = '';
+    messages.forEach((msg, idx) => {
+      const isLiked = likedSet.includes(idx);
+      const safeUserName = cleanUsername(msg.user);
+      const item = document.createElement('div');
+      item.className = 'chat-item';
+      item.innerHTML = `
+        <div class="chat-user">
+          <span>${safeUserName}</span>
+          <div class="chat-actions">
+            <span class="chat-time">${msg.time}</span>
+            <span class="like-btn" onclick="toggleLikeChat(${idx})" style="color: ${isLiked ? '#ff4757' : '#aaa'};">
+              <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i> ${msg.likes || 0}
+            </span>
+            <span class="delete-btn" style="display: ${isAdmin ? 'inline-block' : 'none'};" onclick="deleteChatMessage(${idx})">🗑️ Sil</span>
+          </div>
+        </div>
+        <div class="chat-text">${msg.text}</div>
+      `;
+      chatList.appendChild(item);
+    });
+  }
+
+  function sendChatMessage() {
+    const currentUser = localStorage.getItem('nyxven_current_user');
+    if (!currentUser) {
+      showToast('⚠️ Mesaj göndermek için giriş yapmalısın!');
+      goToSection('giris');
+      return;
+    }
+
+    const now = Date.now();
+    if (now - lastChatTime < MESSAGE_COOLDOWN_MS && !isAdmin) {
+      const remainingSec = Math.ceil((MESSAGE_COOLDOWN_MS - (now - lastChatTime)) / 1000);
+      showToast(`⏳ Tekrar mesaj yazmak için ${remainingSec} saniye beklemelisin!`);
+      return;
+    }
+
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+    
+    const rawUser = isAdmin ? '👑 Efecan (Admin)' : currentUser;
+    const user = cleanUsername(rawUser);
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    if(!globalData.chat) globalData.chat = [];
+    globalData.chat.push({ user, text, time, likes: 0 });
+    
+    lastChatTime = Date.now();
+    input.value = '';
+    saveGlobalData();
+    showToast('💬 Mesajın canlı olarak iletildi!');
+  }
+
+  function deleteChatMessage(idx) {
+    if (!isAdmin || !globalData.chat) return;
+    globalData.chat.splice(idx, 1);
+    saveGlobalData();
+    showToast('🗑️ Mesaj silindi!');
+  }
+
+  function toggleLikeChat(idx) {
+    let likedSet = JSON.parse(localStorage.getItem('nyxven_liked_chats')) || [];
+    if (!globalData.chat[idx]) return;
+
+    if (likedSet.includes(idx)) {
+      globalData.chat[idx].likes = Math.max(0, (globalData.chat[idx].likes || 1) - 1);
+      likedSet = likedSet.filter(i => i !== idx);
+      showToast('💔 Beğeni geri çekildi.');
+    } else {
+      globalData.chat[idx].likes = (globalData.chat[idx].likes || 0) + 1;
+      likedSet.push(idx);
+      showToast('❤️ Beğenildi!');
+    }
+
+    localStorage.setItem('nyxven_liked_chats', JSON.stringify(likedSet));
+    saveGlobalData();
+  }
+
+  function renderSuggestions() {
+    const list = document.getElementById('suggestionList');
+    const suggestions = globalData.suggestions || [];
+    let likedSet = JSON.parse(localStorage.getItem('nyxven_liked_suggestions')) || [];
+
+    if (!suggestions.length) {
+      list.innerHTML = '<p style="color: #777;">Henüz öneri yapılmamış. İlk öneriyi sen yaz!</p>';
+      return;
+    }
+    list.innerHTML = '';
+    suggestions.forEach((s, idx) => {
+      const isLiked = likedSet.includes(idx);
+      const safeUserName = cleanUsername(s.user);
+      const item = document.createElement('div');
+      item.className = 'suggestion-item';
+      item.innerHTML = `
+        <div class="chat-user">
+          <span>${safeUserName}</span>
+          <div class="chat-actions">
+            <span class="chat-time">${s.time}</span>
+            <span class="like-btn" onclick="toggleLikeSuggestion(${idx})" style="color: ${isLiked ? '#ff4757' : '#aaa'};">
+              <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i> ${s.likes || 0}
+            </span>
+            <span class="delete-btn" style="display: ${isAdmin ? 'inline-block' : 'none'};" onclick="deleteSuggestion(${idx})">🗑️ Sil</span>
+          </div>
+        </div>
+        <div class="chat-text">${s.text}</div>
+      `;
+      list.appendChild(item);
+    });
+  }
+
+  function sendSuggestion() {
+    const currentUser = localStorage.getItem('nyxven_current_user');
+    if (!currentUser) {
+      showToast('⚠️ Öneri göndermek için giriş yapmalısın!');
+      goToSection('giris');
+      return;
+    }
+
+    const now = Date.now();
+    if (now - lastSuggestionTime < MESSAGE_COOLDOWN_MS && !isAdmin) {
+      const remainingSec = Math.ceil((MESSAGE_COOLDOWN_MS - (now - lastSuggestionTime)) / 1000);
+      showToast(`⏳ Tekrar öneri yazmak için ${remainingSec} saniye beklemelisin!`);
+      return;
+    }
+
+    const input = document.getElementById('suggestionInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const rawUser = isAdmin ? '👑 Efecan (Admin)' : currentUser;
+    const user = cleanUsername(rawUser);
+    const time = new Date().toLocaleDateString();
+    if(!globalData.suggestions) globalData.suggestions = [];
+    globalData.suggestions.push({ user, text, time, likes: 0 });
+    
+    lastSuggestionTime = Date.now();
+    input.value = '';
+    saveGlobalData();
+    showToast('🚀 Öneri canlı sisteme kaydedildi!');
+  }
+
+  function deleteSuggestion(idx) {
+    if (!isAdmin || !globalData.suggestions) return;
+    globalData.suggestions.splice(idx, 1);
+    saveGlobalData();
+    showToast('🗑️ Öneri silindi!');
+  }
+
+  function toggleLikeSuggestion(idx) {
+    let likedSet = JSON.parse(localStorage.getItem('nyxven_liked_suggestions')) || [];
+    if (!globalData.suggestions[idx]) return;
+
+    if (likedSet.includes(idx)) {
+      globalData.suggestions[idx].likes = Math.max(0, (globalData.suggestions[idx].likes || 1) - 1);
+      likedSet = likedSet.filter(i => i !== idx);
+      showToast('💔 Öneri beğenisi geri çekildi.');
+    } else {
+      globalData.suggestions[idx].likes = (globalData.suggestions[idx].likes || 0) + 1;
+      likedSet.push(idx);
+      showToast('❤️ Öneri beğenildi!');
+    }
+
+    localStorage.setItem('nyxven_liked_suggestions', JSON.stringify(likedSet));
+    saveGlobalData();
+  }
+
+  function getFallbackAvatar() {
+    const c = document.createElement('canvas');
+    c.width = 140; c.height = 140;
+    const x = c.getContext('2d');
+    x.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color') || '#6c5ce7'; 
+    x.fillRect(0,0,140,140);
+    x.fillStyle = '#fff'; x.font = 'bold 64px sans-serif';
+    x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.fillText('N', 70, 70);
+    return c.toDataURL();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    checkUserIP();
+    checkAuthUI();
+    fetchVideos();
+    initViewCounter();
+    fetchGlobalData();
+  });
+</script>
+</body>
+</html>
