@@ -249,7 +249,12 @@
       font-weight: 700;
     }
 
-    /* TEMA SEÇİCİ DROPDOWN */
+    /* TEMA SEÇİCİ & ÖZEL RENK PANELİ */
+    .theme-selector-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
     .theme-selector {
       background: rgba(10, 10, 15, 0.8);
       border: 1px solid rgba(255, 255, 255, 0.15);
@@ -259,6 +264,32 @@
       font-size: 12px;
       font-weight: 600;
       outline: none;
+    }
+    .custom-color-box {
+      display: none;
+      align-items: center;
+      gap: 5px;
+      background: rgba(10,10,15,0.9);
+      padding: 4px 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .custom-color-box input[type="text"] {
+      width: 75px;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 11px;
+      outline: none;
+    }
+    .custom-color-box button {
+      background: var(--accent-color);
+      color: #fff;
+      border: none;
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
     }
 
     /* MULTI-TRACK PLAYER & EQUALIZER */
@@ -797,13 +828,20 @@
   <div class="nav-right">
     <div class="admin-badge" id="adminBadge">👑 ADMIN</div>
 
-    <!-- TEMA SEÇİCİ -->
-    <select class="theme-selector" id="themeSelector" onchange="changeTheme(this.value)">
-      <option value="default">💜 Mor (Default)</option>
-      <option value="cyberpunk">🔥 Cyberpunk</option>
-      <option value="emerald">💚 Emerald</option>
-      <option value="crimson">❤️ Crimson</option>
-    </select>
+    <!-- TEMA & ÖZEL RENK SEÇİCİ -->
+    <div class="theme-selector-wrapper">
+      <select class="theme-selector" id="themeSelector" onchange="handleThemeChange(this.value)">
+        <option value="default">💜 Mor (Default)</option>
+        <option value="cyberpunk">🔥 Cyberpunk</option>
+        <option value="emerald">💚 Emerald</option>
+        <option value="crimson">❤️ Crimson</option>
+        <option value="custom">🎨 Özel Renk</option>
+      </select>
+      <div class="custom-color-box" id="customColorBox">
+        <input type="text" id="customColorInput" placeholder="#660099">
+        <button onclick="applyCustomColor()">Tamam</button>
+      </div>
+    </div>
 
     <div class="view-counter" title="Tekil Ziyaretçi">
       <i class="fas fa-eye"></i> <span id="viewCount">0</span>
@@ -839,7 +877,7 @@
   </div>
 </nav>
 
-<!-- HERO SECTION (PROFİL RESMİ DÜZELTİLDİ: "Editor." YAZISININ ÜSTÜNDE) -->
+<!-- HERO SECTION -->
 <section class="hero" id="anasayfa">
   <div class="avatar-container">
     <img src="profile.png" id="userAvatar" alt="Profile" class="avatar" onerror="this.onerror=null; this.src=getFallbackAvatar();">
@@ -883,7 +921,7 @@
       <!-- JS Dynamic -->
     </div>
 
-    <!-- SADECE ADMIN IP (78.162.41.99) İÇİN ÖZEL ANKET YÖNETİMİ -->
+    <!-- SADECE ADMIN IP İÇİN ÖZEL ANKET YÖNETİMİ -->
     <div class="admin-poll-control" id="adminPollControl">
       <h4>👑 Admin Anket Yönetimi (Yalnızca Sana Özel)</h4>
       <div class="admin-poll-inputs">
@@ -1016,22 +1054,62 @@
   let userIP = "";
   let isAdmin = false;
 
-  // TEMA YÖNETİMİ
-  function changeTheme(themeName) {
-    if(themeName === 'default') {
-      document.documentElement.removeAttribute('data-theme');
+  // TEMA & ÖZEL RENK YÖNETİMİ
+  function handleThemeChange(val) {
+    const customBox = document.getElementById('customColorBox');
+    if(val === 'custom') {
+      customBox.style.display = 'flex';
+      return;
     } else {
-      document.documentElement.setAttribute('data-theme', themeName);
+      customBox.style.display = 'none';
     }
-    localStorage.setItem('nyxven_theme', themeName);
-    showToast('🎨 Tema değiştirildi!');
+
+    if(val === 'default') {
+      document.documentElement.removeAttribute('data-theme');
+      document.documentElement.style.removeProperty('--accent-color');
+      document.documentElement.style.removeProperty('--highlight-color');
+      document.documentElement.style.removeProperty('--accent-glow');
+    } else {
+      document.documentElement.removeAttribute('style');
+      document.documentElement.setAttribute('data-theme', val);
+    }
+    localStorage.setItem('nyxven_theme', val);
+    showToast('🎨 Tema güncellendi!');
+  }
+
+  function applyCustomColor() {
+    const hex = document.getElementById('customColorInput').value.trim();
+    if(!hex.startsWith('#') || (hex.length !== 4 && hex.length !== 7)) {
+      showToast('⚠️ Geçerli bir renk kimliği gir (Örn: #660099)');
+      return;
+    }
+
+    document.documentElement.removeAttribute('data-theme');
+    document.documentElement.style.setProperty('--accent-color', hex);
+    document.documentElement.style.setProperty('--highlight-color', hex);
+    document.documentElement.style.setProperty('--accent-glow', hex + '44');
+
+    localStorage.setItem('nyxven_theme', 'custom');
+    localStorage.setItem('nyxven_custom_hex', hex);
+    showToast('✅ Özel renk uygulandı: ' + hex);
   }
 
   // KAYITLI TEMAYI YÜKLE
   const savedTheme = localStorage.getItem('nyxven_theme');
   if(savedTheme) {
-    document.documentElement.setAttribute('data-theme', savedTheme);
     document.getElementById('themeSelector').value = savedTheme;
+    if(savedTheme === 'custom') {
+      document.getElementById('customColorBox').style.display = 'flex';
+      const hex = localStorage.getItem('nyxven_custom_hex');
+      if(hex) {
+        document.documentElement.style.setProperty('--accent-color', hex);
+        document.documentElement.style.setProperty('--highlight-color', hex);
+        document.documentElement.style.setProperty('--accent-glow', hex + '44');
+        document.getElementById('customColorInput').value = hex;
+      }
+    } else if(savedTheme !== 'default') {
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    }
   }
 
   // IP CONTROL & ADMIN SETUP
@@ -1045,13 +1123,25 @@
           document.getElementById('adminBadge').style.display = 'inline-block';
           document.getElementById('adminPollControl').style.display = 'block';
           showToast('👑 Efecan Hoş Geldin! Admin yetkileri aktif.');
-          renderPoll();
-          loadChatMessages();
-          loadSuggestions();
         }
+        // Arkadaşınla ortak veri senkronizasyonu için periyodik kontrol
+        setInterval(syncSharedData, 1500);
       })
       .catch(e => console.log(e));
   }
+
+  // ORTAK SENKRONİZASYON SİMÜLASYONU (LocalStorage StorageEvent Tetikleme)
+  function syncSharedData() {
+    const remoteChat = localStorage.getItem('nyxven_chat');
+    const remotePoll = localStorage.getItem('nyxven_poll');
+    if(remoteChat) loadChatMessages(false);
+    if(remotePoll) renderPoll(false);
+  }
+
+  window.addEventListener('storage', (e) => {
+    if(e.key === 'nyxven_chat') loadChatMessages(false);
+    if(e.key === 'nyxven_poll') renderPoll(false);
+  });
 
   // AUTH STATE MANAGEMENT
   function checkAuthUI() {
@@ -1143,7 +1233,6 @@
       return;
     }
 
-    // Yeni rastgele şifre üret ve kaydet
     const newPass = 'nyx_' + Math.floor(1000 + Math.random() * 9000);
     users[userIndex].pass = newPass;
     localStorage.setItem('nyxven_users', JSON.stringify(users));
@@ -1245,7 +1334,7 @@
     }).catch(e => console.log(e));
   }
 
-  // 3D GLASS TILT EFFECT (ÇİFT YÖNLÜ DOĞAL EĞİM - SAĞA/SOLA/YUKARI/AŞAĞI)
+  // 3D GLASS TILT EFFECT
   document.querySelectorAll('.glass-card').forEach(card => {
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
@@ -1472,7 +1561,7 @@
   }
 
   // SOHBET İŞLEMLERİ
-  function loadChatMessages() {
+  function loadChatMessages(shouldScroll = true) {
     const chatList = document.getElementById('chatMessageList');
     const messages = JSON.parse(localStorage.getItem('nyxven_chat')) || [];
     let likedSet = JSON.parse(localStorage.getItem('nyxven_liked_chats')) || [];
@@ -1501,7 +1590,7 @@
       `;
       chatList.appendChild(item);
     });
-    chatList.scrollTop = chatList.scrollHeight;
+    if(shouldScroll) chatList.scrollTop = chatList.scrollHeight;
   }
 
   function sendChatMessage() {
@@ -1552,7 +1641,7 @@
 
     localStorage.setItem('nyxven_chat', JSON.stringify(messages));
     localStorage.setItem('nyxven_liked_chats', JSON.stringify(likedSet));
-    loadChatMessages();
+    loadChatMessages(false);
   }
 
   // ÖNERİ İŞLEMLERİ
