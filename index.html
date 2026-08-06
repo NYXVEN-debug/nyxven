@@ -162,6 +162,39 @@
     .guns-nav-icon { font-size: 20px; color: #aaa; transition: all 0.3s ease; text-decoration: none; }
     .guns-nav-icon:hover { color: var(--highlight-color) !important; transform: scale(1.2) rotate(-5deg); filter: drop-shadow(0 0 10px var(--accent-color)); }
 
+    /* Kırmızı Çıkış Butonu */
+    .logout-red-btn {
+      color: #ff4d4d !important;
+      font-weight: 700 !important;
+    }
+    .logout-red-btn:hover {
+      text-shadow: 0 0 10px rgba(255, 77, 77, 0.6) !important;
+    }
+
+    /* AYARLAR POP-UP MODAL STİLİ */
+    .settings-modal {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(10px);
+      display: flex; justify-content: center; align-items: center;
+      z-index: 9999999; opacity: 0; visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .settings-modal.show { opacity: 1; visibility: visible; }
+    .settings-content {
+      background: rgba(16, 16, 24, 0.95); border: 1px solid rgba(162, 155, 254, 0.3);
+      border-radius: 20px; padding: 28px; width: 340px; color: #fff; position: relative;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8); transform: translateY(-20px); transition: transform 0.3s ease;
+    }
+    .settings-modal.show .settings-content { transform: translateY(0); }
+    .settings-content h3 { margin-bottom: 20px; font-size: 20px; color: var(--highlight-color); }
+    .settings-group { margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
+    .settings-group label { font-size: 13px; color: #aaa; }
+    .settings-group input { background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 10px; border-radius: 8px; outline: none; }
+    .settings-group input:focus { border-color: var(--highlight-color); }
+    .settings-save-btn { width: 100%; background: var(--accent-color); color: #fff; font-weight: bold; border: none; padding: 12px; border-radius: 10px; margin-top: 10px; }
+    .settings-close-btn { position: absolute; top: 16px; right: 20px; font-size: 22px; color: #888; }
+    .settings-close-btn:hover { color: #fff; }
+
     .hero {
       min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
       text-align: center; padding: 120px 20px 60px;
@@ -297,6 +330,23 @@
   <h2>[ CLICK TO ENTER ]</h2>
 </div>
 
+<!-- AYARLAR POP-UP MODAL -->
+<div id="settingsModal" class="settings-modal">
+  <div class="settings-content">
+    <span class="settings-close-btn" onclick="closeSettingsModal()">&times;</span>
+    <h3><i class="fas fa-cog"></i> Hesap Ayarları</h3>
+    <div class="settings-group">
+      <label>Yeni Kullanıcı Adı</label>
+      <input type="text" id="newUsername" placeholder="Yeni kullanıcı adın">
+    </div>
+    <div class="settings-group">
+      <label>Yeni Şifre</label>
+      <input type="password" id="newPassword" placeholder="Yeni şifren">
+    </div>
+    <button class="settings-save-btn" onclick="saveUserSettings()">Güncelle</button>
+  </div>
+</div>
+
 <audio id="bgMusic" loop preload="auto"></audio>
 
 <nav class="navbar">
@@ -307,10 +357,12 @@
     <a onclick="goToSection('hakkimda')">Hakkımda</a>
     <a onclick="goToSection('projelerim')">Projelerim</a>
     <a onclick="goToSection('videolarim')">Videolarım</a>
-    <a onclick="goToSection('anket')"><i class="fas fa-poll" style="color: var(--highlight-color);"></i> Anket</a>
+    <a onclick="goToSection('anket')">Anket</a>
     <a onclick="goToSection('kanallarim')">Kanallarım</a>
-    <a onclick="goToSection('oneri')"><i class="fas fa-lightbulb" style="color: #f1c40f;"></i> Öneri</a>
-    <a onclick="goToSection('sohbet')"><i class="fas fa-comments" style="color: var(--highlight-color);"></i> Sohbet</a>
+    <a onclick="goToSection('oneri')">Öneri</a>
+    <a onclick="goToSection('sohbet')">Sohbet</a>
+    <!-- SADECE ÇARK İKONU (YAZISIZ) -->
+    <a id="settingsNavBtn" onclick="openSettingsModal()" style="display: none;" title="Ayarlar"><i class="fas fa-cog"></i></a>
   </div>
 
   <div class="nav-right">
@@ -358,6 +410,7 @@
       <i class="fas fa-gun"></i>
     </a>
 
+    <!-- SADECE KIRMIZI (ÇIKIŞ) / GİRİŞ YAP DÜZENİ -->
     <a id="authNavBtn" onclick="handleAuthNav()" style="color: var(--highlight-color); font-weight: 600;">Giriş Yap</a>
     <a id="registerNavBtn" onclick="goToSection('kayit')">Kayıt Ol</a>
   </div>
@@ -400,7 +453,7 @@
 <section class="section" id="anket">
   <h2>Anket & Oylama</h2>
   <div class="glass-card poll-card">
-    <div class="poll-question" id="pollQuestionText">🎮 Kanalda görmek istediğin içeriği seç ve oy ver:</div>
+    <div class="poll-question" id="pollQuestionText">Kanalda görmek istediğin içeriği seç ve oy ver:</div>
     <div class="poll-options" id="pollOptionsContainer">
       <!-- JS Dynamic -->
     </div>
@@ -541,6 +594,48 @@
   let isAdmin = false;
   let globalData = { chat: [], poll: null, suggestions: [] };
 
+  // MESAJ SÜRE SINIRI (COOLDOWN) DEĞİŞKENLERİ
+  let lastChatTime = 0;
+  let lastSuggestionTime = 0;
+  const MESSAGE_COOLDOWN_MS = 5000; // 5 Saniye
+
+  // AYARLAR MODAL FONKSİYONLARI
+  function openSettingsModal() {
+    document.getElementById('settingsModal').classList.add('show');
+  }
+  function closeSettingsModal() {
+    document.getElementById('settingsModal').classList.remove('show');
+  }
+  function saveUserSettings() {
+    const newUser = document.getElementById('newUsername').value.trim();
+    const newPass = document.getElementById('newPassword').value.trim();
+    const currUser = localStorage.getItem('nyxven_current_user');
+
+    if (!currUser) {
+      showToast('⚠️ Önce giriş yapmalısın!');
+      return;
+    }
+
+    let users = JSON.parse(localStorage.getItem('nyxven_users')) || [];
+    let userIndex = users.findIndex(u => u.name === currUser);
+
+    if (newUser || newPass) {
+      if (userIndex !== -1) {
+        if (newUser) users[userIndex].name = newUser;
+        if (newPass) users[userIndex].pass = newPass;
+        localStorage.setItem('nyxven_users', JSON.stringify(users));
+      }
+      if (newUser) {
+        localStorage.setItem('nyxven_current_user', newUser);
+      }
+      checkAuthUI();
+      closeSettingsModal();
+      showToast('✅ Hesap bilgilerin güncellendi!');
+    } else {
+      showToast('⚠️ Değiştirmek istediğin alanı doldur.');
+    }
+  }
+
   // CLOUD API İLE VERİ ÇEKME & GÜNCELLEME
   function fetchGlobalData() {
     fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
@@ -653,20 +748,24 @@
     }
   }
 
-  // AUTH STATE MANAGEMENT
+  // AUTH STATE MANAGEMENT (SADECE ÇIKIŞ VE AYARLAR SEKME DÜZENİ)
   function checkAuthUI() {
     const currentUser = localStorage.getItem('nyxven_current_user');
     const authBtn = document.getElementById('authNavBtn');
     const regBtn = document.getElementById('registerNavBtn');
+    const settingsBtn = document.getElementById('settingsNavBtn');
     
     if (currentUser) {
-      authBtn.textContent = currentUser + ' (Çıkış)';
-      authBtn.style.color = '#e74c3c';
+      authBtn.textContent = '(Çıkış)';
+      authBtn.className = 'logout-red-btn';
       regBtn.style.display = 'none';
+      settingsBtn.style.display = 'inline-block';
     } else {
       authBtn.textContent = 'Giriş Yap';
+      authBtn.className = '';
       authBtn.style.color = 'var(--highlight-color)';
       regBtn.style.display = 'inline-block';
+      settingsBtn.style.display = 'none';
     }
     checkAdminRights();
   }
@@ -724,7 +823,6 @@
       showToast('🚀 Giriş yapıldı, selamlar!');
       goToSection('anasayfa');
     } else {
-      // Eğer henüz kayıt olunmadıysa direkt girilmesini kolaylaştıralım:
       localStorage.setItem('nyxven_current_user', identifier);
       checkAuthUI();
       showToast('🚀 Giriş yapıldı!');
@@ -911,12 +1009,12 @@
 
   // CANLI ANKET SİSTEMİ
   const defaultPoll = {
-    question: "🎮 Kanalda görmek istediğin içeriği seç ve oy ver:",
+    question: "Kanalda görmek istediğin içeriği seç ve oy ver:",
     options: [
-      { id: 1, text: "🔥 Valorant Highlights & Montage", votes: 0 },
-      { id: 2, text: "🎬 Edit Tutorial / FX Rehberi", votes: 0 },
-      { id: 3, text: "🎧 Phonk / Beats Production", votes: 0 },
-      { id: 4, text: "🎮 Minecraft / Gaming Vlog", votes: 0 }
+      { id: 1, text: "Valorant Highlights & Montage", votes: 0 },
+      { id: 2, text: "Edit Tutorial / FX Rehberi", votes: 0 },
+      { id: 3, text: "Phonk / Beats Production", votes: 0 },
+      { id: 4, text: "Minecraft / Gaming Vlog", votes: 0 }
     ]
   };
 
@@ -1112,6 +1210,14 @@
       return;
     }
 
+    // Cooldown / Süre Kontrolü
+    const now = Date.now();
+    if (now - lastChatTime < MESSAGE_COOLDOWN_MS && !isAdmin) {
+      const remainingSec = Math.ceil((MESSAGE_COOLDOWN_MS - (now - lastChatTime)) / 1000);
+      showToast(`⏳ Tekrar mesaj yazmak için ${remainingSec} saniye beklemelisin!`);
+      return;
+    }
+
     const input = document.getElementById('chatInput');
     const text = input.value.trim();
     if (!text) return;
@@ -1120,6 +1226,8 @@
     const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     if(!globalData.chat) globalData.chat = [];
     globalData.chat.push({ user, text, time, likes: 0 });
+    
+    lastChatTime = Date.now(); // Süre güncelleme
     input.value = '';
     saveGlobalData();
     showToast('💬 Mesajın canlı olarak iletildi!');
@@ -1167,7 +1275,7 @@
       item.className = 'suggestion-item';
       item.innerHTML = `
         <div class="chat-user">
-          <span>💡 ${s.user}</span>
+          <span>${s.user}</span>
           <div class="chat-actions">
             <span class="chat-time">${s.time}</span>
             <span class="like-btn" onclick="toggleLikeSuggestion(${idx})" style="color: ${isLiked ? '#ff4757' : '#aaa'};">
@@ -1190,6 +1298,14 @@
       return;
     }
 
+    // Cooldown / Süre Kontrolü
+    const now = Date.now();
+    if (now - lastSuggestionTime < MESSAGE_COOLDOWN_MS && !isAdmin) {
+      const remainingSec = Math.ceil((MESSAGE_COOLDOWN_MS - (now - lastSuggestionTime)) / 1000);
+      showToast(`⏳ Tekrar öneri yazmak için ${remainingSec} saniye beklemelisin!`);
+      return;
+    }
+
     const input = document.getElementById('suggestionInput');
     const text = input.value.trim();
     if (!text) return;
@@ -1198,6 +1314,8 @@
     const time = new Date().toLocaleDateString();
     if(!globalData.suggestions) globalData.suggestions = [];
     globalData.suggestions.push({ user, text, time, likes: 0 });
+    
+    lastSuggestionTime = Date.now(); // Süre güncelleme
     input.value = '';
     saveGlobalData();
     showToast('🚀 Öneri canlı sisteme kaydedildi!');
@@ -1224,7 +1342,7 @@
       showToast('❤️ Öneri beğenildi!');
     }
 
-    localStorage.setItem('nyxven_liked_suggestions', JSON.stringify(stringify(likedSet)));
+    localStorage.setItem('nyxven_liked_suggestions', JSON.stringify(likedSet));
     saveGlobalData();
   }
 
