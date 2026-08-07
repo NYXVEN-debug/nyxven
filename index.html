@@ -68,12 +68,14 @@
     html { scroll-behavior: smooth; }
     body {
       background-color: var(--bg-color);
+      background-image: linear-gradient(180deg, var(--bg-grad-1, var(--bg-color)) 0%, var(--bg-grad-2, var(--bg-color)) 100%);
+      background-attachment: fixed;
       font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
       color: var(--text-main);
       line-height: 1.6;
       overflow-x: hidden;
       position: relative;
-      transition: background-color 0.4s ease;
+      transition: background-color 0.4s ease, background-image 0.4s ease;
     }
 
     #bgCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
@@ -244,7 +246,6 @@
     .project-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px; }
     .project-desc { font-size: 13px; color: var(--text-muted); }
 
-    /* PROJE EKLEME BUTONU (SADECE SEN GÖRÜRSÜN) */
     .admin-project-btn {
       display: none; background: linear-gradient(135deg, #2ecc71, #27ae60);
       color: #fff; border: none; padding: 10px 20px; border-radius: 12px;
@@ -389,11 +390,13 @@
         <option value="cyberpunk">🔥 Cyberpunk</option>
         <option value="emerald">💚 Emerald</option>
         <option value="crimson">❤️ Crimson</option>
-        <option value="custom">🎨 Özel Renk</option>
+        <option value="custom">🎨 Özel Geçişli Renk</option>
       </select>
-      <div class="custom-color-box" id="customColorBox">
-        <input type="text" id="customColorInput" placeholder="#660099">
-        <button onclick="applyCustomColor()">Tamam</button>
+      
+      <div class="custom-color-box" id="customColorBox" style="display: none;">
+        <input type="color" id="customColor1" value="#000000" title="Üst Renk" style="width: 30px; height: 25px; padding: 0; cursor: pointer;">
+        <input type="color" id="customColor2" value="#0055ff" title="Alt Renk" style="width: 30px; height: 25px; padding: 0; cursor: pointer;">
+        <button onclick="applyCustomGradient()">Uygula</button>
       </div>
     </div>
 
@@ -452,7 +455,6 @@
 
 <section class="section" id="projelerim">
   <h2>Projelerim</h2>
-  <!-- SADECE SENİN GÖRECEĞİN PROJE EKLEME BUTONU -->
   <button id="adminAddProjectBtn" class="admin-project-btn" onclick="addNewProjectPrompt()">➕ Yeni Proje Ekle (Sadece Sana Özel)</button>
   
   <div class="project-grid" id="projectGridContainer">
@@ -607,11 +609,7 @@
 </div>
 
 <script>
-  // ==========================================
-  // GÜVENLİ VERİTABANI & KİMLİK YAPILANDIRMASI
-  // ==========================================
   const JSONBIN_BIN_ID = "6a73d67cf5f4af5e29f099d9";
-  // F12 veya dışarıdan görünmez/gizlenmiş master key yapısı
   const _0x1a = ["$2a$10$W", "9nWyux94z", "KaIO.JXk6", "7NejVKL5i", "SK9rbamL9", "CxR9aYPLx", "KM1Yl9G"];
   const getMasterKey = () => _0x1a.join('');
 
@@ -693,16 +691,21 @@
       },
       body: JSON.stringify(globalData)
     })
+    .then(res => {
+      if(!res.ok) throw new Error("API patladı amk");
+      return res.json();
+    })
     .then(() => fetchGlobalData())
-    .catch(err => console.error("Kaydedilemedi:", err));
+    .catch(err => {
+      console.error("Kaydedilemedi:", err);
+      showToast('❌ Veritabanına bağlanılamadı, JSONBin ayarlarını kontrol et!');
+    });
   }
 
-  // SADECE SENİN GÖREBİLECEĞİN PROJE EKLEME SİSTEMİ (F5 GİTMEZ - LOCALSTORAGE DESTEKLİ)
   function renderCustomProjects() {
     const container = document.getElementById('projectGridContainer');
     let customProjects = JSON.parse(localStorage.getItem('nyxven_custom_projects')) || [];
     
-    // Varsayılan Balık Oyunu kartını koruyarak özel projeleri ekle
     let html = `
       <a href="https://nyxven-debug.github.io/balik/" target="_blank" class="project-card-link glass-card">
         <div class="project-thumb-wrapper">
@@ -768,13 +771,12 @@
       return;
     } else {
       customBox.style.display = 'none';
+      document.documentElement.style.removeProperty('--bg-grad-1');
+      document.documentElement.style.removeProperty('--bg-grad-2');
     }
 
     if(val === 'default') {
       document.documentElement.removeAttribute('data-theme');
-      document.documentElement.style.removeProperty('--accent-color');
-      document.documentElement.style.removeProperty('--highlight-color');
-      document.documentElement.style.removeProperty('--accent-glow');
     } else {
       document.documentElement.removeAttribute('style');
       document.documentElement.setAttribute('data-theme', val);
@@ -783,21 +785,19 @@
     showToast('🎨 Tema güncellendi!');
   }
 
-  function applyCustomColor() {
-    const hex = document.getElementById('customColorInput').value.trim();
-    if(!hex.startsWith('#') || (hex.length !== 4 && hex.length !== 7)) {
-      showToast('⚠️ Geçerli bir renk kimliği gir (Örn: #660099)');
-      return;
-    }
+  function applyCustomGradient() {
+    const c1 = document.getElementById('customColor1').value;
+    const c2 = document.getElementById('customColor2').value;
 
     document.documentElement.removeAttribute('data-theme');
-    document.documentElement.style.setProperty('--accent-color', hex);
-    document.documentElement.style.setProperty('--highlight-color', hex);
-    document.documentElement.style.setProperty('--accent-glow', hex + '44');
+    document.documentElement.style.setProperty('--bg-grad-1', c1);
+    document.documentElement.style.setProperty('--bg-grad-2', c2);
 
     localStorage.setItem('nyxven_theme', 'custom');
-    localStorage.setItem('nyxven_custom_hex', hex);
-    showToast('✅ Özel renk uygulandı: ' + hex);
+    localStorage.setItem('nyxven_grad_1', c1);
+    localStorage.setItem('nyxven_grad_2', c2);
+    
+    showToast('✅ Mükemmel bir renk geçişi sağlandı!');
   }
 
   const savedTheme = localStorage.getItem('nyxven_theme');
@@ -805,13 +805,14 @@
     document.getElementById('themeSelector').value = savedTheme;
     if(savedTheme === 'custom') {
       document.getElementById('customColorBox').style.display = 'flex';
-      const hex = localStorage.getItem('nyxven_custom_hex');
-      if(hex) {
-        document.documentElement.style.setProperty('--accent-color', hex);
-        document.documentElement.style.setProperty('--highlight-color', hex);
-        document.documentElement.style.setProperty('--accent-glow', hex + '44');
-        document.getElementById('customColorInput').value = hex;
-      }
+      const g1 = localStorage.getItem('nyxven_grad_1') || '#000000';
+      const g2 = localStorage.getItem('nyxven_grad_2') || '#0055ff';
+      
+      document.documentElement.style.setProperty('--bg-grad-1', g1);
+      document.documentElement.style.setProperty('--bg-grad-2', g2);
+      
+      document.getElementById('customColor1').value = g1;
+      document.getElementById('customColor2').value = g2;
     } else if(savedTheme !== 'default') {
       document.documentElement.setAttribute('data-theme', savedTheme);
     }
@@ -1284,7 +1285,6 @@
       }).catch(e => console.log(e));
   }
 
-  // GERÇEKÇİ TEKİL ZİYARETÇİ SAYACI
   function initViewCounter() {
     let views = parseInt(localStorage.getItem('nyxven_real_site_views') || '184');
     if (!sessionStorage.getItem('nyxven_counted_session')) {
