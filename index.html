@@ -143,7 +143,6 @@
       display: none; align-items: center; gap: 5px; background: rgba(10,10,15,0.9);
       padding: 4px 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);
     }
-    .custom-color-box input[type="text"] { width: 75px; background: transparent; border: none; color: #fff; font-size: 11px; outline: none; }
     .custom-color-box button { background: var(--accent-color); color: #fff; border: none; padding: 3px 8px; border-radius: 8px; font-size: 11px; font-weight: 600; }
 
     .media-controls {
@@ -455,22 +454,14 @@
 
 <section class="section" id="projelerim">
   <h2>Projelerim</h2>
-  <button id="adminAddProjectBtn" class="admin-project-btn" onclick="addNewProjectPrompt()">➕ Yeni Proje Ekle (Sadece Sana Özel)</button>
+  <button id="adminAddProjectBtn" class="admin-project-btn" onclick="addNewProjectPrompt()">➕ Yeni Proje Ekle (Canlı - Herkeste Görünür)</button>
   
   <div class="project-grid" id="projectGridContainer">
-    <a href="https://nyxven-debug.github.io/balik/" target="_blank" class="project-card-link glass-card">
-      <div class="project-thumb-wrapper">
-        <img src="image_ab6d3d.jpg" alt="Balık Oyunu">
-      </div>
-      <div class="project-info-box">
-        <div class="project-title">🐟 Balık Oyunu</div>
-        <div class="project-desc">Web tabanlı balık besleme ve akvaryum simülasyon oyunu. Tıklayarak oyna!</div>
-      </div>
-    </a>
+    <!-- Projeler JavaScript ile Dinamik Yüklenir -->
   </div>
 </section>
 
-<section class="section visible" id="videolarim" style="display: block;">
+<section class="section" id="videolarim">
   <h2>Videolarım</h2>
   <p style="color: var(--text-muted); margin-bottom: 15px;">En son yüklenen içeriklerim (Tıklayarak izleyebilirsin):</p>
   <div class="video-grid" id="youtubeVideoGrid">
@@ -616,11 +607,25 @@
   const ADMIN_IP = "78.162.41.99";
   let userIP = "";
   let isAdmin = false;
-  let globalData = { chat: [], poll: null, suggestions: [] };
+  let globalData = { chat: [], poll: null, suggestions: [], projects: [], realViews: 184, visitedIPs: [] };
 
   let lastChatTime = 0;
   let lastSuggestionTime = 0;
   const MESSAGE_COOLDOWN_MS = 5000;
+
+  // XSS Güvenlik Temizleyicisi
+  function escapeHTML(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>'"]/g, 
+      tag => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[tag] || tag)
+    );
+  }
 
   function cleanUsername(name) {
     if (!name) return 'Gizli Kullanıcı';
@@ -673,10 +678,12 @@
     .then(res => res.json())
     .then(resData => {
       if(resData && resData.record) {
-        globalData = resData.record;
+        globalData = Object.assign({ chat: [], poll: null, suggestions: [], projects: [], realViews: 184, visitedIPs: [] }, resData.record);
         renderChatMessages();
         renderSuggestions();
         renderPoll();
+        renderProjects();
+        processUniqueIPView();
       }
     })
     .catch(err => console.error("Veri çekilemedi:", err));
@@ -692,42 +699,69 @@
       body: JSON.stringify(globalData)
     })
     .then(res => {
-      if(!res.ok) throw new Error("API patladı amk");
+      if(!res.ok) throw new Error("API hatası");
       return res.json();
     })
     .then(() => fetchGlobalData())
     .catch(err => {
       console.error("Kaydedilemedi:", err);
-      showToast('❌ Veritabanına bağlanılamadı, JSONBin ayarlarını kontrol et!');
+      showToast('❌ Veritabanına bağlanılamadı!');
     });
   }
 
-  function renderCustomProjects() {
-    const container = document.getElementById('projectGridContainer');
-    let customProjects = JSON.parse(localStorage.getItem('nyxven_custom_projects')) || [];
+  // IP Bazlı Gerçek & Eşzamanlı Ziyaretçi Sayacı
+  function processUniqueIPView() {
+    if (!userIP) return;
+    if (!globalData.visitedIPs) globalData.visitedIPs = [];
     
+    if (!globalData.visitedIPs.includes(userIP)) {
+      globalData.visitedIPs.push(userIP);
+      globalData.realViews = (globalData.realViews || 0) + 1;
+      saveGlobalData();
+    }
+    
+    document.getElementById('viewCount').textContent = globalData.realViews || 184;
+  }
+
+  // Sabit ve Dinamik Projeler (Server-Side Herkese Ortak)
+  function renderProjects() {
+    const container = document.getElementById('projectGridContainer');
+    
+    // Varsayılan / Sabit Projeler (Balık Oyunu + Çark/Zamanlayıcı)
     let html = `
       <a href="https://nyxven-debug.github.io/balik/" target="_blank" class="project-card-link glass-card">
         <div class="project-thumb-wrapper">
-          <img src="image_ab6d3d.jpg" alt="Balık Oyunu">
+          <img src="image_ab6d3d.jpg" alt="Balık Oyunu" onerror="this.src='profile.png'">
         </div>
         <div class="project-info-box">
           <div class="project-title">🐟 Balık Oyunu</div>
           <div class="project-desc">Web tabanlı balık besleme ve akvaryum simülasyon oyunu. Tıklayarak oyna!</div>
         </div>
       </a>
+
+      <a href="https://nyxven-debug.github.io/cark/" target="_blank" class="project-card-link glass-card">
+        <div class="project-thumb-wrapper">
+          <img src="profile.png" alt="Çark & Zamanlayıcı">
+        </div>
+        <div class="project-info-box">
+          <div class="project-title">🎡 Çark & Zamanlayıcı</div>
+          <div class="project-desc">Rastgele seçim çarkı, geri sayım zamanlayıcı ve pratik araç kümesi.</div>
+        </div>
+      </a>
     `;
 
-    customProjects.forEach((p, index) => {
+    // Sunucudan (JSONBin) Gelen Ortak Projeler
+    const serverProjects = globalData.projects || [];
+    serverProjects.forEach((p, index) => {
       html += `
-        <a href="${p.link}" target="_blank" class="project-card-link glass-card" style="position: relative;">
+        <a href="${escapeHTML(p.link)}" target="_blank" class="project-card-link glass-card" style="position: relative;">
           ${isAdmin ? `<span onclick="event.preventDefault(); deleteCustomProject(${index})" style="position: absolute; top: 10px; right: 10px; background: rgba(231, 76, 60, 0.8); color: white; padding: 4px 8px; border-radius: 6px; font-size: 11px; z-index: 10;">🗑️ Sil</span>` : ''}
           <div class="project-thumb-wrapper">
-            <img src="${p.image}" alt="${p.title}" onerror="this.src='profile.png'">
+            <img src="${escapeHTML(p.image)}" alt="${escapeHTML(p.title)}" onerror="this.src='profile.png'">
           </div>
           <div class="project-info-box">
-            <div class="project-title">${p.title}</div>
-            <div class="project-desc">${p.desc}</div>
+            <div class="project-title">${escapeHTML(p.title)}</div>
+            <div class="project-desc">${escapeHTML(p.desc)}</div>
           </div>
         </a>
       `;
@@ -743,24 +777,23 @@
     if (!desc) return;
     const link = prompt("Projenin Göndereceği Linki (URL) Girin:");
     if (!link) return;
-    const image = prompt("Proje Resim Bağlantısını (URL veya dosya adı) Girin:", "profile.png");
+    const image = prompt("Proje Resim Bağlantısını Girin:", "profile.png");
 
-    let customProjects = JSON.parse(localStorage.getItem('nyxven_custom_projects')) || [];
-    customProjects.push({ title, desc, link, image: image || 'profile.png' });
-    localStorage.setItem('nyxven_custom_projects', JSON.stringify(customProjects));
+    if (!globalData.projects) globalData.projects = [];
+    globalData.projects.push({ title, desc, link, image: image || 'profile.png' });
     
-    renderCustomProjects();
-    showToast('🚀 Yeni proje başarıyla eklendi!');
+    saveGlobalData();
+    showToast('🚀 Yeni proje sunucuya eklendi! Artık herkes görebilir.');
   }
 
   function deleteCustomProject(index) {
     if (!isAdmin) return;
-    if (confirm("Bu projeyi silmek istediğine emin misin?")) {
-      let customProjects = JSON.parse(localStorage.getItem('nyxven_custom_projects')) || [];
-      customProjects.splice(index, 1);
-      localStorage.setItem('nyxven_custom_projects', JSON.stringify(customProjects));
-      renderCustomProjects();
-      showToast('🗑️ Proje silindi.');
+    if (confirm("Bu projeyi herkesten tamamen silmek istediğine emin misin?")) {
+      if (globalData.projects && globalData.projects[index]) {
+        globalData.projects.splice(index, 1);
+        saveGlobalData();
+        showToast('🗑️ Proje sunucudan silindi.');
+      }
     }
   }
 
@@ -797,7 +830,7 @@
     localStorage.setItem('nyxven_grad_1', c1);
     localStorage.setItem('nyxven_grad_2', c2);
     
-    showToast('✅ Mükemmel bir renk geçişi sağlandı!');
+    showToast('✅ Renk geçişi uygulandı!');
   }
 
   const savedTheme = localStorage.getItem('nyxven_theme');
@@ -824,9 +857,13 @@
       .then(data => {
         userIP = data.ip;
         checkAdminRights();
-        setInterval(fetchGlobalData, 3000);
+        fetchGlobalData();
+        setInterval(fetchGlobalData, 4000);
       })
-      .catch(e => console.log(e));
+      .catch(e => {
+        console.log("IP alınamadı:", e);
+        fetchGlobalData();
+      });
   }
 
   function checkAdminRights() {
@@ -842,7 +879,7 @@
       document.getElementById('adminPollControl').style.display = 'none';
       document.getElementById('adminAddProjectBtn').style.display = 'none';
     }
-    renderCustomProjects();
+    renderProjects();
   }
 
   function checkAuthUI() {
@@ -918,7 +955,7 @@
     if(found) {
       localStorage.setItem('nyxven_current_user', cleanUsername(found.name));
       checkAuthUI();
-      showToast('🚀 Giriş yapıldı, selamlar!');
+      showToast('🚀 Giriş yapıldı!');
       goToSection('anasayfa');
     } else {
       localStorage.setItem('nyxven_current_user', cleanUsername(identifier));
@@ -939,7 +976,7 @@
     const userIndex = users.findIndex(u => u.email === email);
 
     if(userIndex === -1) {
-      showToast('❌ Böyle bir eposta yok!');
+      showToast('❌ Böyle bir e-posta kayıtlı değil!');
       return;
     }
 
@@ -1159,7 +1196,7 @@
 
       optEl.innerHTML = `
         <div class="poll-bg-bar" style="width: ${userVotedId !== null ? pct : 0}%"></div>
-        <span class="poll-text">${opt.text}</span>
+        <span class="poll-text">${escapeHTML(opt.text)}</span>
         <span class="poll-percent">${userVotedId !== null ? pct + '% (' + opt.votes + ' oy)' : opt.votes + ' oy'}</span>
       `;
       container.appendChild(optEl);
@@ -1273,26 +1310,16 @@
               card.target = '_blank';
               card.innerHTML = `
                 <div class="thumb-wrapper">
-                  <img src="https://i.ytimg.com/vi/${vId}/hqdefault.jpg" alt="${item.title}">
+                  <img src="https://i.ytimg.com/vi/${vId}/hqdefault.jpg" alt="${escapeHTML(item.title)}">
                   <div class="play-btn-overlay"><i class="fas fa-play"></i></div>
                 </div>
-                <div class="video-title-box">${item.title}</div>
+                <div class="video-title-box">${escapeHTML(item.title)}</div>
               `;
               grid.appendChild(card);
             }
           });
         }
       }).catch(e => console.log(e));
-  }
-
-  function initViewCounter() {
-    let views = parseInt(localStorage.getItem('nyxven_real_site_views') || '184');
-    if (!sessionStorage.getItem('nyxven_counted_session')) {
-      views += 1;
-      localStorage.setItem('nyxven_real_site_views', views);
-      sessionStorage.setItem('nyxven_counted_session', 'true');
-    }
-    document.getElementById('viewCount').textContent = views;
   }
 
   function renderChatMessages() {
@@ -1307,21 +1334,22 @@
     chatList.innerHTML = '';
     messages.forEach((msg, idx) => {
       const isLiked = likedSet.includes(idx);
-      const safeUserName = cleanUsername(msg.user);
+      const safeUserName = escapeHTML(cleanUsername(msg.user));
+      const safeText = escapeHTML(msg.text);
       const item = document.createElement('div');
       item.className = 'chat-item';
       item.innerHTML = `
         <div class="chat-user">
           <span>${safeUserName}</span>
           <div class="chat-actions">
-            <span class="chat-time">${msg.time}</span>
+            <span class="chat-time">${escapeHTML(msg.time)}</span>
             <span class="like-btn" onclick="toggleLikeChat(${idx})" style="color: ${isLiked ? '#ff4757' : '#aaa'};">
               <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i> ${msg.likes || 0}
             </span>
             <span class="delete-btn" style="display: ${isAdmin ? 'inline-block' : 'none'};" onclick="deleteChatMessage(${idx})">🗑️ Sil</span>
           </div>
         </div>
-        <div class="chat-text">${msg.text}</div>
+        <div class="chat-text">${safeText}</div>
       `;
       chatList.appendChild(item);
     });
@@ -1395,21 +1423,22 @@
     list.innerHTML = '';
     suggestions.forEach((s, idx) => {
       const isLiked = likedSet.includes(idx);
-      const safeUserName = cleanUsername(s.user);
+      const safeUserName = escapeHTML(cleanUsername(s.user));
+      const safeText = escapeHTML(s.text);
       const item = document.createElement('div');
       item.className = 'suggestion-item';
       item.innerHTML = `
         <div class="chat-user">
           <span>${safeUserName}</span>
           <div class="chat-actions">
-            <span class="chat-time">${s.time}</span>
+            <span class="chat-time">${escapeHTML(s.time)}</span>
             <span class="like-btn" onclick="toggleLikeSuggestion(${idx})" style="color: ${isLiked ? '#ff4757' : '#aaa'};">
               <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i> ${s.likes || 0}
             </span>
             <span class="delete-btn" style="display: ${isAdmin ? 'inline-block' : 'none'};" onclick="deleteSuggestion(${idx})">🗑️ Sil</span>
           </div>
         </div>
-        <div class="chat-text">${s.text}</div>
+        <div class="chat-text">${safeText}</div>
       `;
       list.appendChild(item);
     });
@@ -1487,8 +1516,6 @@
     checkUserIP();
     checkAuthUI();
     fetchVideos();
-    initViewCounter();
-    fetchGlobalData();
   });
 </script>
 </body>
