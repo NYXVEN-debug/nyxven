@@ -488,6 +488,16 @@
         <button style="background: #2ecc71; color: #fff;" onclick="createAdminPoll()">Yeni Anketi Yayınla</button>
         <button style="background: #e74c3c; color: #fff;" onclick="deleteAdminPoll()">Anketi Sıfırla / Sil</button>
       </div>
+
+      <!-- BAN YÖNETİMİ PANELİ -->
+      <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+        <h4 style="color: #e74c3c; margin-bottom: 8px;">🔨 Kullanıcı Ban / Yasaklama Yönetimi</h4>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="banUsernameInput" placeholder="Banlanacak kullanıcı adı" style="flex: 1; background: rgba(10,10,15,0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px; color: #fff;">
+          <button style="background: #e74c3c; color: #fff; border: none; padding: 8px 14px; border-radius: 8px; font-weight: bold;" onclick="adminBanUser()">Banla</button>
+          <button style="background: #2ecc71; color: #fff; border: none; padding: 8px 14px; border-radius: 8px; font-weight: bold;" onclick="adminUnbanUser()">Ban Kaldır</button>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -607,11 +617,20 @@
   const ADMIN_IP = "78.162.41.99";
   let userIP = "";
   let isAdmin = false;
-  let globalData = { chat: [], poll: null, suggestions: [], projects: [], realViews: 184, visitedIPs: [] };
+  let globalData = { chat: [], poll: null, suggestions: [], projects: [], realViews: 184, visitedIPs: [], bannedUsers: [] };
 
   let lastChatTime = 0;
   let lastSuggestionTime = 0;
   const MESSAGE_COOLDOWN_MS = 5000;
+
+  // Küfür ve Yasaklı Kelimeler Filtresi
+  const badWords = ["küfür1", "küfür2", "amk", "aq", "orospu", "sik", "anan", "piç", "oç", "sikik"];
+
+  function containsBadWord(text) {
+    if (!text) return false;
+    const lowerText = text.toLowerCase();
+    return badWords.some(word => lowerText.includes(word));
+  }
 
   // XSS Güvenlik Temizleyicisi
   function escapeHTML(str) {
@@ -651,6 +670,11 @@
       return;
     }
 
+    if (newUser && (containsBadWord(newUser))) {
+      showToast('❌ Kullanıcı adı uygunsuz kelimeler içeremez!');
+      return;
+    }
+
     let users = JSON.parse(localStorage.getItem('nyxven_users')) || [];
     let userIndex = users.findIndex(u => u.name === currUser);
 
@@ -678,7 +702,11 @@
     .then(res => res.json())
     .then(resData => {
       if(resData && resData.record) {
-        globalData = Object.assign({ chat: [], poll: null, suggestions: [], projects: [], realViews: 184, visitedIPs: [] }, resData.record);
+        globalData = Object.assign({ chat: [], poll: null, suggestions: [], projects: [], realViews: 184, visitedIPs: [], bannedUsers: [] }, resData.record);
+        
+        // Giriş yapmış kullanıcı banlı mı kontrol et
+        checkIfCurrentAccountBanned();
+
         renderChatMessages();
         renderSuggestions();
         renderPoll();
@@ -709,7 +737,51 @@
     });
   }
 
-  // IP Bazlı Gerçek & Eşzamanlı Ziyaretçi Sayacı
+  // Ban Kontrolü
+  function checkIfCurrentAccountBanned() {
+    const currUser = localStorage.getItem('nyxven_current_user');
+    if (currUser && globalData.bannedUsers && globalData.bannedUsers.includes(currUser.toLowerCase())) {
+      localStorage.removeItem('nyxven_current_user');
+      checkAuthUI();
+      showToast('🚨 Bu hesap admin tarafından süresiz yasaklanmıştır (Ban)!');
+    }
+  }
+
+  function adminBanUser() {
+    if (!isAdmin) return;
+    const target = document.getElementById('banUsernameInput').value.trim().toLowerCase();
+    if (!target) {
+      showToast('⚠️ Banlanacak kullanıcı adını yaz!');
+      return;
+    }
+    if (!globalData.bannedUsers) globalData.bannedUsers = [];
+    if (!globalData.bannedUsers.includes(target)) {
+      globalData.bannedUsers.push(target);
+      saveGlobalData();
+      showToast(`🔨 "${target}" kullanıcısı başarıyla banlandı!`);
+      document.getElementById('banUsernameInput').value = '';
+    } else {
+      showToast('⚠️ Bu kullanıcı zaten banlı!');
+    }
+  }
+
+  function adminUnbanUser() {
+    if (!isAdmin) return;
+    const target = document.getElementById('banUsernameInput').value.trim().toLowerCase();
+    if (!target) {
+      showToast('⚠️ Banı kaldırılacak kullanıcı adını yaz!');
+      return;
+    }
+    if (globalData.bannedUsers && globalData.bannedUsers.includes(target)) {
+      globalData.bannedUsers = globalData.bannedUsers.filter(u => u !== target);
+      saveGlobalData();
+      showToast(`✅ "${target}" kullanıcısının banı kaldırıldı!`);
+      document.getElementById('banUsernameInput').value = '';
+    } else {
+      showToast('⚠️ Bu kullanıcı banlı listesinde bulunamadı!');
+    }
+  }
+
   function processUniqueIPView() {
     if (!userIP) return;
     if (!globalData.visitedIPs) globalData.visitedIPs = [];
@@ -723,11 +795,9 @@
     document.getElementById('viewCount').textContent = globalData.realViews || 184;
   }
 
-  // Sabit ve Dinamik Projeler (Server-Side Herkese Ortak)
   function renderProjects() {
     const container = document.getElementById('projectGridContainer');
     
-    // Varsayılan / Sabit Projeler (Balık Oyunu + Çark/Zamanlayıcı)
     let html = `
       <a href="https://nyxven-debug.github.io/balik/" target="_blank" class="project-card-link glass-card">
         <div class="project-thumb-wrapper">
@@ -750,7 +820,6 @@
       </a>
     `;
 
-    // Sunucudan (JSONBin) Gelen Ortak Projeler
     const serverProjects = globalData.projects || [];
     serverProjects.forEach((p, index) => {
       html += `
@@ -914,6 +983,7 @@
     }
   }
 
+  // Gerçek E-Posta Kontrolü ve Küfür Engelleyici Kayıt Olma Fonksiyonu
   function registerUserAccount() {
     let name = document.getElementById('regName').value.trim();
     const email = document.getElementById('regEmail').value.trim();
@@ -921,6 +991,19 @@
 
     if(!name || !email || !pass) {
       showToast('⚠️ Lütfen tüm alanları doldur!');
+      return;
+    }
+
+    // E-posta format kontrolü (Regex)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      showToast('❌ Geçerli ve gerçek bir e-posta adresi girmelisin!');
+      return;
+    }
+
+    // Küfür kontrolü
+    if (containsBadWord(name)) {
+      showToast('❌ Kullanıcı adın uygunsuz kelimeler içeremez!');
       return;
     }
 
@@ -949,16 +1032,26 @@
       return;
     }
 
+    if (globalData.bannedUsers && globalData.bannedUsers.includes(identifier.toLowerCase())) {
+      showToast('🚨 Bu hesap yasaklanmıştır (Ban)!');
+      return;
+    }
+
     let users = JSON.parse(localStorage.getItem('nyxven_users')) || [];
     const found = users.find(u => (u.name === identifier || u.email === identifier) && u.pass === pass);
 
     if(found) {
+      if (globalData.bannedUsers && globalData.bannedUsers.includes(found.name.toLowerCase())) {
+        showToast('🚨 Bu hesap yasaklanmıştır (Ban)!');
+        return;
+      }
       localStorage.setItem('nyxven_current_user', cleanUsername(found.name));
       checkAuthUI();
       showToast('🚀 Giriş yapıldı!');
       goToSection('anasayfa');
     } else {
-      localStorage.setItem('nyxven_current_user', cleanUsername(identifier));
+      let cleaned = cleanUsername(identifier);
+      localStorage.setItem('nyxven_current_user', cleaned);
       checkAuthUI();
       showToast('🚀 Giriş yapıldı!');
       goToSection('anasayfa');
@@ -1355,11 +1448,27 @@
     });
   }
 
+  // Küfür Filtreli ve Ban Kontrollü Sohbet Mesajı Gönderme
   function sendChatMessage() {
     const currentUser = localStorage.getItem('nyxven_current_user');
     if (!currentUser) {
       showToast('⚠️ Mesaj göndermek için giriş yapmalısın!');
       goToSection('giris');
+      return;
+    }
+
+    if (globalData.bannedUsers && globalData.bannedUsers.includes(currentUser.toLowerCase())) {
+      showToast('🚨 Hesabın yasaklandığı için mesaj yazamazsın!');
+      return;
+    }
+
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    // Küfür kontrolü
+    if (containsBadWord(text) || containsBadWord(currentUser)) {
+      showToast('❌ Mesajın veya kullanıcı adın uygunsuz kelimeler içeremez!');
       return;
     }
 
@@ -1369,10 +1478,6 @@
       showToast(`⏳ Tekrar mesaj yazmak için ${remainingSec} saniye beklemelisin!`);
       return;
     }
-
-    const input = document.getElementById('chatInput');
-    const text = input.value.trim();
-    if (!text) return;
     
     const rawUser = isAdmin ? '👑 Efecan (Admin)' : currentUser;
     const user = cleanUsername(rawUser);
@@ -1452,16 +1557,26 @@
       return;
     }
 
-    const now = Date.now();
-    if (now - lastSuggestionTime < MESSAGE_COOLDOWN_MS && !isAdmin) {
-      const remainingSec = Math.ceil((MESSAGE_COOLDOWN_MS - (now - lastSuggestionTime)) / 1000);
-      showToast(`⏳ Tekrar öneri yazmak için ${remainingSec} saniye beklemelisin!`);
+    if (globalData.bannedUsers && globalData.bannedUsers.includes(currentUser.toLowerCase())) {
+      showToast('🚨 Hesabın yasaklandığı için öneri yazamazsın!');
       return;
     }
 
     const input = document.getElementById('suggestionInput');
     const text = input.value.trim();
     if (!text) return;
+
+    if (containsBadWord(text)) {
+      showToast('❌ Önerin uygunsuz kelimeler içeremez!');
+      return;
+    }
+
+    const now = Date.now();
+    if (now - lastSuggestionTime < MESSAGE_COOLDOWN_MS && !isAdmin) {
+      const remainingSec = Math.ceil((MESSAGE_COOLDOWN_MS - (now - lastSuggestionTime)) / 1000);
+      showToast(`⏳ Tekrar öneri yazmak için ${remainingSec} saniye beklemelisin!`);
+      return;
+    }
 
     const rawUser = isAdmin ? '👑 Efecan (Admin)' : currentUser;
     const user = cleanUsername(rawUser);
