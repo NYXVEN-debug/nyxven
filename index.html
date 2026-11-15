@@ -5,18 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>nyxven.com | Editor & İçerik Üreticisi</title>
   
-  <!-- 🎨 FAVICON: Base64 gömülü, her zaman görünür, dönen ikon yok -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23a29bfe'/%3E%3Cstop offset='100%25' style='stop-color:%236c5ce7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='%2308080c'/%3E%3Ctext x='50' y='68' font-family='Arial,sans-serif' font-size='55' font-weight='bold' fill='url(%23g)' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
   
   <meta name="description" content="Efecan Ülker (nyxven) - Editor & İçerik Üreticisi. Videolar, projeler ve iletişim.">
-  <meta name="keywords" content="nyxven, Efecan Ülker, editor, video editör, içerik üreticisi">
-  <meta name="author" content="Efecan Ülker">
-  
-  <meta property="og:title" content="nyxven.com - Efecan Ülker">
-  <meta property="og:description" content="Editor & İçerik Üreticisi. En son videolar ve projeler.">
-  <meta property="og:image" content="profile.png">
-  <meta property="og:type" content="website">
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
@@ -30,94 +21,26 @@
       --highlight-color: #a29bfe;
       --nav-bg: rgba(12, 12, 18, 0.7);
     }
-
-    [data-theme="cyberpunk"] {
-      --bg-color: #050508;
-      --card-bg: rgba(25, 10, 35, 0.6);
-      --accent-color: #ff007f;
-      --accent-glow: rgba(255, 0, 127, 0.3);
-      --text-main: #fff;
-      --text-muted: #ff99cc;
-      --highlight-color: #ff3399;
-      --nav-bg: rgba(15, 5, 20, 0.8);
-    }
-
-    [data-theme="emerald"] {
-      --bg-color: #040d08;
-      --card-bg: rgba(10, 25, 18, 0.6);
-      --accent-color: #00b894;
-      --accent-glow: rgba(0, 184, 148, 0.3);
-      --text-main: #fff;
-      --text-muted: #81ecec;
-      --highlight-color: #55efc4;
-      --nav-bg: rgba(5, 18, 12, 0.8);
-    }
-
-    [data-theme="crimson"] {
-      --bg-color: #0d0404;
-      --card-bg: rgba(30, 10, 10, 0.6);
-      --accent-color: #d63031;
-      --accent-glow: rgba(214, 48, 49, 0.3);
-      --text-main: #fff;
-      --text-muted: #fab1a0;
-      --highlight-color: #ff7675;
-      --nav-bg: rgba(18, 5, 5, 0.8);
-    }
+    [data-theme="cyberpunk"] { --bg-color: #050508; --card-bg: rgba(25, 10, 35, 0.6); --accent-color: #ff007f; --accent-glow: rgba(255, 0, 127, 0.3); --text-main: #fff; --text-muted: #ff99cc; --highlight-color: #ff3399; --nav-bg: rgba(15, 5, 20, 0.8); }
+    [data-theme="emerald"] { --bg-color: #040d08; --card-bg: rgba(10, 25, 18, 0.6); --accent-color: #00b894; --accent-glow: rgba(0, 184, 148, 0.3); --text-main: #fff; --text-muted: #81ecec; --highlight-color: #55efc4; --nav-bg: rgba(5, 18, 12, 0.8); }
+    [data-theme="crimson"] { --bg-color: #0d0404; --card-bg: rgba(30, 10, 10, 0.6); --accent-color: #d63031; --accent-glow: rgba(214, 48, 49, 0.3); --text-main: #fff; --text-muted: #fab1a0; --highlight-color: #ff7675; --nav-bg: rgba(18, 5, 5, 0.8); }
 
     * { margin: 0; padding: 0; box-sizing: border-box; cursor: url('arrow.cur'), auto !important; }
     a, button, input, textarea, .player-btn, .guns-nav-icon, .menu-toggle, .theme-select { cursor: url('arrow.cur'), pointer !important; }
-
     html { scroll-behavior: smooth; }
-    body {
-      background-color: var(--bg-color);
-      background-image: linear-gradient(180deg, var(--bg-grad-1, var(--bg-color)) 0%, var(--bg-grad-2, var(--bg-color)) 100%);
-      background-attachment: fixed;
-      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
-      color: var(--text-main);
-      line-height: 1.6;
-      overflow-x: hidden;
-      position: relative;
-      transition: background-color 0.4s ease, background-image 0.4s ease;
-    }
-
+    body { background-color: var(--bg-color); background-image: linear-gradient(180deg, var(--bg-grad-1, var(--bg-color)) 0%, var(--bg-grad-2, var(--bg-color)) 100%); background-attachment: fixed; font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif; color: var(--text-main); line-height: 1.6; overflow-x: hidden; position: relative; transition: background-color 0.4s ease, background-image 0.4s ease; }
     #bgCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
+    body::before { content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%); background-size: 100% 4px; z-index: 999990; pointer-events: none; opacity: 0.4; }
 
-    body::before {
-      content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-      background-size: 100% 4px; z-index: 999990; pointer-events: none; opacity: 0.4;
-    }
-
-    #customToast {
-      position: fixed; top: 25px; right: 25px;
-      background: rgba(18, 18, 26, 0.95); border: 1px solid rgba(162, 155, 254, 0.4);
-      border-left: 5px solid var(--highlight-color); color: #fff; padding: 14px 22px;
-      border-radius: 12px; box-shadow: 0 10px 30px var(--accent-glow); z-index: 999999;
-      font-weight: 500; display: flex; align-items: center; gap: 12px; backdrop-filter: blur(15px);
-      opacity: 0; visibility: hidden; transform: translateY(-20px) scale(0.95);
-      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    }
+    #customToast { position: fixed; top: 25px; right: 25px; background: rgba(18, 18, 26, 0.95); border: 1px solid rgba(162, 155, 254, 0.4); border-left: 5px solid var(--highlight-color); color: #fff; padding: 14px 22px; border-radius: 12px; box-shadow: 0 10px 30px var(--accent-glow); z-index: 999999; font-weight: 500; display: flex; align-items: center; gap: 12px; backdrop-filter: blur(15px); opacity: 0; visibility: hidden; transform: translateY(-20px) scale(0.95); transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
     #customToast.show { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
 
-    #enterOverlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(8, 8, 12, 0.98); backdrop-filter: blur(25px); z-index: 999999;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      transition: opacity 0.8s ease, visibility 0.8s ease;
-    }
+    #enterOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 8, 12, 0.98); backdrop-filter: blur(25px); z-index: 999999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease, visibility 0.8s ease; }
     #enterOverlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-    #enterOverlay h2 {
-      font-size: 28px; font-weight: 800; letter-spacing: 5px; color: #fff; text-transform: uppercase;
-      text-shadow: 0 0 25px var(--accent-color); animation: pulse 2s infinite;
-    }
+    #enterOverlay h2 { font-size: 28px; font-weight: 800; letter-spacing: 5px; color: #fff; text-transform: uppercase; text-shadow: 0 0 25px var(--accent-color); animation: pulse 2s infinite; }
     @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } }
 
-    .navbar {
-      position: fixed; top: 0; left: 0; width: 100%; padding: 16px 40px;
-      display: flex; justify-content: space-between; align-items: center;
-      background: var(--nav-bg); backdrop-filter: blur(20px); z-index: 9999;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08); transition: background 0.4s ease;
-    }
+    .navbar { position: fixed; top: 0; left: 0; width: 100%; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; background: var(--nav-bg); backdrop-filter: blur(20px); z-index: 9999; border-bottom: 1px solid rgba(255, 255, 255, 0.08); transition: background 0.4s ease; }
     .brand { font-weight: 800; color: var(--highlight-color); font-size: 20px; letter-spacing: 1px; text-shadow: 0 0 10px var(--accent-glow); }
     .nav-left { display: flex; align-items: center; gap: 22px; }
     .nav-left a, .nav-right a { color: var(--text-muted); text-decoration: none; font-size: 15px; font-weight: 500; transition: all 0.3s ease; }
@@ -125,28 +48,13 @@
     .nav-right { display: flex; align-items: center; gap: 16px; }
     .menu-toggle { display: none; font-size: 24px; color: #fff; }
 
-    .view-counter {
-      background: var(--accent-glow); border: 1px solid rgba(162, 155, 254, 0.3);
-      padding: 5px 12px; border-radius: 20px; font-size: 13px; color: var(--highlight-color);
-      display: flex; align-items: center; gap: 6px; font-weight: 600;
-    }
-
+    .view-counter { background: var(--accent-glow); border: 1px solid rgba(162, 155, 254, 0.3); padding: 5px 12px; border-radius: 20px; font-size: 13px; color: var(--highlight-color); display: flex; align-items: center; gap: 6px; font-weight: 600; }
     .theme-selector-wrapper { display: flex; align-items: center; gap: 6px; }
-    .theme-selector {
-      background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(255, 255, 255, 0.15);
-      color: var(--highlight-color); padding: 5px 10px; border-radius: 15px; font-size: 12px;
-      font-weight: 600; outline: none;
-    }
-    .custom-color-box {
-      display: none; align-items: center; gap: 5px; background: rgba(10,10,15,0.9);
-      padding: 4px 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);
-    }
+    .theme-selector { background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(255, 255, 255, 0.15); color: var(--highlight-color); padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: 600; outline: none; }
+    .custom-color-box { display: none; align-items: center; gap: 5px; background: rgba(10,10,15,0.9); padding: 4px 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); }
     .custom-color-box button { background: var(--accent-color); color: #fff; border: none; padding: 3px 8px; border-radius: 8px; font-size: 11px; font-weight: 600; }
 
-    .media-controls {
-      display: flex; align-items: center; gap: 10px; background: rgba(0, 0, 0, 0.6);
-      padding: 6px 14px; border-radius: 25px; border: 1px solid rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px);
-    }
+    .media-controls { display: flex; align-items: center; gap: 10px; background: rgba(0, 0, 0, 0.6); padding: 6px 14px; border-radius: 25px; border: 1px solid rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); }
     .player-btn { color: var(--highlight-color); font-size: 14px; transition: transform 0.2s, color 0.2s; }
     .player-btn:hover { transform: scale(1.2); color: #fff; }
     .track-title { font-size: 12px; color: #ddd; max-width: 90px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
@@ -156,82 +64,102 @@
     .eq-bars.playing .eq-bar:nth-child(2) { animation: eq 0.8s infinite alternate 0.2s; }
     .eq-bars.playing .eq-bar:nth-child(3) { animation: eq 0.5s infinite alternate 0.4s; }
     @keyframes eq { 0% { height: 3px; } 100% { height: 14px; } }
-    
     .volume-control { display: flex; align-items: center; gap: 5px; }
     .volume-btn { color: var(--highlight-color); font-size: 13px; }
     .volume-control input[type="range"] { width: 55px; accent-color: var(--accent-color); }
 
     .guns-nav-icon { font-size: 20px; color: #aaa; transition: all 0.3s ease; text-decoration: none; }
     .guns-nav-icon:hover { color: var(--highlight-color) !important; transform: scale(1.2) rotate(-5deg); filter: drop-shadow(0 0 10px var(--accent-color)); }
-
     .logout-red-btn { color: #ff4d4d !important; font-weight: 700 !important; }
     .logout-red-btn:hover { text-shadow: 0 0 10px rgba(255, 77, 77, 0.6) !important; }
 
-    .settings-modal {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(10px);
-      display: flex; justify-content: center; align-items: center;
-      z-index: 9999999; opacity: 0; visibility: hidden;
-      transition: all 0.3s ease;
+    /* KULLANICI PROFİL PANELİ (SOL ALT) - BANNER DESTEKLİ */
+    #userProfileBar {
+      position: fixed; bottom: 20px; left: 20px; background: #181822; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px;
+      display: none; flex-direction: column; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      transition: all 0.3s ease; width: 250px; overflow: hidden;
     }
+    #userProfileBar.show { display: flex; }
+    .up-banner { width: 100%; height: 60px; background: var(--accent-color); background-size: cover; background-position: center; }
+    .up-content { padding: 0 15px 15px 15px; display: flex; align-items: flex-end; gap: 10px; margin-top: -25px; position: relative; }
+    .mini-pfp { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 3px solid #181822; background: #000; }
+    .up-info { flex: 1; padding-bottom: 5px; }
+    .mini-name { font-weight: 700; font-size: 15px; color: #fff; display: block; line-height: 1.2; }
+    .mini-status { font-size: 11px; color: #2ecc71; font-weight: 600; }
+    .mini-settings-btn { background: rgba(0,0,0,0.5); border: none; color: #aaa; width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; transition: 0.2s; cursor: pointer; }
+    .mini-settings-btn:hover { color: #fff; background: var(--accent-color); }
+
+    .settings-modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 9999999; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
     .settings-modal.show { opacity: 1; visibility: visible; }
-    .settings-content {
-      background: rgba(16, 16, 24, 0.95); border: 1px solid rgba(162, 155, 254, 0.3);
-      border-radius: 20px; padding: 28px; width: 340px; color: #fff; position: relative;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8); transform: translateY(-20px); transition: transform 0.3s ease;
-    }
+    .settings-content { background: rgba(16, 16, 24, 0.95); border: 1px solid rgba(162, 155, 254, 0.3); border-radius: 20px; padding: 28px; width: 400px; color: #fff; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.8); transform: translateY(-20px); transition: transform 0.3s ease; max-height: 90vh; overflow-y: auto; }
     .settings-modal.show .settings-content { transform: translateY(0); }
-    .settings-content h3 { margin-bottom: 20px; font-size: 20px; color: var(--highlight-color); }
+    .settings-content h3 { margin-bottom: 20px; font-size: 20px; color: var(--highlight-color); text-align: center; }
     .settings-group { margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
     .settings-group label { font-size: 13px; color: #aaa; }
-    .settings-group input { background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 10px; border-radius: 8px; outline: none; }
-    .settings-group input:focus { border-color: var(--highlight-color); }
-    .settings-save-btn { width: 100%; background: var(--accent-color); color: #fff; font-weight: bold; border: none; padding: 12px; border-radius: 10px; margin-top: 10px; }
-    .settings-close-btn { position: absolute; top: 16px; right: 20px; font-size: 22px; color: #888; }
+    .settings-group input, .settings-group textarea { background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 10px; border-radius: 8px; outline: none; font-family: inherit; }
+    .settings-group textarea { resize: vertical; min-height: 60px; }
+    .settings-group input:focus, .settings-group textarea:focus { border-color: var(--highlight-color); }
+    .settings-save-btn { width: 100%; background: var(--accent-color); color: #fff; font-weight: bold; border: none; padding: 12px; border-radius: 10px; margin-top: 10px; cursor: pointer; }
+    .settings-close-btn { position: absolute; top: 16px; right: 20px; font-size: 22px; color: #888; cursor: pointer; }
     .settings-close-btn:hover { color: #fff; }
+    
+    .pfp-upload-area { display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px; border: 1px dashed var(--accent-color); margin-bottom: 15px; }
+    .pfp-preview { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--highlight-color); }
+    .upload-btn-label { background: var(--highlight-color); color: #000; padding: 8px 15px; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; text-align: center; flex: 1; transition: 0.2s; }
+    .upload-btn-label:hover { background: #fff; }
+    #pfpFileInput { display: none; }
 
-    .hero {
-      min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
-      text-align: center; padding: 120px 20px 60px;
-      background: radial-gradient(circle at 50% 35%, var(--accent-glow) 0%, rgba(8, 8, 12, 0.85) 70%);
-    }
+    .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 120px 20px 60px; background: radial-gradient(circle at 50% 35%, var(--accent-glow) 0%, rgba(8, 8, 12, 0.85) 70%); }
     .hero .avatar-container { position: relative; width: 140px; height: 140px; margin-bottom: 24px; border-radius: 50%; }
-    .hero .avatar-container::before {
-      content: ''; position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, var(--accent-glow) 50%, rgba(0,0,0,0) 70%);
-      border-radius: 50%; z-index: 1; filter: blur(10px); animation: gunsGlow 3s ease-in-out infinite alternate;
-    }
-    @keyframes gunsGlow {
-      0% { transform: scale(0.98); filter: blur(8px) drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)); }
-      100% { transform: scale(1.05); filter: blur(14px) drop-shadow(0 0 30px var(--highlight-color)); }
-    }
+    .hero .avatar-container::before { content: ''; position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px; background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, var(--accent-glow) 50%, rgba(0,0,0,0) 70%); border-radius: 50%; z-index: 1; filter: blur(10px); animation: gunsGlow 3s ease-in-out infinite alternate; }
+    @keyframes gunsGlow { 0% { transform: scale(0.98); filter: blur(8px) drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)); } 100% { transform: scale(1.05); filter: blur(14px) drop-shadow(0 0 30px var(--highlight-color)); } }
     .hero .avatar { position: relative; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; z-index: 2; border: 2px solid rgba(255, 255, 255, 0.8); }
-    .hero h1 {
-      font-size: 58px; font-weight: 800; letter-spacing: -1px;
-      background: linear-gradient(135deg, #ffffff 30%, var(--highlight-color) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 4px;
-    }
+    .hero h1 { font-size: 58px; font-weight: 800; letter-spacing: -1px; background: linear-gradient(135deg, #ffffff 30%, var(--highlight-color) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 4px; }
     .hero .cc { font-size: 20px; color: var(--text-muted); font-weight: 600; letter-spacing: 3px; margin-bottom: 4px; }
     .hero .tagline { font-size: 16px; color: var(--text-muted); font-weight: 500; }
 
-    .glass-card {
-      background: var(--card-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); transition: transform 0.1s ease-out, border-color 0.3s ease, box-shadow 0.3s ease;
-      transform-style: preserve-3d; perspective: 1000px;
-    }
+    .glass-card { background: var(--card-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); transition: transform 0.1s ease-out, border-color 0.3s ease, box-shadow 0.3s ease; transform-style: preserve-3d; perspective: 1000px; }
     .glass-card:hover { border-color: rgba(162, 155, 254, 0.4); box-shadow: 0 20px 40px var(--accent-glow); }
-
-    .section {
-      display: none; padding: 80px 20px 40px; max-width: 900px; margin: 0 auto;
-      opacity: 0; transform: translateY(30px); transition: opacity 0.5s ease, transform 0.5s ease;
-    }
+    .section { display: none; padding: 80px 20px 40px; max-width: 900px; margin: 0 auto; opacity: 0; transform: translateY(30px); transition: opacity 0.5s ease, transform 0.5s ease; }
     .section.visible { display: block; opacity: 1; transform: translateY(0); }
-    .section h2 {
-      font-size: 36px; font-weight: 700; margin-bottom: 25px; border-left: 4px solid var(--accent-color);
-      padding-left: 18px; background: linear-gradient(to right, #fff, var(--highlight-color));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
+    .section h2 { font-size: 36px; font-weight: 700; margin-bottom: 25px; border-left: 4px solid var(--accent-color); padding-left: 18px; background: linear-gradient(to right, #fff, var(--highlight-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    /* SOHBET STİLLERİ */
+    .chat-container { display: flex; flex-direction: column; height: 600px; position: relative; }
+    .chat-messages { flex: 1; overflow-y: auto; padding-right: 10px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
+    .chat-messages::-webkit-scrollbar { width: 6px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
+    
+    .pinned-messages-container { background: rgba(241, 196, 15, 0.05); border: 1px solid rgba(241, 196, 15, 0.3); border-radius: 12px; padding: 10px; margin-bottom: 15px; max-height: 150px; overflow-y: auto; display: none; }
+    .pinned-messages-container.has-pinned { display: block; }
+    .pinned-header { font-size: 12px; color: #f1c40f; font-weight: bold; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+
+    .chat-msg { background: rgba(0,0,0,0.4); padding: 12px 16px; border-radius: 12px; border-left: 3px solid var(--accent-color); position: relative; display: flex; gap: 12px; }
+    .msg-pfp { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #444; flex-shrink: 0; }
+    .msg-body { flex: 1; min-width: 0; }
+    .chat-msg-header { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 12px; color: var(--text-muted); }
+    .chat-msg-name { font-weight: bold; color: var(--highlight-color); font-size: 14px;}
+    .chat-msg-text { font-size: 15px; color: #fff; word-break: break-word; }
+    .chat-msg-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 13px; }
+    .chat-msg-buttons { display: flex; gap: 10px; }
+    .chat-msg-actions button { background: none; border: none; color: #aaa; transition: 0.2s; cursor: pointer; }
+    .chat-msg-actions button:hover { color: #fff; transform: scale(1.1); }
+    .chat-msg-actions .liked { color: #e74c3c; }
+
+    .read-by-container { display: flex; align-items: center; }
+    .read-by-pfp { width: 18px; height: 18px; border-radius: 50%; border: 1px solid #555; background: #333; margin-left: -5px; display: flex; justify-content: center; align-items: center; font-size: 9px; color: #fff; font-weight: bold; object-fit: cover;}
+
+    .typing-indicator { position: absolute; bottom: 70px; left: 15px; font-size: 12px; color: var(--highlight-color); display: none; align-items: center; gap: 5px; background: rgba(0,0,0,0.6); padding: 5px 10px; border-radius: 15px; backdrop-filter: blur(5px); }
+    .typing-dots { display: flex; gap: 2px; }
+    .typing-dot { width: 4px; height: 4px; background: var(--highlight-color); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+    .chat-input-area { display: flex; gap: 10px; margin-top: 15px; }
+    .chat-input-area input { flex: 1; padding: 14px; border-radius: 12px; background: rgba(10,10,15,0.9); border: 1px solid rgba(255,255,255,0.1); color: #fff; outline: none; }
+    .chat-input-area input:focus { border-color: var(--accent-color); }
+    .chat-input-area button { background: var(--accent-color); color: #fff; border: none; padding: 0 20px; border-radius: 12px; font-weight: bold; }
 
     .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 20px; }
     .project-card-link { display: block; text-decoration: none; border-radius: 16px; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; }
@@ -247,15 +175,9 @@
     .video-card-link { display: block; text-decoration: none; border-radius: 16px; overflow: hidden; }
     .thumb-wrapper { position: relative; width: 100%; padding-top: 56.25%; background: #000; }
     .thumb-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
-    .play-btn-overlay {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 55px; height: 55px; background: rgba(255, 0, 0, 0.85); border-radius: 50%;
-      display: flex; justify-content: center; align-items: center; color: #fff; font-size: 22px;
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.8); transition: transform 0.3s ease;
-    }
+    .play-btn-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 55px; height: 55px; background: rgba(255, 0, 0, 0.85); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 22px; box-shadow: 0 0 20px rgba(255, 0, 0, 0.8); transition: transform 0.3s ease; }
     .video-card-link:hover .play-btn-overlay { transform: translate(-50%, -50%) scale(1.15); }
     .video-title-box { padding: 16px; font-size: 15px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
     .loading-text { color: #888; text-align: center; padding: 20px; }
 
     .contact-form { display: flex; flex-direction: column; gap: 16px; margin-top: 15px; }
@@ -272,9 +194,10 @@
 
     .login-box, .register-box, .forgot-box { max-width: 400px; margin: 0 auto; }
     .login-box input, .register-box input, .forgot-box input { width: 100%; padding: 14px; margin-bottom: 14px; background: rgba(10, 10, 15, 0.9); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: #fff; }
-    .login-box button, .register-box button, .forgot-box button { width: 100%; padding: 14px; background: var(--accent-color); border: none; border-radius: 30px; color: #fff; font-weight: 600; }
+    .login-box button, .register-box button, .forgot-box button { width: 100%; padding: 14px; background: var(--accent-color); border: none; border-radius: 30px; color: #fff; font-weight: 600; margin-bottom: 10px; }
     .forgot-link { display: block; text-align: right; font-size: 13px; color: var(--highlight-color); margin-top: -8px; margin-bottom: 15px; text-decoration: none; }
     .forgot-link:hover { text-decoration: underline; }
+    .btn-google { background: #fff !important; color: #333 !important; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; margin-top: 10px; }
 
     .footer { text-align: center; padding: 40px 20px; color: #666; font-size: 14px; border-top: 1px solid rgba(255, 255, 255, 0.05); margin-top: 50px; }
 
@@ -288,6 +211,7 @@
       .video-grid, .project-grid { grid-template-columns: 1fr; }
       .track-title { max-width: 60px; }
       .volume-control input[type="range"] { width: 40px; }
+      #userProfileBar { bottom: 10px; left: 10px; }
     }
   </style>
 </head>
@@ -304,19 +228,45 @@
   <h2>[ CLICK TO ENTER ]</h2>
 </div>
 
+<!-- SOL ALT PROFİL PANELİ -->
+<div id="userProfileBar">
+  <div class="up-banner" id="miniBanner"></div>
+  <div class="up-content">
+    <img src="profile.png" id="miniPfp" class="mini-pfp" onerror="this.src=getFallbackAvatar()">
+    <div class="up-info">
+      <span class="mini-name" id="miniName">Kullanıcı</span>
+      <span class="mini-status">Çevrimiçi</span>
+    </div>
+    <button class="mini-settings-btn" onclick="openSettingsModal()" title="Ayarlar"><i class="fas fa-cog"></i></button>
+  </div>
+</div>
+
+<!-- GELİŞMİŞ AYARLAR MODALI -->
 <div id="settingsModal" class="settings-modal">
   <div class="settings-content">
     <span class="settings-close-btn" onclick="closeSettingsModal()">&times;</span>
-    <h3><i class="fas fa-cog"></i> Hesap Ayarları</h3>
+    <h3><i class="fas fa-user-edit"></i> Profil Ayarları</h3>
+    
+    <div class="pfp-upload-area">
+      <img src="profile.png" id="settingsPfpPreview" class="pfp-preview" onerror="this.src=getFallbackAvatar()">
+      <label for="pfpFileInput" class="upload-btn-label">Resim Yükle (Cloudinary)</label>
+      <input type="file" id="pfpFileInput" accept="image/*">
+    </div>
+    <div id="uploadStatus" style="font-size:12px; color:var(--highlight-color); text-align:center; margin-bottom:10px;"></div>
+
     <div class="settings-group">
-      <label>Yeni Kullanıcı Adı</label>
+      <label>Görünecek İsim</label>
       <input type="text" id="newUsername" placeholder="Yeni kullanıcı adın">
     </div>
     <div class="settings-group">
-      <label>Yeni Şifre</label>
-      <input type="password" id="newPassword" placeholder="Yeni şifren">
+      <label>Discord ID (Bir kez girilir, verileri otomatik çeker)</label>
+      <input type="text" id="discordIdInput" placeholder="Örn: 123456789012345678">
     </div>
-    <button class="settings-save-btn" onclick="saveUserSettings()">Güncelle</button>
+    <div class="settings-group">
+      <label>Hakkımda (Biyografi)</label>
+      <textarea id="userBio" placeholder="Kendinden bahset..."></textarea>
+    </div>
+    <button class="settings-save-btn" onclick="saveUserSettings()">Değişiklikleri Kaydet</button>
   </div>
 </div>
 
@@ -331,7 +281,7 @@
     <a onclick="goToSection('projelerim')">Projelerim</a>
     <a onclick="goToSection('videolarim')">Videolarım</a>
     <a onclick="goToSection('kanallarim')">Kanallarım</a>
-    <a id="settingsNavBtn" onclick="openSettingsModal()" style="display: none;" title="Ayarlar"><i class="fas fa-cog"></i> Ayarlar</a>
+    <a onclick="goToSection('sohbet')" style="color: var(--highlight-color); font-weight: bold;">Sohbet Odası</a>
   </div>
 
   <div class="nav-right">
@@ -363,9 +313,7 @@
       <i class="fas fa-step-forward player-btn" onclick="nextTrack()" title="Sonraki"></i>
       
       <div class="eq-bars" id="eqBars">
-        <div class="eq-bar"></div>
-        <div class="eq-bar"></div>
-        <div class="eq-bar"></div>
+        <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
       </div>
 
       <span class="track-title" id="trackTitle">Yükleniyor...</span>
@@ -389,7 +337,7 @@
   <div class="avatar-container">
     <img src="profile.png" id="userAvatar" alt="Profile" class="avatar" onerror="this.onerror=null; this.src=getFallbackAvatar();">
   </div>
-  <h1>Editor.</h1>
+  <h1 id="heroTitle">Editor.</h1>
   <div class="cc">CC</div>
   <div class="tagline">İçerik Üreticisi</div>
 </section>
@@ -401,6 +349,31 @@
       Ben Efecan, içerik üreticisi ve video editörüyüm. Kurgu, tasarım, yazılım ve dijital projelerle ilgileniyorum. 
       Siteden videolarıma göz atabilir veya iletişim formundan bana ulaşabilirsin!
     </p>
+  </div>
+</section>
+
+<section class="section" id="sohbet">
+  <h2>Sohbet Odası</h2>
+  <div class="glass-card chat-container">
+    
+    <div class="pinned-messages-container" id="pinnedContainer">
+      <div class="pinned-header"><i class="fas fa-thumbtack"></i> Sabitlenen Mesajlar</div>
+      <div id="pinnedMessagesList" style="display: flex; flex-direction: column; gap: 8px;"></div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <p class="loading-text">Mesajlar yükleniyor...</p>
+    </div>
+
+    <div class="typing-indicator" id="typingIndicator">
+      <span id="typingText">Birisi</span> yazıyor
+      <div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>
+    </div>
+
+    <div class="chat-input-area">
+      <input type="text" id="chatInput" placeholder="Bir mesaj yazın..." maxlength="200">
+      <button onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
+    </div>
   </div>
 </section>
 
@@ -419,7 +392,6 @@
 
 <section class="section" id="kanallarim">
   <h2>Kanallarım</h2>
-
   <div class="glass-card channel-card">
     <div class="channel-icon"><i class="fab fa-youtube"></i></div>
     <div class="channel-info">
@@ -428,7 +400,6 @@
     </div>
     <a href="https://www.youtube.com/channel/UCM6EXLZFrqGu5Yd0gf1PCpg" target="_blank">Göz At</a>
   </div>
-
   <div class="glass-card channel-card" style="margin-top: 15px;">
     <div class="channel-icon"><i class="fab fa-youtube"></i></div>
     <div class="channel-info">
@@ -437,7 +408,6 @@
     </div>
     <a href="https://www.youtube.com/channel/UCMlwfGb4x0IwAzuNlxeLcZQ" target="_blank">Göz At</a>
   </div>
-
   <div class="social-channels">
     <a href="https://www.youtube.com/@RENXC-c3d" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
     <a href="https://www.tiktok.com/@nyxven.inc" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
@@ -449,14 +419,12 @@
   <div class="glass-card">
     <h2>İletişim</h2>
     <p style="color: var(--text-muted);">İş teklifleri, sponsorluk ve iletişim için formu doldurabilirsiniz.</p>
-
     <form class="contact-form" action="https://formspree.io/f/mlgqvper" method="POST">
       <input type="text" name="name" placeholder="İsim / Kullanıcı adı" required>
       <input type="email" name="email" placeholder="E-posta adresiniz" required>
       <textarea name="message" placeholder="Mesajınız..." required></textarea>
       <button type="submit">Gönder</button>
     </form>
-
     <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
       <div style="font-size: 20px; font-weight: 600;">Efe Can Ülker</div>
       <div style="color: var(--text-muted);"><i class="fas fa-envelope" style="color: var(--highlight-color);"></i> ulkerefecan98@gmail.com</div>
@@ -467,30 +435,26 @@
 <section class="section" id="giris">
   <div class="glass-card login-box">
     <h2>Giriş Yap</h2>
-    <input type="text" id="loginUser" placeholder="Kullanıcı adı veya e-posta">
+    <input type="email" id="loginEmail" placeholder="E-posta adresin">
     <input type="password" id="loginPass" placeholder="Şifre">
-    <a class="forgot-link" onclick="goToSection('sifremiUnuttum')">Şifreni mi unuttun?</a>
+    <a class="forgot-link" onclick="showToast('Şifre sıfırlama Firebase üzerinden yakında eklenecek.');">Şifreni mi unuttun?</a>
     <button onclick="loginUserAccount()">Giriş Yap</button>
-  </div>
-</section>
-
-<section class="section" id="sifremiUnuttum">
-  <div class="glass-card forgot-box">
-    <h2>Şifre Sıfırlama</h2>
-    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 15px;">Kayıtlı e-posta adresini gir, şifren sıfırlanıp geçici şifre tanımlansın.</p>
-    <input type="email" id="forgotEmail" placeholder="Kayıtlı e-posta adresin">
-    <button onclick="resetPasswordAction()">Şifreyi Sıfırla</button>
-    <a class="forgot-link" style="text-align: center; display: block; margin-top: 15px;" onclick="goToSection('giris')">Giriş Ekranına Dön</a>
+    <button class="btn-google" onclick="loginWithGoogle()">
+      <i class="fab fa-google" style="color: #db4437;"></i> Google ile Giriş Yap
+    </button>
   </div>
 </section>
 
 <section class="section" id="kayit">
   <div class="glass-card register-box">
     <h2>Kayıt Ol</h2>
-    <input type="text" id="regName" placeholder="Kullanıcı adı">
-    <input type="email" id="regEmail" placeholder="E-posta">
-    <input type="password" id="regPass" placeholder="Şifre">
+    <input type="text" id="regName" placeholder="Kullanıcı Adı (Görünecek İsim)">
+    <input type="email" id="regEmail" placeholder="E-posta Adresi">
+    <input type="password" id="regPass" placeholder="Şifre (En az 6 karakter)">
     <button onclick="registerUserAccount()">Kayıt Ol</button>
+    <button class="btn-google" onclick="loginWithGoogle()">
+      <i class="fab fa-google" style="color: #db4437;"></i> Google ile Kayıt Ol
+    </button>
   </div>
 </section>
 
@@ -498,509 +462,52 @@
   &copy; 2026 nyxven.com - All Rights Reserved.
 </div>
 
-<script>
-  // ============================================================
-  // 🎯 SABİT PROJELER
-  // ============================================================
-  const STATIC_PROJECTS = [
-    {
-      title: "🐟 Balık Oyunu",
-      desc: "Web tabanlı balık besleme ve akvaryum simülasyon oyunu. Tıklayarak oyna!",
-      link: "https://nyxven-debug.github.io/balik/",
-      image: "image_ab6d3d.jpg"
-    },
-    {
-      title: "🎡 Çark & Zamanlayıcı",
-      desc: "Rastgele seçim çarkı, geri sayım zamanlayıcı ve pratik araç kümesi.",
-      link: "https://nyxven-debug.github.io/cark/",
-      image: "profile.png"
-    },
-    {
-      title: "🎵 Spotify Mini Pro",
-      desc: "Spotify tarzı müzik çalar mini uygulaması. Tıklayarak keşfet!",
-      link: "https://sminipro.gt.tc/",
-      image: "profile.png"
-    }
-  ];
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, updateDoc, deleteDoc, arrayUnion, arrayRemove, getDoc, setDoc, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  // ============================================================
-  // 🌐 GERÇEK GLOBAL İZLENME (CountAPI - ücretsiz, key yok)
-  // ============================================================
-  const COUNTAPI_NAMESPACE = "nyxvencom";
-  const COUNTAPI_KEY = "views";
-  const BASE_VIEW_COUNT = 184; // Başlangıç sayısı (mevcut sayacın üstüne eklenir)
+  const firebaseConfig = {
+    apiKey: "AIzaSyBuwDYxRzlVVJyalw1x1majYixPEEyVHq0",
+    authDomain: "nyxven-56813.firebaseapp.com",
+    projectId: "nyxven-56813",
+    storageBucket: "nyxven-56813.firebasestorage.app",
+    messagingSenderId: "587337112409",
+    appId: "1:587337112409:web:e1b06c78082b038d004a48",
+    measurementId: "G-7H6Y94DKSH"
+  };
 
-  function initViewCounter() {
-    // Her ziyarette +1 artır ve toplam sayıyı al
-    fetch(`https://api.countapi.xyz/hit/${COUNTAPI_NAMESPACE}/${COUNTAPI_KEY}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data && typeof data.value === 'number') {
-          const total = BASE_VIEW_COUNT + data.value;
-          document.getElementById('viewCount').textContent = total.toLocaleString('tr-TR');
-        } else {
-          throw new Error('CountAPI yanıt vermedi');
-        }
-      })
-      .catch(err => {
-        console.warn('CountAPI hatası, localStorage fallback:', err);
-        // Fallback: localStorage bazlı
-        let local = parseInt(localStorage.getItem('nyxven_views') || '0');
-        let visited = localStorage.getItem('nyxven_has_visited');
-        if (!visited) {
-          local++;
-          localStorage.setItem('nyxven_views', local);
-          localStorage.setItem('nyxven_has_visited', 'true');
-        }
-        document.getElementById('viewCount').textContent = (BASE_VIEW_COUNT + local).toLocaleString('tr-TR');
-      });
-  }
+  // CLOUDINARY AYARLARI
+  const CLOUDINARY_CLOUD_NAME = "sra4bmww"; 
+  const CLOUDINARY_UPLOAD_PRESET = "nyxven_pfp"; 
 
-  // ============================================================
-  // 🚫 KÜFÜR FİLTRESİ
-  // ============================================================
-  const badWords = [
-    "küfür1", "küfür2", "amk", "aq", "orospu", "sik", "anan", "piç", "oç", "sikik",
-    "yarrak", "göt", "amcık", "sikeyim", "orospu çocuğu", "pezevenk", "şerefsiz",
-    "salak", "aptal", "gerizekalı", "embesil", "hain", "alçak", "namussuz",
-    "siktir", "sikerim", "sike", "amına", "amina", "kahpe", "fahişe",
-    "yavşak", "yavsak", "serefsiz", "puşt", "pust", "ibne", "gavat"
-  ];
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const provider = new GoogleAuthProvider();
 
-  function normalizeText(text) {
-    if (!text) return '';
-    return text.toLowerCase()
-      .replace(/[1!|]/g, 'i').replace(/[0]/g, 'o').replace(/[3]/g, 'e')
-      .replace(/[4]/g, 'a').replace(/[5]/g, 's').replace(/[7]/g, 't')
-      .replace(/[@]/g, 'a').replace(/[.$]/g, 's')
-      .replace(/\s+/g, '').replace(/[^a-zçğıöşü]/g, '');
-  }
+  const ADMIN_EMAIL = "ulkerefecan98@gmail.com"; 
+  let isAdmin = false;
+  let currentUser = null;
+  let currentUserPhoto = "profile.png";
+  let currentBanner = "var(--accent-color)";
+  let currentDiscordId = "";
+  let lastMessageTime = 0;
 
-  function containsBadWord(text) {
-    if (!text) return false;
-    const normalized = normalizeText(text);
-    return badWords.some(word => normalized.includes(normalizeText(word)));
-  }
-
-  // ============================================================
-  // 🛡️ XSS GÜVENLİK
-  // ============================================================
-  function escapeHTML(str) {
-    if (!str) return '';
-    return String(str).replace(/[&<>'"]/g, 
-      tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-    );
-  }
-
-  function cleanUsername(name) {
-    if (!name) return 'Gizli Kullanıcı';
-    if (name.includes('@')) return name.split('@')[0];
-    return name;
-  }
-
-  // ============================================================
-  // 🛡️ DEVTOOLS KORUMASI (Agresif)
-  // ============================================================
-  function setupDevToolsProtection() {
-    document.addEventListener('contextmenu', e => {
-      e.preventDefault();
-      return false;
-    });
-
-    document.addEventListener('keydown', e => {
-      if (e.key === 'F12' || e.keyCode === 123) {
-        e.preventDefault(); e.stopPropagation(); return false;
-      }
-      if (e.ctrlKey && e.shiftKey && ['I','J','C','K','i','j','c','k'].includes(e.key)) {
-        e.preventDefault(); e.stopPropagation(); return false;
-      }
-      if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) {
-        e.preventDefault(); e.stopPropagation(); return false;
-      }
-      if (e.ctrlKey && (e.key === 'S' || e.key === 's')) {
-        e.preventDefault(); e.stopPropagation(); return false;
-      }
-    });
-
-    // DevTools boyut tespiti
-    let devtoolsOpen = false;
-    const threshold = 160;
-    setInterval(() => {
-      const widthDiff = window.outerWidth - window.innerWidth;
-      const heightDiff = window.outerHeight - window.innerHeight;
-      if (widthDiff > threshold || heightDiff > threshold) {
-        if (!devtoolsOpen) {
-          devtoolsOpen = true;
-          document.body.innerHTML = `
-            <div style="position:fixed;inset:0;background:#000;color:#ff4d4d;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:999999999;font-family:sans-serif;text-align:center;padding:20px;">
-              <h1 style="font-size:48px;">🚫</h1>
-              <h2 style="margin-top:20px;">DevTools Tespit Edildi</h2>
-              <p style="margin-top:10px;color:#aaa;">Bu sayfayı incelemek yasaktır. Lütfen sekmeyi kapatın.</p>
-            </div>
-          `;
-        }
-      } else {
-        devtoolsOpen = false;
-      }
-    }, 1000);
-
-    // Debugger trap
-    setInterval(() => {
-      try {
-        (function() {
-          const before = new Date();
-          debugger;
-          const after = new Date();
-          if (after - before > 100) {
-            document.body.innerHTML = `
-              <div style="position:fixed;inset:0;background:#000;color:#ff4d4d;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:999999999;font-family:sans-serif;text-align:center;padding:20px;">
-                <h1 style="font-size:48px;">🚫</h1>
-                <h2 style="margin-top:20px;">DevTools Tespit Edildi</h2>
-                <p style="margin-top:10px;color:#aaa;">Bu sayfayı incelemek yasaktır. Lütfen sekmeyi kapatın.</p>
-              </div>
-            `;
-          }
-        })();
-      } catch(e) {}
-    }, 2000);
-  }
-
-  // ============================================================
-  // 🎨 TEMA
-  // ============================================================
-  function handleThemeChange(val) {
-    const customBox = document.getElementById('customColorBox');
-    if(val === 'custom') { customBox.style.display = 'flex'; return; }
-    else {
-      customBox.style.display = 'none';
-      document.documentElement.style.removeProperty('--bg-grad-1');
-      document.documentElement.style.removeProperty('--bg-grad-2');
-    }
-    if(val === 'default') document.documentElement.removeAttribute('data-theme');
-    else {
-      document.documentElement.removeAttribute('style');
-      document.documentElement.setAttribute('data-theme', val);
-    }
-    localStorage.setItem('nyxven_theme', val);
-    showToast('🎨 Tema güncellendi!');
-  }
-
-  function applyCustomGradient() {
-    const c1 = document.getElementById('customColor1').value;
-    const c2 = document.getElementById('customColor2').value;
-    document.documentElement.removeAttribute('data-theme');
-    document.documentElement.style.setProperty('--bg-grad-1', c1);
-    document.documentElement.style.setProperty('--bg-grad-2', c2);
-    localStorage.setItem('nyxven_theme', 'custom');
-    localStorage.setItem('nyxven_grad_1', c1);
-    localStorage.setItem('nyxven_grad_2', c2);
-    showToast('✅ Renk geçişi uygulandı!');
-  }
-
-  const savedTheme = localStorage.getItem('nyxven_theme');
-  if(savedTheme) {
-    document.getElementById('themeSelector').value = savedTheme;
-    if(savedTheme === 'custom') {
-      document.getElementById('customColorBox').style.display = 'flex';
-      const g1 = localStorage.getItem('nyxven_grad_1') || '#000000';
-      const g2 = localStorage.getItem('nyxven_grad_2') || '#0055ff';
-      document.documentElement.style.setProperty('--bg-grad-1', g1);
-      document.documentElement.style.setProperty('--bg-grad-2', g2);
-      document.getElementById('customColor1').value = g1;
-      document.getElementById('customColor2').value = g2;
-    } else if(savedTheme !== 'default') {
-      document.documentElement.setAttribute('data-theme', savedTheme);
-    }
-  }
-
-  // ============================================================
-  // 👤 AUTH
-  // ============================================================
-  function checkAuthUI() {
-    const currentUser = localStorage.getItem('nyxven_current_user');
-    const authBtn = document.getElementById('authNavBtn');
-    const regBtn = document.getElementById('registerNavBtn');
-    const settingsBtn = document.getElementById('settingsNavBtn');
-    if (currentUser) {
-      authBtn.textContent = '(Çıkış)';
-      authBtn.className = 'logout-red-btn';
-      regBtn.style.display = 'none';
-      settingsBtn.style.display = 'inline-block';
-    } else {
-      authBtn.textContent = 'Giriş Yap';
-      authBtn.className = '';
-      authBtn.style.color = 'var(--highlight-color)';
-      regBtn.style.display = 'inline-block';
-      settingsBtn.style.display = 'none';
-    }
-  }
-
-  function handleAuthNav() {
-    const currentUser = localStorage.getItem('nyxven_current_user');
-    if (currentUser) {
-      localStorage.removeItem('nyxven_current_user');
-      checkAuthUI();
-      showToast('👋 Çıkış yapıldı.');
-    } else goToSection('giris');
-  }
-
-  function registerUserAccount() {
-    let name = document.getElementById('regName').value.trim();
-    const email = document.getElementById('regEmail').value.trim();
-    const pass = document.getElementById('regPass').value.trim();
-    if(!name || !email || !pass) { showToast('⚠️ Lütfen tüm alanları doldur!'); return; }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) { showToast('❌ Geçerli ve gerçek bir e-posta adresi girmelisin!'); return; }
-    if (containsBadWord(name)) { showToast('❌ Kullanıcı adın uygunsuz kelimeler içeremez!'); return; }
-    name = cleanUsername(name);
-    let users = JSON.parse(localStorage.getItem('nyxven_users')) || [];
-    if(users.some(u => u.email === email)) { showToast('⚠️ Bu e-posta zaten kayıtlı!'); return; }
-    users.push({ name, email, pass });
-    localStorage.setItem('nyxven_users', JSON.stringify(users));
-    localStorage.setItem('nyxven_current_user', name);
-    checkAuthUI();
-    showToast('🎉 Kayıt başarılı, hoş geldin ' + name + '!');
-    goToSection('anasayfa');
-  }
-
-  function loginUserAccount() {
-    let identifier = document.getElementById('loginUser').value.trim();
-    const pass = document.getElementById('loginPass').value.trim();
-    if(!identifier || !pass) { showToast('⚠️ Bilgileri eksiksiz gir!'); return; }
-    let users = JSON.parse(localStorage.getItem('nyxven_users')) || [];
-    const found = users.find(u => (u.name === identifier || u.email === identifier) && u.pass === pass);
-    if(found) {
-      localStorage.setItem('nyxven_current_user', cleanUsername(found.name));
-      checkAuthUI();
-      showToast('🚀 Giriş yapıldı!');
-      goToSection('anasayfa');
-    } else showToast('❌ Kullanıcı adı veya şifre hatalı!');
-  }
-
-  function resetPasswordAction() {
-    const email = document.getElementById('forgotEmail').value.trim();
-    if(!email) { showToast('⚠️ E-posta adresini yazmalısın!'); return; }
-    let users = JSON.parse(localStorage.getItem('nyxven_users')) || [];
-    const userIndex = users.findIndex(u => u.email === email);
-    if(userIndex === -1) { showToast('❌ Böyle bir e-posta kayıtlı değil!'); return; }
-    const newPass = 'nyx_' + Math.floor(1000 + Math.random() * 9000);
-    users[userIndex].pass = newPass;
-    localStorage.setItem('nyxven_users', JSON.stringify(users));
-    showToast('✅ Şifren sıfırlandı! Yeni geçici şifren: ' + newPass);
-    document.getElementById('forgotEmail').value = '';
-    setTimeout(() => goToSection('giris'), 4000);
-  }
-
-  function saveUserSettings() {
-    const newUser = document.getElementById('newUsername').value.trim();
-    const newPass = document.getElementById('newPassword').value.trim();
-    const currUser = localStorage.getItem('nyxven_current_user');
-    if (!currUser) { showToast('⚠️ Önce giriş yapmalısın!'); return; }
-    if (newUser && (containsBadWord(newUser))) { showToast('❌ Kullanıcı adı uygunsuz kelimeler içeremez!'); return; }
-    let users = JSON.parse(localStorage.getItem('nyxven_users')) || [];
-    let userIndex = users.findIndex(u => u.name === currUser);
-    if (newUser || newPass) {
-      if (userIndex !== -1) {
-        if (newUser) users[userIndex].name = newUser;
-        if (newPass) users[userIndex].pass = newPass;
-        localStorage.setItem('nyxven_users', JSON.stringify(users));
-      }
-      if (newUser) localStorage.setItem('nyxven_current_user', newUser);
-      checkAuthUI();
-      closeSettingsModal();
-      showToast('✅ Hesap bilgilerin güncellendi!');
-    } else showToast('⚠️ Değiştirmek istediğin alanı doldur.');
-  }
-
-  function openSettingsModal() { document.getElementById('settingsModal').classList.add('show'); }
-  function closeSettingsModal() { document.getElementById('settingsModal').classList.remove('show'); }
-
-  // ============================================================
-  // 🔊 SES / MÜZİK
-  // ============================================================
-  let audioCtx;
-  function getAudioContext() {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    return audioCtx;
-  }
-  function playCyberClickSFX() {
-    try {
-      const ctx = getAudioContext();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(1200, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.04);
-      gain.gain.setValueAtTime(0.04, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.04);
-    } catch(e){}
-  }
-  document.querySelectorAll('a, button, .player-btn').forEach(elem => {
-    elem.addEventListener('click', playCyberClickSFX);
-  });
-
-  const bgMusic = document.getElementById('bgMusic');
-  const volumeSlider = document.getElementById('volumeSlider');
-  const muteBtn = document.getElementById('muteBtn');
-  const enterOverlay = document.getElementById('enterOverlay');
-  const playPauseBtn = document.getElementById('playPauseBtn');
-  const trackTitle = document.getElementById('trackTitle');
-  const eqBars = document.getElementById('eqBars');
-  let lastVolume = 0.5;
-
-  function toggleMute() {
-    if (bgMusic.muted || bgMusic.volume === 0) {
-      bgMusic.muted = false;
-      bgMusic.volume = lastVolume || 0.5;
-      volumeSlider.value = bgMusic.volume * 100;
-      muteBtn.className = "fas fa-volume-up volume-btn";
-    } else {
-      lastVolume = bgMusic.volume;
-      bgMusic.muted = true;
-      volumeSlider.value = 0;
-      muteBtn.className = "fas fa-volume-mute volume-btn";
-    }
-  }
-
-  const playlist = [
-    { title: "Sadece Sevilmek İstedim", src: "sadece-sevilmek-istedim.mp3" },
-    { title: "Day - No, I'm Not a Human OST", src: "day-no-im-not-a-human.mp3" }
-  ];
-  let currentTrackIndex = 0;
-
-  function loadTrack(index) {
-    currentTrackIndex = index;
-    bgMusic.src = playlist[currentTrackIndex].src;
-    trackTitle.textContent = playlist[currentTrackIndex].title;
-  }
-  function togglePlay() {
-    if (bgMusic.paused) {
-      bgMusic.play();
-      playPauseBtn.className = "fas fa-pause player-btn";
-      eqBars.classList.add('playing');
-    } else {
-      bgMusic.pause();
-      playPauseBtn.className = "fas fa-play player-btn";
-      eqBars.classList.remove('playing');
-    }
-  }
-  function nextTrack() {
-    currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-    loadTrack(currentTrackIndex); bgMusic.play();
-    playPauseBtn.className = "fas fa-pause player-btn";
-    eqBars.classList.add('playing');
-  }
-  function prevTrack() {
-    currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
-    loadTrack(currentTrackIndex); bgMusic.play();
-    playPauseBtn.className = "fas fa-pause player-btn";
-    eqBars.classList.add('playing');
-  }
-  volumeSlider.addEventListener('input', (e) => {
-    const val = e.target.value / 100;
-    bgMusic.volume = val;
-    bgMusic.muted = false;
-    if (val === 0) muteBtn.className = "fas fa-volume-mute volume-btn";
-    else muteBtn.className = "fas fa-volume-up volume-btn";
-  });
-
-  function enterSite() {
-    enterOverlay.classList.add('hidden');
+  window.enterSite = () => {
+    document.getElementById('enterOverlay').classList.add('hidden');
     loadTrack(0);
+    const bgMusic = document.getElementById('bgMusic');
+    const volumeSlider = document.getElementById('volumeSlider');
     bgMusic.volume = volumeSlider.value / 100;
-    bgMusic.play().then(() => {
-      playPauseBtn.className = "fas fa-pause player-btn";
-      eqBars.classList.add('playing');
+    bgMusic.play().then(() => { 
+      document.getElementById('playPauseBtn').className = "fas fa-pause player-btn"; 
+      document.getElementById('eqBars').classList.add('playing'); 
     }).catch(e => console.log(e));
-  }
+  };
 
-  // ============================================================
-  // 🎴 3D KART
-  // ============================================================
-  document.querySelectorAll('.glass-card').forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width / 2;
-      const y = e.clientY - rect.top - rect.height / 2;
-      const rotateX = (-y / rect.height) * 20;
-      const rotateY = (x / rect.width) * 20;
-      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = `rotateX(0deg) rotateY(0deg) translateY(0px)`;
-    });
-  });
-
-  // ============================================================
-  // ✨ PARÇACIKLAR
-  // ============================================================
-  const canvas = document.getElementById('bgCanvas');
-  const ctx = canvas.getContext('2d');
-  let particles = [];
-
-  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
-
-  class Particle {
-    constructor() {
-      this.x = Math.random() * canvas.width;
-      this.y = Math.random() * canvas.height;
-      this.radius = Math.random() * 2 + 1;
-      this.speedX = (Math.random() - 0.5) * 0.6;
-      this.speedY = (Math.random() - 0.5) * 0.6;
-      this.alpha = Math.random() * 0.5 + 0.2;
-    }
-    update() {
-      this.x += this.speedX; this.y += this.speedY;
-      if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-      if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-    }
-    draw() {
-      ctx.save();
-      ctx.globalAlpha = this.alpha;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--highlight-color') || '#a29bfe';
-      ctx.shadowBlur = 10;
-      ctx.shadowColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-color') || '#6c5ce7';
-      ctx.fill();
-      ctx.restore();
-    }
-  }
-  for (let i = 0; i < 50; i++) particles.push(new Particle());
-  function animateCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => { p.update(); p.draw(); });
-    requestAnimationFrame(animateCanvas);
-  }
-  animateCanvas();
-
-  // ============================================================
-  // 🔔 TOAST
-  // ============================================================
-  let toastTimeout;
-  function showToast(msg) {
-    const toast = document.getElementById('customToast');
-    document.getElementById('toastMsg').textContent = msg;
-    clearTimeout(toastTimeout);
-    toast.classList.add('show');
-    toastTimeout = setTimeout(() => toast.classList.remove('show'), 3500);
-  }
-
-  // ============================================================
-  // 🧭 NAVİGASYON
-  // ============================================================
-  function toggleMobileMenu() { document.getElementById('navLeftMenu').classList.toggle('active'); }
-
-  function goToSection(id) {
-    document.querySelectorAll('.section').forEach(sec => {
-      sec.classList.remove('visible'); sec.style.display = 'none';
-    });
+  window.goToSection = (id) => {
+    document.querySelectorAll('.section').forEach(sec => { sec.classList.remove('visible'); sec.style.display = 'none'; });
     const target = document.getElementById(id);
     if (target) {
       target.style.display = 'block';
@@ -1009,12 +516,551 @@
         const y = target.getBoundingClientRect().top + window.scrollY - 90;
         window.scrollTo({ top: y, behavior: 'smooth' });
       }, 50);
+      
+      if(id === 'sohbet') {
+        listenChat();
+        listenTyping();
+      }
     }
+  };
+
+  window.toggleMobileMenu = () => document.getElementById('navLeftMenu').classList.toggle('active');
+
+  // Cloudinary Resim Yükleme (Gelişmiş Hata Yakalama)
+  document.getElementById('pfpFileInput').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const statusText = document.getElementById('uploadStatus');
+    statusText.style.color = "var(--highlight-color)";
+    statusText.textContent = "Yükleniyor... Lütfen bekleyin.";
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+    try {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      
+      // Hata varsa detaylı göster
+      if (data.error) {
+        statusText.style.color = "#e74c3c";
+        statusText.textContent = "Hata: " + data.error.message;
+        showToast('❌ Cloudinary: ' + data.error.message);
+        return;
+      }
+
+      if (data.secure_url) {
+        document.getElementById('settingsPfpPreview').src = data.secure_url;
+        document.getElementById('miniPfp').src = data.secure_url;
+        document.getElementById('userAvatar').src = data.secure_url;
+        currentUserPhoto = data.secure_url;
+        
+        await setDoc(doc(db, "users", currentUser.uid), {
+          pfpUrl: data.secure_url
+        }, { merge: true });
+
+        statusText.style.color = "#2ecc71";
+        statusText.textContent = "✅ Resim başarıyla yüklendi!";
+        showToast('📸 Profil fotoğrafı güncellendi!');
+      }
+    } catch (err) {
+      statusText.style.color = "#e74c3c";
+      statusText.textContent = "❌ Bağlantı hatası oluştu.";
+      console.error(err);
+    }
+  });
+
+  // Kullanıcı Durumu
+  onAuthStateChanged(auth, async (user) => {
+    const authBtn = document.getElementById('authNavBtn');
+    const regBtn = document.getElementById('registerNavBtn');
+    const heroTitle = document.getElementById('heroTitle');
+    const profileBar = document.getElementById('userProfileBar');
+
+    if (user) {
+      currentUser = user;
+      isAdmin = (user.email === ADMIN_EMAIL);
+      
+      authBtn.textContent = '(Çıkış)';
+      authBtn.className = 'logout-red-btn';
+      regBtn.style.display = 'none';
+      heroTitle.textContent = user.displayName || 'Kullanıcı';
+      
+      // Veritabanından kullanıcı bilgilerini çek
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (userDoc.exists()) {
+        const data = userDoc.data();
+        currentUserPhoto = data.pfpUrl || "profile.png";
+        currentBanner = data.bannerUrl || "var(--accent-color)";
+        currentDiscordId = data.discordId || "";
+        
+        document.getElementById('miniPfp').src = currentUserPhoto;
+        document.getElementById('settingsPfpPreview').src = currentUserPhoto;
+        document.getElementById('userAvatar').src = currentUserPhoto;
+        document.getElementById('miniBanner').style.backgroundImage = `url(${currentBanner})`;
+        document.getElementById('miniBanner').style.background = currentBanner.startsWith('http') ? `url(${currentBanner}) center/cover` : currentBanner;
+        
+        document.getElementById('discordIdInput').value = currentDiscordId;
+        document.getElementById('userBio').value = data.bio || "";
+      } else {
+        currentUserPhoto = user.photoURL || "profile.png";
+        document.getElementById('miniPfp').src = currentUserPhoto;
+        document.getElementById('settingsPfpPreview').src = currentUserPhoto;
+        document.getElementById('userAvatar').src = currentUserPhoto;
+        document.getElementById('miniBanner').style.background = "var(--accent-color)";
+      }
+
+      document.getElementById('miniName').textContent = user.displayName || 'Kullanıcı';
+      profileBar.classList.add('show');
+
+    } else {
+      currentUser = null;
+      isAdmin = false;
+      authBtn.textContent = 'Giriş Yap';
+      authBtn.className = '';
+      authBtn.style.color = 'var(--highlight-color)';
+      regBtn.style.display = 'inline-block';
+      heroTitle.textContent = 'Editor.';
+      profileBar.classList.remove('show');
+      document.getElementById('userAvatar').src = "profile.png";
+    }
+  });
+
+  window.loginWithGoogle = () => {
+    signInWithPopup(auth, provider).then(() => {
+      showToast('🚀 Google ile giriş başarılı!');
+      goToSection('anasayfa');
+    }).catch((error) => {
+      if (error.code === 'auth/popup-closed-by-user') showToast('⚠️ Giriş iptal edildi.');
+      else showToast('❌ Hata: ' + error.message);
+    });
+  };
+
+  window.registerUserAccount = () => {
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const pass = document.getElementById('regPass').value.trim();
+
+    if(!name || !email || !pass) { showToast('⚠️ Lütfen tüm alanları doldur!'); return; }
+    if(pass.length < 6) { showToast('❌ Şifre en az 6 karakter olmalı!'); return; }
+
+    createUserWithEmailAndPassword(auth, email, pass).then((userCredential) => {
+      return updateProfile(userCredential.user, { displayName: name });
+    }).then(() => {
+      showToast('🎉 Kayıt başarılı, hoş geldin ' + name + '!');
+      goToSection('anasayfa');
+    }).catch((error) => {
+      if(error.code === 'auth/email-already-in-use') showToast('⚠️ Bu e-posta zaten kayıtlı!');
+      else showToast('❌ Hata: ' + error.message);
+    });
+  };
+
+  window.loginUserAccount = () => {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPass').value.trim();
+    if(!email || !pass) { showToast('⚠️ Bilgileri eksiksiz gir!'); return; }
+    signInWithEmailAndPassword(auth, email, pass).then(() => {
+      showToast('🚀 Giriş yapıldı!');
+      goToSection('anasayfa');
+    }).catch((error) => {
+      showToast('❌ E-posta veya şifre hatalı!');
+    });
+  };
+
+  window.handleAuthNav = () => {
+    if (auth.currentUser) {
+      signOut(auth).then(() => { showToast('👋 Çıkış yapıldı.'); goToSection('anasayfa'); });
+    } else {
+      goToSection('giris');
+    }
+  };
+
+  window.openSettingsModal = () => document.getElementById('settingsModal').classList.add('show');
+  window.closeSettingsModal = () => {
+    document.getElementById('settingsModal').classList.remove('show');
+    document.getElementById('uploadStatus').textContent = "";
+  };
+
+  // Ayarları Kaydet (İsim + Discord ID + Bio)
+  window.saveUserSettings = async () => {
+    const newUser = document.getElementById('newUsername').value.trim();
+    const newDiscordId = document.getElementById('discordIdInput').value.trim();
+    const newBio = document.getElementById('userBio').value.trim();
+    
+    if (!currentUser) { showToast('⚠️ Önce giriş yapmalısın!'); return; }
+
+    let updateData = {};
+    let isDiscordFetched = false;
+
+    // Discord ID kontrolü
+    if (newDiscordId && newDiscordId !== currentDiscordId) {
+      if (currentDiscordId) {
+        showToast('⛔ Discord ID bir kez girildikten sonra değiştirilemez!');
+        return;
+      }
+      
+      // Başkası almış mı kontrolü
+      const q = query(collection(db, "users"), where("discordId", "==", newDiscordId));
+      const querySnapshot = await getDocs(q);
+      
+      if (!querySnapshot.empty) {
+        showToast('⛔ Bu Discord ID zaten başka bir hesaba kayıtlı!');
+        return;
+      }
+
+      showToast('🔄 Discord verileri çekiliyor...');
+      
+      try {
+        // Japi.rest üzerinden Discord verilerini çek
+        const res = await fetch(`https://japi.rest/discord/v1/user/${newDiscordId}`);
+        const data = await res.json();
+
+        if(data && data.data) {
+          const dUser = data.data;
+          // Discord İsmini ve PFP'sini güncelle
+          if(dUser.username) {
+            newUser = dUser.username;
+            await updateProfile(currentUser, { displayName: newUser });
+            document.getElementById('heroTitle').textContent = newUser;
+            document.getElementById('miniName').textContent = newUser;
+            updateData.displayName = newUser;
+          }
+          if(dUser.avatar && dUser.avatar.url) {
+            updateData.pfpUrl = dUser.avatar.url;
+            currentUserPhoto = dUser.avatar.url;
+            document.getElementById('miniPfp').src = currentUserPhoto;
+            document.getElementById('settingsPfpPreview').src = currentUserPhoto;
+            document.getElementById('userAvatar').src = currentUserPhoto;
+          }
+          if(dUser.banner && dUser.banner.url) {
+            updateData.bannerUrl = dUser.banner.url;
+            currentBanner = dUser.banner.url;
+            document.getElementById('miniBanner').style.background = `url(${currentBanner}) center/cover`;
+          }
+          if(dUser.bio) {
+            updateData.bio = dUser.bio;
+            document.getElementById('userBio').value = dUser.bio;
+            newBio = dUser.bio;
+          }
+          updateData.discordId = newDiscordId;
+          currentDiscordId = newDiscordId;
+          isDiscordFetched = true;
+          showToast('✅ Discord profili başarıyla çekildi!');
+        }
+      } catch (err) {
+        console.log("Discord API hatası: ", err);
+        showToast('⚠️ Discord verileri çekilemedi, ID manuel kaydedildi.');
+        updateData.discordId = newDiscordId;
+        currentDiscordId = newDiscordId;
+      }
+    }
+
+    try {
+      // Diğer verileri kaydet
+      if (newBio && newBio !== (updateData.bio || "")) {
+        updateData.bio = newBio;
+      }
+
+      if (Object.keys(updateData).length > 0) {
+        await setDoc(doc(db, "users", currentUser.uid), updateData, { merge: true });
+      }
+
+      closeSettingsModal();
+      if(!isDiscordFetched) showToast('✅ Ayarlar güncellendi!');
+      document.getElementById('newUsername').value = '';
+      
+    } catch (error) {
+      showToast('❌ Hata: ' + error.message);
+    }
+  };
+
+  // SOHBET SİSTEMİ
+  let unsubscribeChat = null;
+
+  function listenChat() {
+    if(unsubscribeChat) return; 
+    
+    const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
+    const chatBox = document.getElementById('chatMessages');
+    const pinnedBox = document.getElementById('pinnedMessagesList');
+    const pinnedContainer = document.getElementById('pinnedContainer');
+    
+    unsubscribeChat = onSnapshot(q, 
+      (snapshot) => {
+        const isScrolledToBottom = chatBox.scrollHeight - chatBox.clientHeight <= chatBox.scrollTop + 150;
+        
+        chatBox.innerHTML = '';
+        pinnedBox.innerHTML = '';
+        
+        let hasPinned = false;
+        const messages = [];
+
+        snapshot.forEach(doc => {
+          messages.push({ id: doc.id, ...doc.data() });
+        });
+
+        messages.sort((a, b) => {
+          const timeA = a.createdAt ? a.createdAt.toMillis() : 0;
+          const timeB = b.createdAt ? b.createdAt.toMillis() : 0;
+          return timeA - timeB;
+        });
+
+        messages.forEach(msg => {
+          let dateStr = "Şimdi";
+          if(msg.createdAt) {
+            dateStr = msg.createdAt.toDate().toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'});
+          }
+
+          const likes = msg.likes || [];
+          const isLiked = currentUser && likes.includes(currentUser.uid);
+          const likeClass = isLiked ? 'fas fa-heart liked' : 'far fa-heart';
+          const likeCount = likes.length > 0 ? likes.length : '';
+
+          const readBy = msg.readBy || [];
+          let readByHTML = '';
+          if(readBy.length > 0) {
+            const uniqueReaders = [...new Set(readBy)].filter(uid => uid !== currentUser?.uid);
+            readByHTML = `<div class="read-by-container">`;
+            uniqueReaders.slice(0, 5).forEach(uid => { 
+              readByHTML += `<img src="profile.png" class="read-by-pfp" title="Gördü" onerror="this.style.display='none'">`; 
+            });
+            readByHTML += `</div>`;
+          }
+
+          let actionButtons = '';
+          const canDelete = isAdmin || (currentUser && msg.userId === currentUser.uid);
+          
+          if (canDelete || isAdmin) {
+            actionButtons = `<div class="chat-msg-buttons">`;
+            if (canDelete) actionButtons += `<button onclick="deleteMessage('${msg.id}', '${msg.userId}')" title="Sil"><i class="fas fa-trash" style="color: #e74c3c;"></i></button>`;
+            if (isAdmin) actionButtons += `<button onclick="pinMessage('${msg.id}', ${msg.isPinned || false})" title="Sabitle"><i class="fas fa-thumbtack" style="color: ${msg.isPinned ? '#f1c40f' : '#aaa'};"></i></button>`;
+            actionButtons += `</div>`;
+          }
+
+          const msgHTML = `
+            <div class="chat-msg ${msg.isPinned ? 'pinned' : ''}">
+              <img src="${msg.userPfp || 'profile.png'}" class="msg-pfp" onerror="this.src='profile.png'">
+              <div class="msg-body">
+                <div class="chat-msg-header">
+                  <span class="chat-msg-name">${msg.userName || 'Anonim'}</span>
+                  <span>${dateStr}</span>
+                </div>
+                <div class="chat-msg-text">${msg.text}</div>
+                <div class="chat-msg-actions">
+                  <div style="display: flex; gap: 10px; align-items: center;">
+                    <button onclick="toggleLike('${msg.id}')" ${!currentUser ? 'disabled title="Giriş yapmalısın"' : ''}>
+                      <i class="${likeClass}"></i> <span>${likeCount}</span>
+                    </button>
+                    ${readByHTML}
+                  </div>
+                  ${actionButtons}
+                </div>
+              </div>
+            </div>
+          `;
+
+          if (msg.isPinned) {
+            hasPinned = true;
+            pinnedBox.insertAdjacentHTML('beforeend', msgHTML);
+          } else {
+            chatBox.insertAdjacentHTML('beforeend', msgHTML);
+          }
+          
+          if (currentUser && msg.userId !== currentUser.uid && !readBy.includes(currentUser.uid)) {
+            updateDoc(doc(db, "messages", msg.id), {
+              readBy: arrayUnion(currentUser.uid)
+            }).catch(e => console.log("Okundu işaretlenemedi", e));
+          }
+        });
+
+        if (hasPinned) pinnedContainer.classList.add('has-pinned');
+        else pinnedContainer.classList.remove('has-pinned');
+
+        if (messages.filter(m => !m.isPinned).length === 0) {
+          chatBox.innerHTML = '<p class="loading-text">Henüz mesaj yok. İlk mesajı sen at!</p>';
+        }
+
+        if (isScrolledToBottom) {
+          setTimeout(() => {
+            chatBox.scrollTop = chatBox.scrollHeight;
+          }, 100);
+        }
+      },
+      (error) => {
+        console.error("Sohbet hatası:", error);
+        chatBox.innerHTML = `<p class="loading-text" style="color: #e74c3c;">Hata: ${error.message}</p>`;
+      }
+    );
   }
 
-  // ============================================================
-  // 📺 YOUTUBE VİDEOLARI
-  // ============================================================
+  window.sendChatMessage = async () => {
+    if(!currentUser) { showToast('⚠️ Mesaj atmak için giriş yapmalısın!'); return; }
+    
+    const now = Date.now();
+    if (now - lastMessageTime < 1500) {
+      showToast('🐢 Çok hızlısın! Lütfen biraz bekle.');
+      return;
+    }
+
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if(!text) return;
+
+    input.value = '';
+    lastMessageTime = now;
+
+    deleteDoc(doc(db, "typingStatus", currentUser.uid)).catch(()=>{});
+
+    try {
+      await addDoc(collection(db, "messages"), {
+        text: text,
+        userId: currentUser.uid,
+        userName: currentUser.displayName || currentUser.email.split('@')[0],
+        userPfp: currentUserPhoto, // Profil fotoğrafı
+        createdAt: serverTimestamp(),
+        likes: [],
+        readBy: [],
+        isPinned: false
+      });
+      const chatBox = document.getElementById('chatMessages');
+      setTimeout(() => { chatBox.scrollTop = chatBox.scrollHeight; }, 200);
+    } catch (e) {
+      showToast('❌ Mesaj gönderilemedi!');
+    }
+  };
+
+  document.getElementById('chatInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      sendChatMessage();
+    }
+  });
+
+  window.toggleLike = async (msgId) => {
+    if(!currentUser) return;
+    try {
+      const msgRef = doc(db, "messages", msgId);
+      const snap = await getDoc(msgRef); 
+      if (!snap.exists()) return;
+      
+      const data = snap.data();
+      const likes = data.likes || [];
+      
+      if(likes.includes(currentUser.uid)) {
+        await updateDoc(msgRef, { likes: arrayRemove(currentUser.uid) });
+      } else {
+        await updateDoc(msgRef, { likes: arrayUnion(currentUser.uid) });
+      }
+    } catch (e) { console.error(e); }
+  };
+
+  window.deleteMessage = async (msgId, ownerId) => {
+    if(!currentUser) return;
+    if(!isAdmin && currentUser.uid !== ownerId) {
+      showToast('⛔ Bu mesajı silme yetkin yok!');
+      return;
+    }
+    
+    try {
+      await deleteDoc(doc(db, "messages", msgId));
+      showToast('🗑️ Mesaj silindi.');
+    } catch(e) {
+      showToast('❌ Mesaj silinirken hata oluştu!');
+    }
+  };
+
+  window.pinMessage = async (msgId, currentPinStatus) => {
+    if(!isAdmin) return;
+    const msgRef = doc(db, "messages", msgId);
+    await updateDoc(msgRef, { isPinned: !currentPinStatus });
+    showToast(currentPinStatus ? '📌 Sabitleme kaldırıldı.' : '📌 Mesaj sabitlendi.');
+  };
+
+  let typingTimeout;
+  let unsubscribeTyping = null;
+  const chatInput = document.getElementById('chatInput');
+
+  chatInput.addEventListener('input', () => {
+    if (!currentUser) return;
+    
+    setDoc(doc(db, "typingStatus", currentUser.uid), {
+      name: currentUser.displayName || currentUser.email.split('@')[0],
+      timestamp: serverTimestamp()
+    }).catch(()=>{});
+
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => {
+      deleteDoc(doc(db, "typingStatus", currentUser.uid)).catch(()=>{});
+    }, 2000);
+  });
+
+  function listenTyping() {
+    if(unsubscribeTyping) return;
+
+    unsubscribeTyping = onSnapshot(collection(db, "typingStatus"), (snapshot) => {
+      const now = Date.now();
+      let typingUsers = [];
+
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        if (data.timestamp && now - data.timestamp.toMillis() < 3000 && doc.id !== currentUser?.uid) {
+          typingUsers.push(data.name);
+        }
+      });
+
+      const indicator = document.getElementById('typingIndicator');
+      const textEl = document.getElementById('typingText');
+
+      if (typingUsers.length > 0) {
+        indicator.style.display = 'flex';
+        if (typingUsers.length === 1) textEl.textContent = typingUsers[0];
+        else if (typingUsers.length === 2) textEl.textContent = typingUsers[0] + " ve " + typingUsers[1];
+        else textEl.textContent = "Birkaç kişi";
+      } else {
+        indicator.style.display = 'none';
+      }
+    });
+  }
+
+  // ==========================================
+  // DİĞER MANTIKLAR
+  // ==========================================
+  const STATIC_PROJECTS = [
+    { title: "🐟 Balık Oyunu", desc: "Web tabanlı balık besleme ve akvaryum simülasyon oyunu.", link: "https://nyxven-debug.github.io/balik/", image: "image_ab6d3d.jpg" },
+    { title: "🎡 Çark & Zamanlayıcı", desc: "Rastgele seçim çarkı ve pratik araç kümesi.", link: "https://nyxven-debug.github.io/cark/", image: "profile.png" },
+    { title: "🎵 Spotify Mini Pro", desc: "Spotify tarzı müzik çalar mini uygulaması.", link: "https://sminipro.gt.tc/", image: "profile.png" }
+  ];
+
+  function initViewCounter() {
+    fetch(`https://api.countapi.xyz/hit/nyxvencom/views`)
+      .then(res => res.json()).then(data => { if (data && data.value) document.getElementById('viewCount').textContent = (184 + data.value).toLocaleString('tr-TR'); })
+      .catch(() => { document.getElementById('viewCount').textContent = '184'; });
+  }
+
+  function renderProjects() {
+    const container = document.getElementById('projectGridContainer');
+    let html = '';
+    STATIC_PROJECTS.forEach(p => {
+      html += `
+        <a href="${p.link}" target="_blank" class="project-card-link glass-card">
+          <div class="project-thumb-wrapper">
+            <img src="${p.image}" alt="${p.title}" onerror="this.src='profile.png'">
+          </div>
+          <div class="project-info-box">
+            <div class="project-title">${p.title}</div>
+            <div class="project-desc">${p.desc}</div>
+          </div>
+        </a>
+      `;
+    });
+    container.innerHTML = html;
+  }
+
   function fetchVideos() {
     const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=UCM6EXLZFrqGu5Yd0gf1PCpg`;
     fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`)
@@ -1032,10 +1078,10 @@
               card.target = '_blank';
               card.innerHTML = `
                 <div class="thumb-wrapper">
-                  <img src="https://i.ytimg.com/vi/${vId}/hqdefault.jpg" alt="${escapeHTML(item.title)}">
+                  <img src="https://i.ytimg.com/vi/${vId}/hqdefault.jpg" alt="Video">
                   <div class="play-btn-overlay"><i class="fas fa-play"></i></div>
                 </div>
-                <div class="video-title-box">${escapeHTML(item.title)}</div>
+                <div class="video-title-box">${item.title}</div>
               `;
               grid.appendChild(card);
             }
@@ -1043,55 +1089,122 @@
         } else {
           grid.innerHTML = '<p class="loading-text">Video bulunamadı.</p>';
         }
-      }).catch(e => {
-        console.log(e);
+      }).catch(() => {
         document.getElementById('youtubeVideoGrid').innerHTML = '<p class="loading-text">Videolar yüklenemedi.</p>';
       });
   }
 
-  // ============================================================
-  // 🖼️ PROJELER
-  // ============================================================
-  function renderProjects() {
-    const container = document.getElementById('projectGridContainer');
-    let html = '';
-    STATIC_PROJECTS.forEach(p => {
-      html += `
-        <a href="${escapeHTML(p.link)}" target="_blank" class="project-card-link glass-card">
-          <div class="project-thumb-wrapper">
-            <img src="${escapeHTML(p.image)}" alt="${escapeHTML(p.title)}" onerror="this.src='profile.png'">
-          </div>
-          <div class="project-info-box">
-            <div class="project-title">${escapeHTML(p.title)}</div>
-            <div class="project-desc">${escapeHTML(p.desc)}</div>
-          </div>
-        </a>
-      `;
-    });
-    container.innerHTML = html;
+  window.handleThemeChange = (val) => {
+    const customBox = document.getElementById('customColorBox');
+    if(val === 'custom') { customBox.style.display = 'flex'; return; }
+    else { customBox.style.display = 'none'; document.documentElement.style.removeProperty('--bg-grad-1'); document.documentElement.style.removeProperty('--bg-grad-2'); }
+    if(val === 'default') document.documentElement.removeAttribute('data-theme');
+    else { document.documentElement.removeAttribute('style'); document.documentElement.setAttribute('data-theme', val); }
+    localStorage.setItem('nyxven_theme', val);
+    showToast('🎨 Tema güncellendi!');
+  };
+
+  window.applyCustomGradient = () => {
+    const c1 = document.getElementById('customColor1').value;
+    const c2 = document.getElementById('customColor2').value;
+    document.documentElement.removeAttribute('data-theme');
+    document.documentElement.style.setProperty('--bg-grad-1', c1);
+    document.documentElement.style.setProperty('--bg-grad-2', c2);
+    localStorage.setItem('nyxven_theme', 'custom');
+    showToast('✅ Renk geçişi uygulandı!');
+  };
+
+  let toastTimeout;
+  window.showToast = (msg) => {
+    const toast = document.getElementById('customToast');
+    document.getElementById('toastMsg').textContent = msg;
+    clearTimeout(toastTimeout);
+    toast.classList.add('show');
+    toastTimeout = setTimeout(() => toast.classList.remove('show'), 3500);
+  };
+
+  const bgMusic = document.getElementById('bgMusic');
+  const volumeSlider = document.getElementById('volumeSlider');
+  const muteBtn = document.getElementById('muteBtn');
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const trackTitle = document.getElementById('trackTitle');
+  const eqBars = document.getElementById('eqBars');
+  let lastVolume = 0.5;
+
+  window.toggleMute = () => {
+    if (bgMusic.muted || bgMusic.volume === 0) {
+      bgMusic.muted = false; bgMusic.volume = lastVolume || 0.5; volumeSlider.value = bgMusic.volume * 100; muteBtn.className = "fas fa-volume-up volume-btn";
+    } else {
+      lastVolume = bgMusic.volume; bgMusic.muted = true; volumeSlider.value = 0; muteBtn.className = "fas fa-volume-mute volume-btn";
+    }
+  };
+
+  const playlist = [
+    { title: "Sadece Sevilmek İstedim", src: "sadece-sevilmek-istedim.mp3" },
+    { title: "Day - No, I'm Not a Human OST", src: "day-no-im-not-a-human.mp3" }
+  ];
+  let currentTrackIndex = 0;
+
+  function loadTrack(index) {
+    currentTrackIndex = index;
+    bgMusic.src = playlist[currentTrackIndex].src;
+    trackTitle.textContent = playlist[currentTrackIndex].title;
   }
+  window.togglePlay = () => {
+    if (bgMusic.paused) { bgMusic.play(); playPauseBtn.className = "fas fa-pause player-btn"; eqBars.classList.add('playing'); }
+    else { bgMusic.pause(); playPauseBtn.className = "fas fa-play player-btn"; eqBars.classList.remove('playing'); }
+  }
+  window.nextTrack = () => { currentTrackIndex = (currentTrackIndex + 1) % playlist.length; loadTrack(currentTrackIndex); bgMusic.play(); playPauseBtn.className = "fas fa-pause player-btn"; eqBars.classList.add('playing'); }
+  window.prevTrack = () => { currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length; loadTrack(currentTrackIndex); bgMusic.play(); playPauseBtn.className = "fas fa-pause player-btn"; eqBars.classList.add('playing'); }
+  
+  volumeSlider.addEventListener('input', (e) => {
+    const val = e.target.value / 100;
+    bgMusic.volume = val; bgMusic.muted = false;
+    if (val === 0) muteBtn.className = "fas fa-volume-mute volume-btn";
+    else muteBtn.className = "fas fa-volume-up volume-btn";
+  });
 
   function getFallbackAvatar() {
-    const c = document.createElement('canvas');
-    c.width = 140; c.height = 140;
-    const x = c.getContext('2d');
-    x.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color') || '#6c5ce7'; 
-    x.fillRect(0,0,140,140);
-    x.fillStyle = '#fff'; x.font = 'bold 64px sans-serif';
-    x.textAlign = 'center'; x.textBaseline = 'middle';
-    x.fillText('N', 70, 70);
+    const c = document.createElement('canvas'); c.width = 140; c.height = 140;
+    const x = c.getContext('2d'); x.fillStyle = '#6c5ce7'; x.fillRect(0,0,140,140);
+    x.fillStyle = '#fff'; x.font = 'bold 64px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('N', 70, 70);
     return c.toDataURL();
   }
 
-  // ============================================================
-  // 🚀 BAŞLATMA
-  // ============================================================
+  const canvas = document.getElementById('bgCanvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resizeCanvas); resizeCanvas();
+
+  class Particle {
+    constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.radius = Math.random() * 2 + 1; this.speedX = (Math.random() - 0.5) * 0.6; this.speedY = (Math.random() - 0.5) * 0.6; this.alpha = Math.random() * 0.5 + 0.2; }
+    update() { this.x += this.speedX; this.y += this.speedY; if (this.x < 0 || this.x > canvas.width) this.speedX *= -1; if (this.y < 0 || this.y > canvas.height) this.speedY *= -1; }
+    draw() { ctx.save(); ctx.globalAlpha = this.alpha; ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--highlight-color') || '#a29bfe'; ctx.shadowBlur = 10; ctx.shadowColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-color') || '#6c5ce7'; ctx.fill(); ctx.restore(); }
+  }
+  for (let i = 0; i < 50; i++) particles.push(new Particle());
+  function animateCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateCanvas); }
+  animateCanvas();
+
   document.addEventListener('DOMContentLoaded', () => {
-    setupDevToolsProtection();
     initViewCounter();
     renderProjects();
-    checkAuthUI();
     fetchVideos();
+    const savedTheme = localStorage.getItem('nyxven_theme');
+    if(savedTheme) {
+      document.getElementById('themeSelector').value = savedTheme;
+      if(savedTheme === 'custom') {
+        document.getElementById('customColorBox').style.display = 'flex';
+        const g1 = localStorage.getItem('nyxven_grad_1') || '#000000';
+        const g2 = localStorage.getItem('nyxven_grad_2') || '#0055ff';
+        document.documentElement.style.setProperty('--bg-grad-1', g1);
+        document.documentElement.style.setProperty('--bg-grad-2', g2);
+        document.getElementById('customColor1').value = g1;
+        document.getElementById('customColor2').value = g2;
+      } else if(savedTheme !== 'default') {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      }
+    }
   });
 </script>
 </body>
